@@ -81,7 +81,7 @@
                                                 <tr>
                                                     <td>{{ $i++}}</td>
                                                     <td>{{ $message_details->message }}</td>
-                                                    <td>{{ $message_details->created_on }}</td>
+                                                    <td>{{ $message_details->created_at }}</td>
                                                     <td>{{ $message_details->email }}</td>
                                                     <td>{{ $message_details->status }}</td>
                                                 </tr>

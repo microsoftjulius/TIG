@@ -28,7 +28,7 @@ class messages extends Controller {
     public function display_sent_messages() {
         $display_sent_message_details = message::join('users', 'users.id', 'messages.created_by')
         ->where('status','!=','Deleted')
-        ->where('users.church_id', Auth::user()->church_id)->select('messages.id', 'messages.message', 'messages.tobesent_on', 'messages.status', 'users.email')->paginate('10');
+        ->where('users.church_id', Auth::user()->church_id)->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email')->paginate('10');
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
     public function drop_down_groups() {

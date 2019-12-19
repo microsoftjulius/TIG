@@ -1,0 +1,3 @@
+Url: http://localhost:8000/create-TIG-groups
+ UserName: microsoft
+ Password: $2y$10$ql2lBiq4TbehqOojy8dnruLE8MziAQZl5Gc/GSk.AXWoBTnaoA9bC
