@@ -1,0 +1,3 @@
+Url: http://localhost:8000/createchurc
+ UserName: Watoto Chuh
+ Password: $2y$10$hxiVBzeRdRvklbhdka50kOG5MJnUuFuerNw2e5xAaFoJmYcU3UkNK

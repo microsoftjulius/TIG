@@ -1,0 +1,3 @@
+Url: http://localhost:8000/createchurches
+ UserName: Watoto Church Of Ug
+ Password: $2y$10$K0BYaQqFbjl.A./2e1G6aeDyUqPiFJxF8s908sM8XyFgLyX2Kejb.

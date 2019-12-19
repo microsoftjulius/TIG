@@ -1,0 +1,3 @@
+Url: http://localhost:8000/createchurc
+ UserName: kasenge miracle Cen
+ Password: $2y$10$STru4XrV3cBa58Hp/rGJb.yCPTowmZi9y2rrWK5FHGwdYtbHbVyES

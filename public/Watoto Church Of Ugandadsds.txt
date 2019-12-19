@@ -1,0 +1,3 @@
+Url: http://localhost:8000/groups
+ UserName: Watoto Church Of Ugandadsds
+ Password: $2y$10$N/XRqizlJgISd7YVgM1wI.aeZYvt4.kJDMy/OBbPmXbS33Ng6fIpq

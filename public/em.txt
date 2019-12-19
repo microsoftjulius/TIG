@@ -1,0 +1,3 @@
+Url: http://localhost:8000/createchurches
+ UserName: em
+ Password: $2y$10$gBFoR3LkcaRAGVKgYn.wP.Aat2pMtCGFrusiaZxLoYNyYJZNdBDE6

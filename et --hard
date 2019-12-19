@@ -1,0 +1,192 @@
+[33mfaf9946[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m HEAD@{0}: commit: Corrected desired corrections of Count contacts, Validation
+[33md967afd[m HEAD@{1}: pull origin master: Fast-forward
+[33m164d959[m HEAD@{2}: checkout: moving from James to master
+[33m76b1105[m[33m ([m[1;32mJames[m[33m)[m HEAD@{3}: pull: Merge made by the 'recursive' strategy.
+[33md24a251[m HEAD@{4}: commit: Corrected desired corrections of Count contacts, Validation
+[33m164d959[m HEAD@{5}: checkout: moving from master to James
+[33m164d959[m HEAD@{6}: checkout: moving from James to master
+[33m164d959[m HEAD@{7}: merge master: Fast-forward
+[33maf04129[m HEAD@{8}: checkout: moving from master to James
+[33m164d959[m HEAD@{9}: commit: added paginations for groups
+[33maf04129[m HEAD@{10}: merge James: Fast-forward
+[33m1425a6a[m HEAD@{11}: checkout: moving from James to master
+[33maf04129[m HEAD@{12}: checkout: moving from master to James
+[33m1425a6a[m HEAD@{13}: checkout: moving from James to master
+[33maf04129[m HEAD@{14}: pull: Merge made by the 'recursive' strategy.
+[33m1425a6a[m HEAD@{15}: checkout: moving from master to James
+[33m1425a6a[m HEAD@{16}: merge James: Fast-forward
+[33m33ec7b9[m HEAD@{17}: checkout: moving from James to master
+[33m1425a6a[m HEAD@{18}: merge master: Merge made by the 'recursive' strategy.
+[33ma57f8b1[m HEAD@{19}: pull: Fast-forward
+[33m25c9ee6[m HEAD@{20}: checkout: moving from master to James
+[33m33ec7b9[m HEAD@{21}: commit: tuesday categories changes
+[33m1141e2d[m HEAD@{22}: commit: solved conflicts with messages categories
+[33m25c9ee6[m HEAD@{23}: merge James: Fast-forward
+[33mb93dcc4[m HEAD@{24}: checkout: moving from James to master
+[33m25c9ee6[m HEAD@{25}: commit (merge): merged categories
+[33mb93dcc4[m HEAD@{26}: checkout: moving from master to James
+[33mb93dcc4[m HEAD@{27}: checkout: moving from James to master
+[33mb93dcc4[m HEAD@{28}: merge master: Fast-forward
+[33m0de1761[m HEAD@{29}: checkout: moving from master to James
+[33mb93dcc4[m HEAD@{30}: commit: message categories worked on and mapped categories
+[33m4b66bbf[m HEAD@{31}: pull origin master: Fast-forward
+[33m0de1761[m HEAD@{32}: checkout: moving from James to master
+[33m0de1761[m HEAD@{33}: merge master: Fast-forward
+[33mf71f536[m HEAD@{34}: checkout: moving from master to James
+[33m0de1761[m HEAD@{35}: commit: category added
+[33mf71f536[m HEAD@{36}: merge James: Fast-forward
+[33med28f41[m HEAD@{37}: checkout: moving from James to master
+[33mf71f536[m HEAD@{38}: commit (merge): merge with James to complete categories
+[33med28f41[m HEAD@{39}: merge master: Fast-forward
+[33mbe7ec35[m HEAD@{40}: checkout: moving from James to James
+[33mbe7ec35[m HEAD@{41}: checkout: moving from master to James
+[33med28f41[m HEAD@{42}: checkout: moving from James to master
+[33mbe7ec35[m HEAD@{43}: checkout: moving from master to James
+[33med28f41[m HEAD@{44}: commit: search terms worked on
+[33mada71ed[m HEAD@{45}: commit: showing categories
+[33mf659ee4[m HEAD@{46}: commit (merge): merged James
+[33me64e609[m HEAD@{47}: checkout: moving from James to master
+[33mbe7ec35[m HEAD@{48}: pull: Fast-forward
+[33m7dc300d[m HEAD@{49}: checkout: moving from master to James
+[33me64e609[m HEAD@{50}: commit: updated commit beore remove ubuntu
+[33m7dc300d[m HEAD@{51}: checkout: moving from James to master
+[33m7dc300d[m HEAD@{52}: checkout: moving from master to James
+[33m7dc300d[m HEAD@{53}: checkout: moving from James to master
+[33m7dc300d[m HEAD@{54}: merge master: Fast-forward
+[33ma5b82f3[m HEAD@{55}: checkout: moving from master to James
+[33m7dc300d[m HEAD@{56}: commit: commits before merge
+[33md523995[m HEAD@{57}: commit: Modified current password
+[33m335f399[m HEAD@{58}: commit: User can change password
+[33m2ed4fca[m HEAD@{59}: pull origin master: Fast-forward
+[33mdfefc48[m HEAD@{60}: checkout: moving from James to master
+[33ma5b82f3[m HEAD@{61}: checkout: moving from master to James
+[33mdfefc48[m HEAD@{62}: commit: Worked on repeated contacts
+[33m6ca907b[m HEAD@{63}: pull origin master: Merge made by the 'recursive' strategy.
+[33m6ebf0a0[m HEAD@{64}: commit: My Weekend Changes
+[33mf484aac[m HEAD@{65}: commit (merge): Merged James and Julius Final Sprints 6
+[33mcee6d8b[m HEAD@{66}: checkout: moving from James to master
+[33ma5b82f3[m HEAD@{67}: pull: Fast-forward
+[33m9e7203b[m HEAD@{68}: checkout: moving from master to James
+[33mcee6d8b[m HEAD@{69}: checkout: moving from James to master
+[33m9e7203b[m HEAD@{70}: checkout: moving from master to James
+[33mcee6d8b[m HEAD@{71}: checkout: moving from James to master
+[33m9e7203b[m HEAD@{72}: checkout: moving from master to James
+[33mcee6d8b[m HEAD@{73}: commit: Pagination worked on
+[33m58137e3[m HEAD@{74}: commit: Church
+[33mb3786f6[m HEAD@{75}: pull origin master: Merge made by the 'recursive' strategy.
+[33m06d08ed[m HEAD@{76}: checkout: moving from James to master
+[33m9e7203b[m HEAD@{77}: checkout: moving from master to James
+[33m06d08ed[m HEAD@{78}: commit: Guarded
+[33m2f6af4b[m HEAD@{79}: checkout: moving from James to master
+[33m9e7203b[m HEAD@{80}: checkout: moving from James to James
+[33m9e7203b[m HEAD@{81}: commit: Guarding the sent messages not to be null
+[33md5aec37[m HEAD@{82}: checkout: moving from James to James
+[33md5aec37[m HEAD@{83}: pull origin master: Fast-forward
+[33m2f6af4b[m HEAD@{84}: checkout: moving from master to James
+[33m2f6af4b[m HEAD@{85}: checkout: moving from James to master
+[33m2f6af4b[m HEAD@{86}: checkout: moving from master to James
+[33m2f6af4b[m HEAD@{87}: checkout: moving from James to master
+[33m2f6af4b[m HEAD@{88}: merge master: Fast-forward
+[33m5c160eb[m HEAD@{89}: checkout: moving from master to James
+[33m2f6af4b[m HEAD@{90}: pull origin master: Merge made by the 'recursive' strategy.
+[33mbfe2b36[m HEAD@{91}: checkout: moving from James to master
+[33m5c160eb[m HEAD@{92}: checkout: moving from master to James
+[33mbfe2b36[m HEAD@{93}: checkout: moving from James to master
+[33m5c160eb[m HEAD@{94}: merge refs/remotes/origin/James: Fast-forward
+[33m7988546[m HEAD@{95}: checkout: moving from master to James
+[33mbfe2b36[m HEAD@{96}: pull origin James: Merge made by the 'recursive' strategy.
+[33m476dd55[m HEAD@{97}: commit: commit on tuesday
+[33m35f3e61[m HEAD@{98}: commit: Contact groups edited
+[33m783c8aa[m HEAD@{99}: commit: Churches Controller
+[33m7988546[m HEAD@{100}: checkout: moving from James to master
+[33m7988546[m HEAD@{101}: checkout: moving from master to James
+[33m7988546[m HEAD@{102}: pull origin James: Fast-forward
+[33mc1e4191[m HEAD@{103}: checkout: moving from James to master
+[33m7988546[m HEAD@{104}: checkout: moving from master to James
+[33mc1e4191[m HEAD@{105}: checkout: moving from James to master
+[33m7988546[m HEAD@{106}: commit (merge): Changes after comments
+[33mc1e4191[m HEAD@{107}: merge master: Fast-forward
+[33m01b8bf9[m HEAD@{108}: checkout: moving from master to James
+[33mc1e4191[m HEAD@{109}: commit: final sprint 3
+[33m01b8bf9[m HEAD@{110}: merge James: Fast-forward
+[33m63e6865[m HEAD@{111}: checkout: moving from James to master
+[33m01b8bf9[m HEAD@{112}: pull: Merge made by the 'recursive' strategy.
+[33me40e0a3[m HEAD@{113}: commit: Properties file done
+[33m63e6865[m HEAD@{114}: merge master: Fast-forward
+[33m54c0ec2[m HEAD@{115}: checkout: moving from master to James
+[33m63e6865[m HEAD@{116}: pull origin master: Merge made by the 'recursive' strategy.
+[33m6d4ad8c[m HEAD@{117}: commit: Sorted Input text
+[33m08c6d9f[m HEAD@{118}: checkout: moving from James to master
+[33m54c0ec2[m HEAD@{119}: pull: Merge made by the 'recursive' strategy.
+[33m08c6d9f[m HEAD@{120}: checkout: moving from master to James
+[33m08c6d9f[m HEAD@{121}: checkout: moving from master to master
+[33m08c6d9f[m HEAD@{122}: checkout: moving from master to master
+[33m08c6d9f[m HEAD@{123}: merge James: Fast-forward
+[33mdea0195[m HEAD@{124}: checkout: moving from James to master
+[33m08c6d9f[m HEAD@{125}: checkout: moving from James to James
+[33m08c6d9f[m HEAD@{126}: commit: Multiple select
+[33m889ae74[m HEAD@{127}: merge master: Merge made by the 'recursive' strategy.
+[33mc54a8bd[m HEAD@{128}: checkout: moving from James to James
+[33mc54a8bd[m HEAD@{129}: pull: Fast-forward
+[33ma004e70[m HEAD@{130}: checkout: moving from master to James
+[33mdea0195[m HEAD@{131}: pull origin master: Merge made by the 'recursive' strategy.
+[33md82c895[m HEAD@{132}: commit: Changes in Sprints
+[33m22ff987[m HEAD@{133}: pull origin master: Merge made by the 'recursive' strategy.
+[33ma004e70[m HEAD@{134}: merge James: Fast-forward
+[33m6e46a25[m HEAD@{135}: checkout: moving from James to master
+[33ma004e70[m HEAD@{136}: checkout: moving from James to James
+[33ma004e70[m HEAD@{137}: commit: Send Message
+[33mc084f07[m HEAD@{138}: pull: Merge made by the 'recursive' strategy.
+[33m717d4fe[m HEAD@{139}: commit: commit fin
+[33m86e2c94[m HEAD@{140}: checkout: moving from James to James
+[33m86e2c94[m HEAD@{141}: checkout: moving from James to James
+[33m86e2c94[m HEAD@{142}: checkout: moving from master to James
+[33m6e46a25[m HEAD@{143}: checkout: moving from master to master
+[33m6e46a25[m HEAD@{144}: checkout: moving from James to master
+[33m86e2c94[m HEAD@{145}: checkout: moving from James to James
+[33m86e2c94[m HEAD@{146}: commit (merge): merged
+[33m6e46a25[m HEAD@{147}: checkout: moving from master to James
+[33m6e46a25[m HEAD@{148}: checkout: moving from James to master
+[33m6e46a25[m HEAD@{149}: merge master: Fast-forward
+[33m057847a[m HEAD@{150}: checkout: moving from master to James
+[33m6e46a25[m HEAD@{151}: commit: Json Objects saving
+[33mb485263[m HEAD@{152}: commit: Wednesday Changes
+[33m057847a[m HEAD@{153}: merge James: Fast-forward
+[33m3948c5c[m HEAD@{154}: checkout: moving from James to master
+[33m057847a[m HEAD@{155}: commit (merge): James
+[33m3948c5c[m HEAD@{156}: checkout: moving from master to James
+[33m3948c5c[m HEAD@{157}: merge James: Fast-forward
+[33m8a772b6[m HEAD@{158}: checkout: moving from James to master
+[33m3948c5c[m HEAD@{159}: checkout: moving from James to James
+[33m3948c5c[m HEAD@{160}: commit: wednesday
+[33m8a772b6[m HEAD@{161}: checkout: moving from master to James
+[33m8a772b6[m HEAD@{162}: pull origin James: Fast-forward
+[33mdf15fc6[m HEAD@{163}: checkout: moving from James to master
+[33m8a772b6[m HEAD@{164}: pull: Fast-forward
+[33mdf15fc6[m HEAD@{165}: checkout: moving from master to James
+[33mdf15fc6[m HEAD@{166}: checkout: moving from James to master
+[33mdf15fc6[m HEAD@{167}: checkout: moving from James to James
+[33mdf15fc6[m HEAD@{168}: merge master: Fast-forward
+[33m436286b[m HEAD@{169}: checkout: moving from master to James
+[33mdf15fc6[m HEAD@{170}: commit: Sprint 3 Partial
+[33mdda9e62[m HEAD@{171}: commit: James Sprint partly
+[33m6669dd0[m HEAD@{172}: pull origin master: Merge made by the 'recursive' strategy.
+[33m436286b[m HEAD@{173}: checkout: moving from James to master
+[33m436286b[m HEAD@{174}: merge master: Fast-forward
+[33ma0b5af2[m HEAD@{175}: checkout: moving from master to James
+[33m436286b[m HEAD@{176}: checkout: moving from master to master
+[33m436286b[m HEAD@{177}: commit (merge): Sprint one
+[33mc92c66c[m HEAD@{178}: checkout: moving from James to master
+[33ma0b5af2[m HEAD@{179}: checkout: moving from master to James
+[33mc92c66c[m HEAD@{180}: checkout: moving from master to master
+[33mc92c66c[m HEAD@{181}: commit (merge): Sprint one
+[33ma69de96[m HEAD@{182}: commit: Sprint one
+[33m6ff3206[m HEAD@{183}: commit: Modified Sprint One
+[33mb65b869[m HEAD@{184}: pull origin master: Fast-forward
+[33m1575ce6[m HEAD@{185}: pull origin master: Fast-forward
+[33m34b27cf[m HEAD@{186}: commit: Church Controllers Worked On
+[33m25dce5f[m HEAD@{187}: commit: First Database
+[33m07f9008[m HEAD@{188}: commit: Added Churches Title
+[33m080140e[m HEAD@{189}: commit: Modified Home
+[33m12226c8[m HEAD@{190}: commit: Home View Created and After Login
+[33md1ec62c[m HEAD@{191}: commit (initial): Church System Empty Repo

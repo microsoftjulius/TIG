@@ -1,0 +1,3 @@
+Url: http://localhost:8000/createchurches
+ UserName: ociba ministry
+ Password: $2y$10$ArbgdYFdhiY5CdPc2lWRO.MSs3sbQ5dXKzmrwrFm4o9dC1dyU274y

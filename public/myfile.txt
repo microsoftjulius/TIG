@@ -1,0 +1,40 @@
+-	Ability to setup a message category with the following fields (Name)
+-	Ability to add search terms to a category (list)
+-	Ability to remove search terms from a category.
+-	A view displaying a list of categories.
+-	A link on each category (View/Edit), to edit a category with it is search terms displayed when the term loads.
+Incoming messages
+-	Create a view for incoming messages
+-	Add filters for [From (Date & Time) To (Date & Time)].
+-	Add a multi select dropdown with categories.
+-	An API to receive a message {message body(text), phone From (unique number), Date & Time Received, church code, received by}.
+-	Match the new message to the existing categories.
+var okCount = $('td:contains("OK")').filter(function() {
+    return $(this).index() == 0;
+}).length;
+var missingCount = $('td:contains("Missing")').filter(function() {
+    return $(this).index() == 0;
+}).length;
+
+console.log('okCount: ' + okCount);
+console.log('missingCount : ' + missingCount);
+
+<table>
+    <tr>
+        <th>Alarm</th>
+        <th>Foo</th>
+    </tr>
+    <tr>
+        <td>OK</td>
+        <td>OK</td>
+    </tr>
+    <tr>
+        <td>Missing</td>
+        <td>Missing</td>
+    </tr>
+    <tr>
+        <td>OK</td>
+        <td>OK</td>
+    </tr>
+</table>
+

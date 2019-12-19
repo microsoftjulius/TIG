@@ -1,0 +1,3 @@
+Url: http://localhost:8000/createchurches
+ UserName: Watoto Church Ofnda
+ Password: $2y$10$tM2tJqpTAAezrj3WzicMPeb/l3eGxltpfOMaeHHFol.NHG4S.VAxm
