@@ -61,12 +61,12 @@
                             <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Category</label>
                                     <div class="col-sm-10">
-                                    
-                                        <select class="form-control" id="select3" name="category_id">
+                                    <input type="text" name="category_id" list="messages_id" class="form-control">
+                                        <datalist id="messages_id">
                                         @foreach ($subscribes_for_messages as $message)
-                                            <option value="{{$message->id}}">{{ $message->title }}</option>
+                                            <option value="{{$message->title}}"></option>
                                         @endforeach
-                                        </select> 
+                                        </datalist> 
                                     </div>
                                 </div>
                             

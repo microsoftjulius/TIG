@@ -94,7 +94,7 @@ class messages extends Controller {
         if($empty_array[1] == 30){
         return redirect()->back()->withErrors("Message sending was successful");
         }
-        return redirect()->back()->withErrors($empty_array[2]);
+        return redirect()->back()->withErrors("You have insufficient balance on your account. Please recharge and try again");
     }
     public function search_messages(Request $request) {
         $display_sent_message_details = message::where('message', $request->search_message)->orWhere('message', 'like', '%' . $request->search_message . '%')->where('church_id', Auth::user()->church_id)
@@ -227,20 +227,22 @@ class messages extends Controller {
          */
         $registered_searchTerms = searchTerms::all();
         foreach($registered_searchTerms as $search_term){
-            $category_id = searchTerms::where('search_term',$search_term->search_term)->value('category_id');
-            if(!empty($category_id)){
-                if(strpos($request->message, strtolower($search_term->search_term))){
-                    message::create(array(
-                        'group_id'      => $request->group,
-                        'church_id'     => $request->church,
-                        'category_id'   => $category_id,
-                        'message'       => $request->message,
-                        'contact_character' => 0,
-                        'tobesent_on'     => '',
-                        'status'         => 'Recieved'
-                    ));
-                }
-            }else{
+            if(strpos($request->message, strtolower($search_term->search_term))){
+                $category_id = searchTerms::where('search_term',strtolower($search_term->search_term))->value('category_id');
+                message::create(array(
+                    'group_id'      => $request->group,
+                    'church_id'     => $request->church,
+                    'category_id'   => $category_id,
+                    'message'       => $request->message,
+                    'contact_character' => 0,
+                    'tobesent_on'     => '',
+                    'status'         => 'Recieved'
+                ));
+                return redirect('/incoming-messages')->withErrors('New message has been recieved');
+            }
+        }
+        foreach($registered_searchTerms as $search_term){
+            if(strpos($request->message, strtolower($search_term->search_term))===false){
                 message::create(array(
                     'group_id'      => $request->group,
                     'church_id'     => $request->church,
@@ -250,7 +252,7 @@ class messages extends Controller {
                     'status'         => 'Recieved'
                 ));
             }
-            return redirect('/incoming-messages')->withErrors('New message has been recieved');
+            return redirect('/incoming-messages')->withErrors('New message has been recieved with no category');
         }
         // foreach($registered_searchTerms as $search_term){
         //     if(strpos($request->message, $search_term->search_term) === false){
@@ -260,7 +262,6 @@ class messages extends Controller {
         //     }
         // }
         //return $registered_searchTerms;
-        return redirect('/incoming-messages')->withErrors('New message has been recieved');
     }
     
     public function showUnCategorizedMessages(){

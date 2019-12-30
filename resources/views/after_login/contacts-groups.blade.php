@@ -88,11 +88,7 @@
                                             <td>{{ $contact->group_name }}</td>
                                             <td>{{ $contact->email }}</td>
                                             <td>{{ $contact->created_at }}</td>
-                                            @if($contact->number_of_contacts-1 > 0)
-                                            <td>{{ $contact->number_of_contacts-1 }}</td>
-                                            @else
                                             <td>{{ $contact->number_of_contacts }}</td>
-                                            @endif
                                             <td><a href="/view-contacts/{{ $contact->id }}">view contacts</a></td>
                                         </tr>
                                     @endforeach

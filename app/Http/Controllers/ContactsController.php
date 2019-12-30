@@ -124,6 +124,8 @@ class ContactsController extends Controller {
         }
         elseif ($request->contact[2] != 6) {
             return Redirect()->back()->withInput()->withErrors("Input a correct phone number");
+        }elseif ($request->contact[3] != 7) {
+            return Redirect()->back()->withInput()->withErrors("Input a correct phone number");
         }
         $check_if_element_exists_array = [];
         $contact_array = json_decode(Contacts::where('contacts.group_id', $id)->value('contact_number'));
@@ -144,7 +146,7 @@ class ContactsController extends Controller {
     public function remove_element_from_an_array($group_id, Request $request) {
         $empty_array = array();
         $contact_array = json_decode(Contacts::where('contacts.group_id', $group_id)->value('contact_number'), true);
-        unset($contact_array[$request->index_to_delete + 1]);
+        unset($contact_array[$request->index_to_delete]);
         foreach($contact_array as $array){
             array_push($empty_array, $array);
         }

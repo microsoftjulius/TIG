@@ -104,6 +104,8 @@ class ChurchUserController extends Controller {
             return Redirect()->back()->withInput()->withErrors("Required numbers only have 5 as their second digit");
         } elseif ($request->username[2] != 6) {
             return Redirect()->back()->withInput()->withErrors("Required numbers only have 6 as their third number");
+        }elseif ($request->username[3] != 7) {
+            return Redirect()->back()->withInput()->withErrors("Input a correct phone number, hint: use 2567***");
         }
 
         if (User::where('email', $request->username)->exists()) {

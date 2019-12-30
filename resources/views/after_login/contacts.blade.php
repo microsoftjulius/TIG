@@ -55,12 +55,12 @@
                                             @else
                                             @php($i = 1)
                                             @endif
-                                        @foreach ($contacts as $i => $contact)
+                                        @foreach ($contacts as $index => $contact)
                                         <tr>
                                             <form action="/delete-contact/{{ $group->group_id }}" method="POST">
                                                 @csrf
                                                 <td hidden><input type="hidden" name="index_to_delete" id="" value="{{ $i }}"></td>
-                                                <td>{{ $i+1 }}</td>
+                                                <td>{{ $i++ }}</td>
                                                 <td>{{ $group->group_name }}</td>
                                                 <td>{{ $group->email }}</td>
                                                 <td>{{ $group->email }}</td>
@@ -82,7 +82,7 @@
                                                 <td></td>
                                             </tr>
 
-                                            <a href="{{url()->previous()}}"><button type="button" class="btn btn-warning pull-right"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</i></button></a>
+                                            <a href="/contact-groups"><button type="button" class="btn btn-warning pull-right"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</i></button></a>
                                             <button class="btn btn-primary pull-right" type="submit"><i class="fa fa-save"></i> Save</button>
                                             @include('layouts.breadcrumbs')
                                             <span class="text-primary">After inputing a name and a contact number, press enter to save it to the group</span>

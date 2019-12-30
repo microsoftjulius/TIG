@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\PackagesModel;
+use App\category;
 use App\SubscribedForMessages;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -12,9 +13,9 @@ class PackagesController extends Controller
 {
     public function getChurchPackages(){
         if(Auth::user()->church_id == 1){
-            $all_packages = PackagesModel::join('subscribed_for_messages','subscribed_for_messages.id','packages.category_id')->paginate('10');
+            $all_packages = PackagesModel::join('category','category.id','packages.category_id')->paginate('10');
         }else{
-            $all_packages = PackagesModel::join('subscribed_for_messages','subscribed_for_messages.id','packages.category_id')
+            $all_packages = PackagesModel::join('category','category.id','packages.category_id')
             ->where('packages.church_id',Auth::user()->church_id)->paginate('10');
         }
         return view('after_login.packages',compact('all_packages'));
@@ -35,13 +36,15 @@ class PackagesController extends Controller
     }
 
     public function selectSubscribedForMessagesTitle(){
-        $subscribes_for_messages = SubscribedForMessages::where('church_id',Auth::user()->church_id)->get();
+        $subscribes_for_messages = category::where('church_id',Auth::user()->church_id)->get();
         return view('after_login.new-subscription-form',compact('subscribes_for_messages'));
     }
 
     public function createManualSubscription(Request $request){
-        $category_id = $request->category_id;
-        //$category_id = 2;
+        if(category::where('title',$request->category_id)->doesntExist()){
+            return redirect()->back()->withErrors("Kindly just choose the categories listed, or create a new category");
+        }
+        $category_id = category::where('title',$request->category_id)->value('id');
         PackagesModel::create(array(
             'church_id'      => Auth::user()->church_id,
             'category_id'    => $category_id,
@@ -54,10 +57,10 @@ class PackagesController extends Controller
     }
 
     public function getPaymentLogs(){
-            $all_packages = PackagesModel::join('subscribed_for_messages','subscribed_for_messages.id','packages.category_id')
-            ->join('church_databases','church_databases.id','subscribed_for_messages.church_id')
+            $all_packages = PackagesModel::join('category','category.id','packages.category_id')
+            ->join('church_databases','church_databases.id','category.church_id')
             ->where('church_databases.id',Auth::user()->church_id)
-            ->select('church_databases.church_name','packages.amount','subscribed_for_messages.created_at')
+            ->select('church_databases.church_name','packages.amount','category.created_at')
             ->paginate('10');
             return view('after_login.log',compact('all_packages'));
     }
