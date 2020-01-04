@@ -81,7 +81,7 @@
                                     </button>
                                     </div>
                                     <div class="modal-body">
-                                        <input type="text" name="new_search_term" id="" class="form-control">
+                                        <input type="text" name="new_search_term" id="" class="form-control" required>
                                     </div>
                                     <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

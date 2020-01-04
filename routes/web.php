@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/add-search-term/{id}','messages@display_message_category_form');
     Route::post('/add-message-categories','messages@save_message_category');
     Route::get('/search-message-categories','messages@search_message_categories');
-    Route::post('/delete-contact/{group_id}','ContactsController@remove_element_from_an_array');
+    Route::post('/delete-contact/{group_id}','ContactsController@deleteContact');
     Route::get('/save-search-term/{id}','messages@save_search_terms');
     Route::post('/delete-search-term/{id}','messages@deleteSearchTerm');
     Route::get('/search-incoming-messages','messages@searchIncomingMessages');
@@ -66,8 +66,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/packages','PackagesController@getChurchPackages')->name('Packages');
     Route::get('/addnewsubscription','PackagesController@selectSubscribedForMessagesTitle');
     Route::get('/logs','PackagesController@getPaymentLogs')->name('Subscription Logs');
-    Route::get('/messages/{message}/group_id/{group}/church_id/{church}','messages@incoming');
-    //Route::get('/messages/{message}/group_id/{group}/church_id/{church}/category_id/{category}','messages@incoming');
+    // Route::get('/messages/{message}/group_id/{group}/church_id/{church}','messages@incoming');
+    // //Route::get('/messages/{message}/group_id/{group}/church_id/{church}/category_id/{category}','messages@incoming');
     Route::get('/packages/category/{category_id}/time_frame/{time_frame}/contact_number/{contact_number}/amount/{amount}','PackagesController@createAutomaticPackage');
     Route::post('/save-manual-subscription','PackagesController@createManualSubscription');
     Route::get('/uncategorized-messages','messages@showUnCategorizedMessages');

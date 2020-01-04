@@ -50,22 +50,22 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @foreach ($contacts as $index => $contact)
+                                        <tr>
                                             @if ($contacts->currentPage() > 1)
                                             @php($i =  1 + (($contacts->currentPage() - 1) * $contacts->perPage()))
                                             @else
-                                            @php($i = 1)
+                                            @php($i = $index + 1)
                                             @endif
-                                        @foreach ($contacts as $index => $contact)
-                                        <tr>
-                                            <form action="/delete-contact/{{ $group->group_id }}" method="POST">
+                                            <form action="/delete-contact/{{ $contact->id }}" method="POST">
                                                 @csrf
-                                                <td hidden><input type="hidden" name="index_to_delete" id="" value="{{ $i }}"></td>
-                                                <td>{{ $i++ }}</td>
-                                                <td>{{ $group->group_name }}</td>
-                                                <td>{{ $group->email }}</td>
-                                                <td>{{ $group->email }}</td>
-                                                <td>{{ $contact->name }}</td>
-                                                <td>{{ $contact->Contact }}</td>
+                                                <td hidden><input type="hidden" name="index_to_delete" id="" value="{{ $contact->id }}"></td>
+                                                <td>{{ $i }}</td>
+                                                <td>{{ $contact->group_name }}</td>
+                                                <td>{{ $contact->email }}</td>
+                                                <td>{{ $contact->email }}</td>
+                                                <td>{{ $contact->u_name }}</td>
+                                                <td>{{ $contact->contact_number }}</td>
                                                 <td><button class="btn btn-danger" type="submit"><i class="fa fa-trash"></i> Delete</button></td>
                                             </form>
                                         </tr>
@@ -74,11 +74,11 @@
                                             @csrf
                                             <tr>
                                                 <td></td>
-                                                <td><input type="text" name="groupname" value="{{ $group->group_name }}" class="form-control" disabled></td>
+                                                <td></td>
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
                                                 <td><input type="text" name="name" value="" class="form-control"></td>
-                                                <td><input type="text" name="contact" value="" class="form-control"></td>
+                                                <td><input type="text" name="contact" value="{{old('contact')}}" class="form-control"></td>
                                                 <td></td>
                                             </tr>
 
@@ -92,7 +92,7 @@
                                     </tbody>
 
                                 </table>
-                                {{ $contacts->links() }}
+                                {{ $contacts->links() }} 
                             </section>
                         </div>
                     </div>

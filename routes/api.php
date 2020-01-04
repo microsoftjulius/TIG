@@ -16,14 +16,5 @@ use Illuminate\Mail\Message;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-Route::get('/messages/{id}',function($id){
-    return new MessageResource(messages::where('id',$id)->get());
-});
-Route::apiResource('messages','messages');
-Route::group(['prefix'=>'messages'],function(){
-    Route::apiResource('/{message}/groups','GroupsController');
-});
+Route::post('/messages','messages@createAPIMessage');
 

@@ -8,50 +8,29 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
 class ContactsController extends Controller {
-    //It redirects to a page showing all contacts
-    public function index() {
-    }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Contacts  $contacts
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Contacts $contacts) {
-        //
-
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Contacts  $contacts
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Contacts $contacts) {
-        //
-
-    }
+    
     public function view_for_group($id, Request $request) {
-        $group = Contacts::join('Groups', 'contacts.group_id', 'Groups.id')
-        ->join('church_databases', 'church_databases.id', 'contacts.church_id')
-        ->join('users', 'users.id', 'contacts.created_by')->where('group_id', $id)
-        ->where('contacts.church_id', Auth::user()->church_id)->first();
-
-        $contacts = json_decode($group->contact_number);
-        $contacts = array_slice($contacts, 1);
-
-        $count = count($contacts);
-        $offset = ($request->page - 1) * 10;
-        $contacts = new LengthAwarePaginator(array_slice($contacts, $offset, 10), $count, 10, $request->page);
-        $contacts->withPath("/view-contacts/$id");
-
-        return view('after_login.contacts', compact('group', 'contacts'));
+        if(Auth::user()->id == 1){
+            $contacts = Contacts::join('Groups', 'contacts.group_id', 'Groups.id')
+            ->join('church_databases', 'church_databases.id', 'contacts.church_id')
+            ->join('users', 'users.id', 'contacts.created_by')
+            ->where('group_id',$id)
+            ->select('contacts.contact_number','users.name','Groups.group_name','users.email','contacts.id','contacts.u_name')
+            ->paginate(10);
+        }else{
+            $contacts = Contacts::join('Groups', 'contacts.group_id', 'Groups.id')
+            ->join('church_databases', 'church_databases.id', 'contacts.church_id')
+            ->join('users', 'users.id', 'contacts.created_by')
+            ->where('church_id',Auth::user()->id)
+            ->where('group_id',$id)
+            ->select('contacts.contact_number','users.name','Groups.group_name','users.email','contacts.id','contacts.u_name')
+            ->paginate(10);
+        }
+        return view('after_login.contacts', compact('contacts'));
     }
-    //save contact to group
     public function save_contact_to_group($id, Request $request) {
         if (empty($request->contact)) {
-            return Redirect()->back();
+            return Redirect()->back()->withErrors("Contact information cannot be null");
         }
         if (ctype_alpha($request->contact)) {
             return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
@@ -127,33 +106,25 @@ class ContactsController extends Controller {
         }elseif ($request->contact[3] != 7) {
             return Redirect()->back()->withInput()->withErrors("Input a correct phone number");
         }
-        $check_if_element_exists_array = [];
-        $contact_array = json_decode(Contacts::where('contacts.group_id', $id)->value('contact_number'));
-        foreach ($contact_array as $item) {
-            array_push($check_if_element_exists_array, $item->Contact);
-            if (in_array($request->contact, $check_if_element_exists_array)) {
-                return Redirect()->back()->withInput()->withErrors("Contact is already registered under this group");
-            }
+        if(Contacts::where('contact_number',$request->contact)->where('church_id',Auth::user()->id)->exists()){
+            return redirect()->back()->withInput()->withErrors('The supplied contact is already registered under a certain group, please add another contact');
         }
-        $nospace_request = str_replace(" ", "", $request->contact);
-        $empty_array = array('Contact' => $nospace_request, 'name' => $request->name);
-        array_push($contact_array, $empty_array);
-        //saving new array to the database
-        Contacts::where('contacts.group_id', $id)->update(array('contact_number' => json_encode($contact_array)));
-        Groups::where('id', $id)->update(array('number_of_contacts' => count($contact_array) -1));
-        return Redirect()->back();
+        $contact = new Contacts();
+        $contact->church_id = Auth::user()->church_id;
+        $contact->group_id = $id;
+        $contact->u_name = $request->name;
+        $contact->created_by = Auth::user()->id;
+        $contact->update_by = Auth::user()->id;
+        $contact->contact_number = $request->contact;
+        $contact->save();
+        Groups::find($id)->update(array('number_of_contacts'=>Contacts::where('group_id',$id)->count()));
+        return Redirect()->back()->withErrors('Contact has been created successfully');
     }
-    public function remove_element_from_an_array($group_id, Request $request) {
-        $empty_array = array();
-        $contact_array = json_decode(Contacts::where('contacts.group_id', $group_id)->value('contact_number'), true);
-        unset($contact_array[$request->index_to_delete]);
-        foreach($contact_array as $array){
-            array_push($empty_array, $array);
-        }
-        //return (json_encode($contact_array));
-        Contacts::where('contacts.group_id', $group_id)->update(array('contact_number' => json_encode($empty_array)));
-        //$counted = json_decode($contact_array);
-        Groups::where('id', $group_id)->update(array('number_of_contacts' => count($empty_array) -1));
+    public function deleteContact($id) {
+        $group_id = Contacts::find($id)->value('group_id');
+        $contact = Contacts::find($id);
+        $contact->delete();
+        Groups::find($group_id)->update(array('number_of_contacts'=>Contacts::where('group_id',$group_id)->count()));
         return Redirect()->back()->withInput()->withErrors("Contact was deleted Successfully");
     }
     public function import() {

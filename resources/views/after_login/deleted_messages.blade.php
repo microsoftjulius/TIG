@@ -35,7 +35,7 @@
                     <!--table -->
                     <div class="row">
                         <div class="col-lg-12">
-                    @include('layouts.message')
+                        @include('layouts.message')
                             <section class="box col-lg-12 col-sm-12 col-md-12 mt-3">
                                 <table id="dataTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                                     <thead>
@@ -43,16 +43,19 @@
                                             <th class="th-sm">No.</th>
                                             <th class="th-sm">Category</th>
                                             <th class="th-sm">Message</th>
+                                            <th class="th-sm">Senders Contact</th>
+                                            <th class="th-sm">Message Sent on</th>
                                             <th class="th-sm">Options</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        
                                         @foreach ($uncategorized_messages as $index=>$message)
                                         <tr>
                                             <td>{{$index+1}}</td>
                                             <td>No Category</td>
                                             <td>{{$message->message}}</td>
+                                            <td>{{$message->contact_number}}</td>
+                                            <td>{{$message->created_at}}</td>
                                             <form action="/delete-uncategorized-message/{{$message->id}}" method="post">
                                                 @csrf
                                                 <td><button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
@@ -62,33 +65,31 @@
                                     </tbody>
                                 </table>
                                 {{ $uncategorized_messages->links()}}
-                                </section>
+                            </section>
                         </div>
                     </div>
                     <form action="/save-search-term/{{\Request::route('id')}}" method="get">
                         <div class="modal fade" id="addSearchTerm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Type Search Term</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <input type="text" name="new_message" id="" class="form-control">
-                                    </div>
-                                    <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save Search term</button>
-                                    </div>
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Type Search Term</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                                 </div>
+                                <div class="modal-body">
+                                    <input type="text" name="new_message" id="" class="form-control">
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save Search term</button>
                                 </div>
                             </div>
-                        </form>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-                <!-- /page content -->
-                <!-- footer content -->
                 @include('layouts.footer')
                 <!-- /footer content -->
             </div>

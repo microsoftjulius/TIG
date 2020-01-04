@@ -13,10 +13,33 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Date;
 
 class messages extends Controller {
-    public function index() {
-        // return view('after_login.messages');
-        //return new MessagesCollection(message::all()); this transforms only one instance
-        return MessagesCollection::collection(message::all());
+    public function createAPIMessage(Request $request) {
+        $contact_id = Contacts::where('contact_number',$request->contact_number)->value('id');
+        if($contact_id){
+            $registered_searchTerms = searchTerms::all();
+            foreach($registered_searchTerms as $search_term){
+                if(strpos($request->message, strtolower($search_term->search_term))){
+                    $category_id = searchTerms::where('search_term',strtolower($search_term->search_term))->value('category_id');
+                    $message = new message();
+                    $message->category_id = $category_id;
+                    $message->contact_id  = $contact_id;
+                    $message->message     = $request->message;
+                    $message->status      = 'Recieved';
+                    $message->save();
+                    return response()->json([$message, 200]);
+                }else{
+                    $message = new message();
+                    $message->category_id = null;
+                    $message->contact_id  = $contact_id;
+                    $message->message     = $request->message;
+                    $message->status      = 'Recieved';
+                    $message->save();
+                    return response()->json([$message, 200]);
+                }
+            }
+        }else{
+            return response()->json(["The senders number is not registered with our system"]);
+        }
     }
     public function search_use_contact_group_attributes(Request $request) {
         $search = $request->search;
@@ -28,7 +51,10 @@ class messages extends Controller {
     public function display_sent_messages() {
         $display_sent_message_details = message::join('users', 'users.id', 'messages.created_by')
         ->where('status','!=','Deleted')
-        ->where('users.church_id', Auth::user()->church_id)->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email')->paginate('10');
+        ->where('users.church_id', Auth::user()->church_id)
+        ->distinct('messages.message')
+        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email')
+        ->paginate('10');
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
     public function drop_down_groups() {
@@ -46,21 +72,21 @@ class messages extends Controller {
             return Redirect()->back()->withInput()->withErrors("Make sure you have selected at least one group");
         }
         $message_to_send = $request->message;
-        for ($i = 0;$i < count($request->checkbox);$i++) {
-            $contact_array = json_decode(Contacts::where('contacts.group_id', $request->checkbox[$i])->value('contact_number'));
-
-        if(count($contact_array) < 2){
+        for($i = 0;$i < count($request->checkbox);$i++) {
+            $contact = Contacts::where('contacts.group_id', $request->checkbox[$i])->get();
+        if(Contacts::where('contacts.group_id', $request->checkbox[$i])->count() == 0){
             return Redirect()->back()->withInput()->withErrors("Some of the chosen groups have no contacts");
         }
-
+        //return $contact;
             //return $contact_array;
-            foreach ($contact_array as $contact) {
+            foreach ($contact as $contacts) {
+                //return $contacts->contact_number;
                 //$contact->Contact;
                 //echo $contact->Contact;
                 $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft', // Egosms Username
                 'password' => '123456'
                 //Egosms Password
-                ), 'msgdata' => array(array('number' => $contact->Contact, 'message' => $message_to_send, 'senderid' => 'Good')));
+                ), 'msgdata' => array(array('number' => $contacts->contact_number, 'message' => $message_to_send, 'senderid' => 'Good')));
                 //encode the array into json
                 $json_builder = json_encode($data);
                 //use curl to post the the json encoded information
@@ -68,7 +94,7 @@ class messages extends Controller {
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
                 curl_setopt($ch, CURLOPT_HEADER, 0);
                 curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $json_builder);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $json_builder); 
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                 $ch_result = curl_exec($ch);
@@ -126,24 +152,9 @@ class messages extends Controller {
     public function save_added_search_terms(Request $request) {
         message::create(array('church_id' => Auth::user()->church_id, 'search_term_name' => $request->search_term_name, 'search_terms_list'->$request->search_terms_list));
     }
-    public function read_file() {
-        $fn = "myfile.txt";
-        $result = file_get_contents("myfile.txt");
-        $emp = [];
-        $newvalue = "category";
-        $category = ['Ability', 'each', 'following'];
-        $new_text = str_replace("<text>", $newvalue, $result);
-        array_push($emp, $new_text);
-        foreach ($emp as $value) {
-            for ($i = 0;$i < strlen($new_text);$i++) {
-                if ($new_text[$i] != "each") {
-                    echo $value;
-                }
-            }
-        }
-    }
     public function message_categories_page() {
-        $category = category::where('category.church_id', Auth::user()->church_id)->join('users', 'users.id', 'category.user_id')
+        $category = category::where('category.church_id', Auth::user()->church_id)
+        ->join('users', 'users.id', 'category.user_id')
         ->select('category.id','title', 'name')->paginate('10');
         return view('after_login.message-categories', compact('category'));
     }
@@ -155,6 +166,9 @@ class messages extends Controller {
     }
     public function save_search_terms(Request $request, $id) {
         //return "true";
+        if(empty($request->new_search_term)){
+            return redirect()->back()->withErrors("Search term cannot be null");
+        }
         if(searchTerms::where('church_id',Auth::user()->church_id)->where('search_term',$request->new_search_term)->exists()){
             return redirect()->back()->withErrors("Search term is already registered, choose another search term");
         }
@@ -195,80 +209,25 @@ class messages extends Controller {
     }
     public function show_incoming_messages(Request $request){
         $messages_to_categories = category::join('messages','messages.category_id','category.id')
+        ->join('contacts','messages.contact_id','contacts.id')
         ->where('category.church_id',Auth::user()->church_id)
         ->where('status','Recieved')
-        ->select('messages.message','category.title')->paginate('10');
+        ->select('messages.message','category.title','contacts.contact_number','messages.created_at')->paginate('10');
         $drop_down_categories = category::where('church_id', Auth::user()->church_id)
         ->select("title", "user_id", "id")->paginate(10);
 
         return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
     }
-    // public function picking_messages_from_api(){
-    //     $client = new Nexmo\Client(new Nexmo\Client\Credentials\Basic(API_KEY, API_SECRET));
-    //     $message = new \Nexmo\Message\InboundMessage('ID');
-    //     $client->message()->search($message);
-    //     echo "The body of the message was: " . $message->getBody();
-    // }
     public function display_search_terms(){
         $all_search_terms = searchTerms::all();
         return $all_search_terms;
     }
-
-    public function incoming(Request $request){
-        /**
-         * ## We have to know the groups they are sending from, for now we shall by default pass it in the route
-         * 1. When a message is recieved, search through it.
-         * 2. Find if it has a word that is already registered under a searchcategory,
-         * 3. if the word exists,
-         *      3.1. then pick the id of the category and save it as a variable,
-         * 4. else
-         *      4.1 set the id to default.
-         *  5. return the messages view having the category, and the message 
-         */
-        $registered_searchTerms = searchTerms::all();
-        foreach($registered_searchTerms as $search_term){
-            if(strpos($request->message, strtolower($search_term->search_term))){
-                $category_id = searchTerms::where('search_term',strtolower($search_term->search_term))->value('category_id');
-                message::create(array(
-                    'group_id'      => $request->group,
-                    'church_id'     => $request->church,
-                    'category_id'   => $category_id,
-                    'message'       => $request->message,
-                    'contact_character' => 0,
-                    'tobesent_on'     => '',
-                    'status'         => 'Recieved'
-                ));
-                return redirect('/incoming-messages')->withErrors('New message has been recieved');
-            }
-        }
-        foreach($registered_searchTerms as $search_term){
-            if(strpos($request->message, strtolower($search_term->search_term))===false){
-                message::create(array(
-                    'group_id'      => $request->group,
-                    'church_id'     => $request->church,
-                    'message'       => $request->message,
-                    'contact_character' => 0,
-                    'tobesent_on'     => '',
-                    'status'         => 'Recieved'
-                ));
-            }
-            return redirect('/incoming-messages')->withErrors('New message has been recieved with no category');
-        }
-        // foreach($registered_searchTerms as $search_term){
-        //     if(strpos($request->message, $search_term->search_term) === false){
-        //         $category_id = searchTerms::where('search_term',$search_term->search_term)->value('category_id');
-                
-        //         return redirect('/incoming-messages')->withErrors('New message has been recieved with no category');
-        //     }
-        // }
-        //return $registered_searchTerms;
-    }
     
     public function showUnCategorizedMessages(){
-        $uncategorized_messages = message::where('church_id',Auth::user()->church_id)
+        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
         ->where('category_id',null)
         ->where('status','Recieved')
-        ->select('messages.message','messages.id')->paginate('10');
+        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
         return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
     }
 
@@ -282,7 +241,8 @@ class messages extends Controller {
 
     public function showDeletedMessages()
     {
-        $uncategorized_messages = message::where('church_id',Auth::user()->church_id)->where('status','Deleted')->paginate(10);
+        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
+        ->where('status','Deleted')->paginate(10);
         return view('after_login.deleted_messages',compact('uncategorized_messages'));
 
     }
