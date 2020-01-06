@@ -41,6 +41,83 @@ class PackagesController extends Controller
     }
 
     public function createManualSubscription(Request $request){
+        if (empty($request->contact_number)) {
+            return Redirect()->back()->withErrors("Contact information cannot be null");
+        }
+        if (ctype_alpha($request->contact_number)) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        }
+        if  (preg_match('/[a-zA-Z]+$/', $request->contact_number)) {
+            return Redirect()->back()->withInput()->withErrors("Please input a correct number, it should not be alpha numeric");
+        }
+        if (strpos($request->contact_number, '.') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '!') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '@') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '#') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '$') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '%') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '^') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '&') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '*') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '"') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, ',') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, ':') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '\'') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '?') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, ';') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '/') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '}') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '{') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '[') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, ']') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '-') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '_') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '=') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '+') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, '(') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strpos($request->contact_number, ')') == true) {
+            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+        } elseif (strlen($request->contact_number) > 12) {
+            return Redirect()->back()->withInput()->withErrors("The Number count is supposed to be exactly 12");
+        } elseif (strlen($request->contact_number) < 12) {
+            return Redirect()->back()->withInput()->withErrors("The Number count is supposed to be exactly 12");
+        } elseif ($request->contact_number[0] != 2) {
+            return Redirect()->back()->withInput()->withErrors("Required numbers only start with 256");
+        } elseif ($request->contact_number[1] != 5) {
+            return Redirect()->back()->withInput()->withErrors("Required numbers only have 5 as their second digit");
+        } elseif ($request->contact_number[2] != 6) {
+            return Redirect()->back()->withInput()->withErrors("Required numbers only have 6 as their third number");
+        }
+        elseif ($request->contact_number[2] != 6) {
+            return Redirect()->back()->withInput()->withErrors("Input a correct phone number");
+        }elseif ($request->contact_number[3] != 7) {
+            return Redirect()->back()->withInput()->withErrors("Input a correct phone number");
+        }
         if(category::where('title',$request->category_id)->doesntExist()){
             return redirect()->back()->withErrors("Kindly just choose the categories listed, or create a new category");
         }

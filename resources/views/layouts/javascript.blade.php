@@ -20,12 +20,16 @@
 <script src="{{ asset('bootstrap/build/js/custom.min.js')}}"></script>
 <!-- MDB core JavaScript -->
 <!--multiselect checkboxes-->
-<script>
-    $( function() {
-        $( "#datepicker" ).datepicker();
-        } );
-    </script>
-    <script type="text/javascript">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+
+<script type="text/javascript">
+$( function() {
+    //$( "#datepicker" ).datepicker();
+    jQuery('#datetimepicker').datetimepicker({format:'d.m.Y H:i',
+    inline:false,
+    lang:'ru'});
+    } );
         function countChars(obj){
             var maxLength = 160;   
             var strLength = obj.value.length;
@@ -45,8 +49,6 @@
         } 
         
     }
-</script>
-<script type="text/javascript">
     $('text').maxlength({
             alwaysShow: true,
             threshold: 10,
@@ -58,8 +60,6 @@
             validate: true,
             placement: 'bottom-left'
     });
-</script>
-<script type="text/javascript">
     $(document).ready(function(){
         $('#select_all').on('click',function(){
             if(this.checked){
@@ -80,8 +80,6 @@
             }
         });
     });
-</script>
-<SCRIPT language="javascript">
     function addRow(tableID) {
     
         var table = document.getElementById(tableID);
@@ -108,8 +106,6 @@
         element2.type = "text";
         element2.name = "txtbox[]";
         cell3.appendChild(element2);
-    
-    
     }
     
     function deleteRow(tableID) {
@@ -125,12 +121,9 @@
                 rowCount--;
                 i--;
             }
-    
-    
         }
         }catch(e) {
             alert(e);
         }
     }
-    
-</SCRIPT>
+</script>
