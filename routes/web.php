@@ -42,7 +42,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/import-contacts/{id}', 'ContactsController@import')->name('import');
     Route::post('/create-group','GroupsController@create_group');
     Route::get('/create-group-form','GroupsController@show_form');
-    Route::post('/store-sent-messages','messages@store_sent_messages');
+    Route::post('/store-sent-messages','SendingMessages@sendImmediateMessage');
     Route::get('/view-contacts/{id}','ContactsController@view_for_group')->name('Add Contacts to Group');
     Route::post('/save-contact-to-group/{id}','ContactsController@save_contact_to_group');
     Route::get('/search-sent-messages','messages@search_messages');
@@ -73,4 +73,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/uncategorized-messages','messages@showUnCategorizedMessages');
     Route::post('/delete-uncategorized-message/{id}','messages@deleteUncategorizedMessage');
     Route::get('/deleted-messages','messages@showDeletedMessages');
+    Route::get('/show-scheduled-message','SendingMessages@sendScheduledMessage');
 });

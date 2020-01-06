@@ -1,4 +1,6 @@
-
+<script>
+    window.location="{{URL::to('/')}}";
+</script>
 @extends('layouts.app')
 @section('content')
 <div class="container">

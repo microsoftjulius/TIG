@@ -63,7 +63,7 @@
                         <div class="form-group row">
                             <label for="colFormLabel" class="col-sm-2 col-form-label">Date and time</label>
                             <div class="col-sm-8">
-                                <input type="text" class="form-control" id="datetimepicker" name="created_at" value="{{ old('created_at') }}">
+                                <input type="text" class="form-control" id="datetimepicker" name="scheduled_date" value="{{ old('created_at') }}">
                             </div>
                         </div>
                         <div class="form-group row">
