@@ -16,6 +16,7 @@ class ContactsController extends Controller {
             ->join('users', 'users.id', 'contacts.created_by')
             ->where('group_id',$id)
             ->select('contacts.contact_number','users.name','Groups.group_name','users.email','contacts.id','contacts.u_name')
+            ->orderBy('id','Desc')
             ->paginate(10);
         }else{
             $contacts = Contacts::join('Groups', 'contacts.group_id', 'Groups.id')

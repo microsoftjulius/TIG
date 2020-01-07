@@ -59,37 +59,11 @@ class SendingMessages extends Controller
         'message' => $request->message, 'tobesent_on' => null, 'status'=>$empty_array[0], 'created_by' => Auth::user()->id));
         }else{
             messages::create(array('church_id' => Auth::user()->church_id, 'group_id' => $request->checkbox[$i],
-            'message' => $request->message, 'tobesent_on' => Carbon::parse($request->scheduled_date)->format('Y-m-d h:m:s'), 'status'=>'Scheduled', 'created_by' => Auth::user()->id));
+            'message' => $request->message, 'tobesent_on' => Carbon::createFromTimeStamp(strtotime($request->scheduled_date))->format('Y-m-d H:i:s'), 'status'=>'Scheduled', 'created_by' => Auth::user()->id));
 
-            return redirect()->back()->withErrors("Message has been scheduled for " . Carbon::parse($request->scheduled_date)->format('Y-m-d h:m:s'));
+            return redirect()->back()->withErrors("Message has been scheduled for " . Carbon::createFromTimeStamp(strtotime($request->scheduled_date))->format('Y-m-d H:i:s'));
         }
     }
         return redirect()->back()->withErrors("You have insufficient balance on your account. Please recharge and try again");
-    }
-    public function sendScheduledMessage(){
-        $mytime = Carbon::now();
-        $mytime->setTimezone('Africa/Kampala');
-        if(messages::where('tobesent_on',$mytime->toDateTimeString())->exists()){
-            $message_to_send = messages::where('tobesent_on',$mytime->toDateTimeString())->get();
-            foreach($message_to_send as $message){
-                $contact = Contacts::where('contacts.group_id', $message->group_id)->get();
-                foreach ($contact as $contacts) {
-                    $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft',
-                    'password' => '123456'
-                    ), 'msgdata' => array(array('number' => $contacts->contact_number, 'message' => $message->message, 'senderid' => 'Good')));
-                    $json_builder = json_encode($data);
-                    $ch = curl_init('http://www.egosms.co/api/v1/json/');
-                    curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-                    curl_setopt($ch, CURLOPT_HEADER, 0);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, $json_builder); 
-                    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    $ch_result = curl_exec($ch);
-                    curl_close($ch);
-                }
-            }
-            echo "sent";
-        }
     }
 }

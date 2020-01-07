@@ -27,16 +27,15 @@ class messages extends Controller {
                     $message->status      = 'Recieved';
                     $message->save();
                     return response()->json([$message, 200]);
-                }else{
-                    $message = new message();
-                    $message->category_id = null;
-                    $message->contact_id  = $contact_id;
-                    $message->message     = $request->message;
-                    $message->status      = 'Recieved';
-                    $message->save();
-                    return response()->json([$message, 200]);
                 }
             }
+                $message = new message();
+                $message->category_id = null;
+                $message->contact_id  = $contact_id;
+                $message->message     = $request->message;
+                $message->status      = 'Recieved';
+                $message->save();
+                return response()->json([$message, 200]);
         }else{
             return response()->json(["The senders number is not registered with our system"]);
         }
