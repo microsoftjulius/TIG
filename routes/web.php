@@ -58,7 +58,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/add-search-term/{id}','messages@display_message_category_form');
     Route::post('/add-message-categories','messages@save_message_category');
     Route::get('/search-message-categories','messages@search_message_categories');
-    Route::post('/delete-contact/{group_id}','ContactsController@deleteContact');
+    Route::post('/delete-contact/{contact_id}','ContactsController@deleteContact');
     Route::get('/save-search-term/{id}','messages@save_search_terms');
     Route::post('/delete-search-term/{id}','messages@deleteSearchTerm');
     Route::get('/search-incoming-messages','messages@searchIncomingMessages');
@@ -74,4 +74,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/delete-uncategorized-message/{id}','messages@deleteUncategorizedMessage');
     Route::get('/deleted-messages','messages@showDeletedMessages');
     Route::get('/show-scheduled-message','SendingMessages@sendScheduledMessage');
+    Route::post('/permanetly-delete-message','messages@permanetlyDeleteMessage');
+    Route::get('/display-scheduled-messages','ScheduledMessagesController@displayScheduledMessages')->name("Scheduled Messages");
 });

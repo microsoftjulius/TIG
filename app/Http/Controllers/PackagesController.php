@@ -42,7 +42,7 @@ class PackagesController extends Controller
 
     public function createManualSubscription(Request $request){
         if (empty($request->contact_number)) {
-            return Redirect()->back()->withErrors("Contact information cannot be null");
+            return Redirect()->back()->withInput()->withErrors("Contact information cannot be null");
         }
         if (ctype_alpha($request->contact_number)) {
             return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
@@ -119,7 +119,7 @@ class PackagesController extends Controller
             return Redirect()->back()->withInput()->withErrors("Input a correct phone number");
         }
         if(category::where('title',$request->category_id)->doesntExist()){
-            return redirect()->back()->withErrors("Kindly just choose the categories listed, or create a new category");
+            return redirect()->back()->withInput()->withErrors("Kindly just choose the categories listed, or create a new category");
         }
         $category_id = category::where('title',$request->category_id)->value('id');
         PackagesModel::create(array(

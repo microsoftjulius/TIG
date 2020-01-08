@@ -13,10 +13,12 @@ class ApiTest extends TestCase
     public function createMessage(){
         $this->withoutExceptionHandling();
         $response = $this->post('/api/messages/',[
-            'contact_number' => '256702913454',
+            'from' => '256702983454',
             'contact_id' => 86,
             'message'    => 'Hey its complete blasd',
-            'status'     => 'Recieved'
+            'status'     => 'Recieved',
+            'to'    => '256702913454',
+            'date_and_time' => '2020-01-06 11:59:25'
         ]);
         $response->assertOk();
     }

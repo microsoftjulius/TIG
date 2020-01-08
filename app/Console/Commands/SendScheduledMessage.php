@@ -42,8 +42,8 @@ class SendScheduledMessage extends Command
     {
         $mytime = Carbon::now();
         $mytime->setTimezone('Africa/Kampala');
-        if(messages::where('tobesent_on',$mytime->toDateTimeString())->exists()){
-            $message_to_send = messages::where('tobesent_on',$mytime->toDateTimeString())->get();
+        if(messages::where('tobesent_on','<=',$mytime->toDateTimeString())->where('status','Scheduled')->exists()){
+            $message_to_send = messages::where('tobesent_on','<=',$mytime->toDateTimeString())->where('status','Scheduled')->get();
             foreach($message_to_send as $message){
                 $contact = Contacts::where('contacts.group_id', $message->group_id)->get();
                 foreach ($contact as $contacts) {
@@ -62,6 +62,10 @@ class SendScheduledMessage extends Command
                     curl_close($ch);
                 }
             }
+            messages::where('tobesent_on','<=',$mytime->toDateTimeString())
+            ->where('status','Scheduled')
+            ->update(array('status'=>'OK'));
+            echo "sent";
         }
     }
 }

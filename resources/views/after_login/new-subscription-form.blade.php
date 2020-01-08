@@ -42,19 +42,19 @@
                             <div class="form-group row md-form">
                                 <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Period</label>
                                 <div class="col-sm-10">
-                                <input type="text" class="form-control form-control-sm" name="time_frame" id="materialFormCardNameEx" placeholder="Enter Your time frame" value="" required>
+                                <input type="text" class="form-control form-control-sm" name="time_frame" id="materialFormCardNameEx" placeholder="Enter Your time frame" value="{{old('time_frame')}}" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="colFormLabel" class="col-sm-2 col-form-label">Contact</label>
                                 <div class="col-sm-10">
-                                <input type="text" class="form-control" id="colFormLabel" name="contact_number" placeholder="Enter Your contact" value="" required>
+                                <input type="text" class="form-control" id="colFormLabel" name="contact_number" placeholder="Enter Your contact" value="{{old('contact_number')}}" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Amount</label>
                                 <div class="col-sm-10">
-                                <input type="text" class="form-control form-control-lg" name="Amount" id="colFormLabelLg" placeholder="shs." value="" required>
+                                <input type="text" class="form-control form-control-lg" name="Amount" id="colFormLabelLg" placeholder="shs." value="{{old('Amount')}}" required>
                                 </div>
                             </div>
                             

@@ -35,11 +35,11 @@
             <ul class="nav child_menu">
                 <li><a href="/sent-quick-messages">Quick Message</a></li>
                 <li><a href="/display-sent-messages">Sent Messages</a></li>
+                <li><a href="/display-scheduled-messages">Scheduled Messages</a></li>
                 <li><a href="/message-categories"><i class=""></i> Message categories </a></li>
                 <li><a href="/incoming-messages"><i class=""></i> Incoming messages </a></li>
                 <li><a href="/uncategorized-messages"><i class=""></i> Uncategorized Messages</a></li>
                 <li><a href="/deleted-messages"><i class=""></i> Deleted Messages</a></li>
-
             </ul>
         </li>
         <li><a><i class="fa fa-cc-paypal"></i> Payments <span class="fa fa-chevron-down"></span></a>

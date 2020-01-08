@@ -53,13 +53,11 @@
                                         <tr>
                                             <td>{{$index+1}}</td>
                                             <td>No Category</td>
+                                            <td hidden>{{$message->id}}</td>
                                             <td>{{$message->message}}</td>
                                             <td>{{$message->contact_number}}</td>
-                                            <td>{{$message->created_at}}</td>
-                                            <form action="/delete-uncategorized-message/{{$message->id}}" method="post">
-                                                @csrf
-                                                <td><button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
-                                            </form>
+                                            <td>{{$message->updated_at}}</td>
+                                            <td><button class="btn btn-danger" data-toggle="modal" data-target="#addSearchTerm"><i class="fa fa-trash"></i> Delete</button></td>
                                         </tr>
                                         @endforeach
                                     </tbody>
@@ -68,22 +66,24 @@
                             </section>
                         </div>
                     </div>
-                    <form action="/save-search-term/{{\Request::route('id')}}" method="get">
+                    <form action="/permanetly-delete-message" method="post">
+                        @csrf
                         <div class="modal fade" id="addSearchTerm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Type Search Term</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                {{-- <h2 class="modal-title" id="exampleModalLabel">Approve Delete</h2> --}}
+                                {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
-                                </button>
+                                </button> --}}
                                 </div>
                                 <div class="modal-body">
-                                    <input type="text" name="new_message" id="" class="form-control">
+                                    <h4>Performing this is not reversable, are you sure you want to continue?</h4>
+                                    <input type="hidden" name="message_id" id="message_id" class="form-control">
                                 </div>
                                 <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save Search term</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> Delete</button>
                                 </div>
                             </div>
                             </div>
@@ -96,5 +96,11 @@
         </div>
         <!-- Modal -->
         @include('layouts.javascript')
+        <script>
+            $('button[data-toggle = "modal"]').click(function(){
+                var message_id = $(this).parents('tr').children('td').eq(2).text();
+                document.getElementById('message_id').setAttribute("Value", message_id);
+            });
+        </script>
     </body>
 </html>

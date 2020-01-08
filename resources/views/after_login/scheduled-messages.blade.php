@@ -32,46 +32,29 @@
                 <!-- /top navigation -->
                 <!-- page content -->
                 <div class="right_col" role="main">
+                @include('layouts.message')
                 <!-- Search form -->
                 <div class="row">
-                        @include('layouts.message')
+                            <form class="pull-right pt-4" role="search" action="/search-scheduled-messages" method="get" >
+                            @csrf
                                 <div class="col-md-12">
-                                        <div class="col-md-3">
+                                    <div class="col-md-4">
                                             <div class="input-group">
                                                 @include('layouts.breadcrumbs')
                                             </div>
                                         </div>
-                                        <div class="col-lg-3"></div>
-                                            <div class="col-md-3">
-                                            <form class="pull-right pt-4" role="search" action="/search-message-categories" method="post" >
-                                                @csrf
+                                        <div class="col-md-4"></div>
+                                            <div class="col-md-4">
                                                     <div class="input-group">
-                                                            <input type="text" class="form-control col-md-4" placeholder="Search" name="category" id="srch-term" value="{{old('category')}}" required>
+                                                            <input type="text" class="form-control col-md-12" placeholder="Search" name="scheduled_message" id="" required>
                                                             <div class="input-group-btn">
                                                                 <button class="btn btn-success" type="submit"><i class="glyphicon glyphicon-search"></i>
                                                                 </button>
                                                             </div>
                                                     </div>
-                                                    </form>
                                             </div>
-                                            <div class="col-md-3 pull-right">
-                                                <div class="input-group-btn">
-                                                    <form action="/add-message-category" method="GET">
-                                                        @csrf
-                                                    <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Message category
-                                                    </button>
-                                                </form>
-                                                </div>
-
-                                            </div>
-
-                                            {{-- <div class="col-md-2">
-                                                <div class="input-group-btn">
-                                                    <a href="/search-term-list"> <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Search term
-                                                    </button></a>
-                                                </div>
-                                            </div> --}}
                                 </div>
+                            </form>
                         </div>
                     <!--Table-->
                 <div class="row">
@@ -80,35 +63,44 @@
                                     <table id="dtBasicExample" class="table table-striped table-bordered table-sm bg-white" cellspacing="0" width="100%">
                                                 <thead>
                                                     <tr>
-                                                        <th class="th-sm">No.</th>
-                                                        <th>Added by</th>
-                                                        <th class="th-sm">Message category</th>
-                                                        <th class="th-sm">Option</th>
+                                                        <th class="th-sm">Id</th>
+                                                        <th class="th-sm">Message</th>
+                                                        <th class="th-sm">Group</th>
+                                                        @if(auth()->user()->id == 1)
+                                                        <th class="th-sm">Church</th>
+                                                        @endif
+                                                        <th class="th-sm"> Date/Time to send it</th>
+                                                        <th class="th-sm"> Message status</th>
                                                     </tr>
                                                 </thead>
                                             <tbody>
-                                                    @if ($category->currentPage() > 1)
-                                                    @php($i =  1 + (($category->currentPage() - 1) * $category->perPage()))
-                                                    @else
-                                                    @php($i = 1)
+                                            @if ($display_all_scheduled_messages->currentPage() > 1)
+                                            @php($i =  1 + (($display_all_scheduled_messages->currentPage() - 1) * $display_all_scheduled_messages->perPage()))
+                                            @else
+                                            @php($i = 1)
+                                            @endif
+                                            @foreach ($display_all_scheduled_messages as $scheduled_message_details)
+                                                <tr>
+                                                    <td>{{ $i++}}</td>
+                                                    <td>{{ $scheduled_message_details->message }}</td>
+                                                    <td>{{ $scheduled_message_details->group_name }}</td>
+                                                    @if(auth()->user()->id == 1)
+                                                    <td>{{ $scheduled_message_details->church_name}}</td>
                                                     @endif
-                                                    @foreach ($category as $index => $categories)
-                                                    <tr>
-                                                        <td>{{ $i++ }}</td>
-                                                        <td>{{ $categories->name }}</td>
-                                                        <td>{{ $categories->title }}</td>
-                                                        <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
-                                                    </tr>
-                                                @endforeach
+                                                    <td>{{ $scheduled_message_details->tobesent_on }}</td>
+                                                    <td>{{ $scheduled_message_details->status }}</td>
+                                                </tr>
+                                            @endforeach
                                             </tbody>
                                     </table>
                                 </section>
-                                {{ $category->links() }}
+                                @if(isset($search_query))
+                                {{ $display_all_scheduled_messages->appends(['search_message' => $search_query])->links() }}
+                                @else
+                                {{ $display_all_scheduled_messages->links() }}
+                                @endif
                             </div>
                     </div>
-
-
-
                     <div class="row">
                     </div>
                 </div>

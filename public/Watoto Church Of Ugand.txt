@@ -1,3 +1,3 @@
-http://localhost:8000/createchurches
-Watoto Church Of Ugand
-123Jane14
+Url: http://localhost:8000/create-TIG-groups
+ UserName: Watoto Church Of Ugand
+ Password: $2y$10$MDgqfJxkTfgTPL810fbyXuv3bWpdrQqUhMHfYfDumGQ4cUyL5pswW

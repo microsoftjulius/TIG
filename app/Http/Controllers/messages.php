@@ -14,16 +14,20 @@ use Illuminate\Support\Facades\Date;
 
 class messages extends Controller {
     public function createAPIMessage(Request $request) {
-        $contact_id = Contacts::where('contact_number',$request->contact_number)->value('id');
+        $contact_id = Contacts::where('contact_number',$request->from)->value('id');
+        $church_id  = Contacts::where('contact_number',$request->from)->value('church_id');
         if($contact_id){
             $registered_searchTerms = searchTerms::all();
             foreach($registered_searchTerms as $search_term){
                 if(strpos($request->message, strtolower($search_term->search_term))){
                     $category_id = searchTerms::where('search_term',strtolower($search_term->search_term))->value('category_id');
                     $message = new message();
-                    $message->category_id = $category_id;
-                    $message->contact_id  = $contact_id;
-                    $message->message     = $request->message;
+                    $message->category_id          = $category_id;
+                    $message->contact_id           = $contact_id;
+                    $message->send_to              = $request->to;
+                    $message->church_id            = $church_id;
+                    $message->message              = $request->message;
+                    $message->time_from_app        = $request->date_and_time;
                     $message->status      = 'Recieved';
                     $message->save();
                     return response()->json([$message, 200]);
@@ -31,13 +35,27 @@ class messages extends Controller {
             }
                 $message = new message();
                 $message->category_id = null;
-                $message->contact_id  = $contact_id;
-                $message->message     = $request->message;
-                $message->status      = 'Recieved';
+                $message->contact_id           = $contact_id;
+                $message->send_to              = $request->to;
+                $message->message              = $request->message;
+                $message->time_from_app        = $request->date_and_time;
+                $message->status               = 'Recieved';
+                $message->church_id            = $church_id;
                 $message->save();
                 return response()->json([$message, 200]);
         }else{
-            return response()->json(["The senders number is not registered with our system"]);
+                Contacts::create(array('contact_number' => $request->from));
+                $contact_id = Contacts::where('contact_number',$request->from)->value('id');
+                $message = new message();
+                $message->category_id = null;
+                $message->contact_id           = $contact_id;
+                $message->send_to              = $request->to;
+                $message->message              = $request->message;
+                $message->time_from_app        = $request->date_and_time;
+                $message->status               = 'Recieved';
+                $message->church_id            = $church_id;
+                $message->save();
+                return response()->json([$message, 200]);
         }
     }
     public function search_use_contact_group_attributes(Request $request) {
@@ -48,8 +66,19 @@ class messages extends Controller {
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
     public function display_sent_messages() {
+        if(auth()->user()->id == 1){
+            $display_sent_message_details = message::join('users', 'users.id', 'messages.created_by')
+            ->join('church_databases','church_databases.id','messages.church_id')
+            ->where('status','!=','Deleted')
+            ->where('status','!=','Scheduled')
+            ->distinct('messages.message')
+            ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name')
+            ->paginate('10');
+            return view('after_login.sent-messages', compact('display_sent_message_details'));
+        }
         $display_sent_message_details = message::join('users', 'users.id', 'messages.created_by')
         ->where('status','!=','Deleted')
+        ->where('status','!=','Scheduled')
         ->where('users.church_id', Auth::user()->church_id)
         ->distinct('messages.message')
         ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email')
@@ -163,11 +192,21 @@ class messages extends Controller {
     }
     
     public function showUnCategorizedMessages(){
+        if(Auth::user()->church_id == 1){
         $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
         ->where('category_id',null)
         ->where('status','Recieved')
         ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
         return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
+        }
+        else{
+        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
+        ->where('category_id',null)
+        ->where('status','Recieved')
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
+        return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
+        }
     }
 
     public function deleteUncategorizedMessage($id){
@@ -181,9 +220,18 @@ class messages extends Controller {
     public function showDeletedMessages()
     {
         $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
-        ->where('status','Deleted')->paginate(10);
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->where('status','Deleted')
+        ->select('messages.id','contacts.contact_number','messages.updated_at','messages.message')
+        ->paginate(10);
         return view('after_login.deleted_messages',compact('uncategorized_messages'));
 
+    }
+
+    public function permanetlyDeleteMessage(Request $request){
+        $message = message::find($request->message_id);
+        $message->delete();
+        return redirect()->back()->withErrors("Message Was Permanetly deleted successfully");
     }
     public function searchIncomingMessages(Request $request)
         {

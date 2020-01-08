@@ -6,106 +6,88 @@ use App\User;
 use App\church_user;
 use Illuminate\Support\Facades\Auth;
 class ChurchUserController extends Controller {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function __construct(){
+        $this->error_message = new ErrorMessagesController();
+    }
     public function index(Request $request) {
         $display_all_church_users = User::Where('email', $request->search)
         ->orWhere('name', 'like', '%' . $request->search . '%')
         ->where('church_id', Auth::user()->church_id)->paginate('10');
         return view('after_login.users', compact('display_all_church_users'))->with(['search_query' => $request->search]);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create() {
-        //
-
-    }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request) {
-        if (empty($request->username)) {
-            return Redirect()->back();
+        if (empty($request->username)) {  return Redirect()->back();
         }
         if (ctype_alpha($request->username)) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         }
         if(preg_match('/[a-zA-Z]+$/',$request->username)){
-            return Redirect()->back()->withInput()->withErrors("A phone number should not be alpha numerical");
+            return $this->error_message->errorResponse();
         }
         if (strpos($request->username, '.') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '!') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '@') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '#') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '$') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '%') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '^') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '&') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '*') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '"') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, ',') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, ':') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '\'') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '?') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, ';') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '/') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '}') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '{') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '[') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, ']') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '-') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '_') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '=') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '+') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, '(') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strpos($request->username, ')') == true) {
-            return Redirect()->back()->withInput()->withErrors("Please put a correct phone number with no plus, syntax used is: 256*********");
+            return $this->error_message->errorResponse();
         } elseif (strlen($request->username) > 12) {
-            return Redirect()->back()->withInput()->withErrors("The Number count is supposed to be exactly 12");
+            return $this->error_message->errorResponse();
         } elseif (strlen($request->username) < 12) {
-            return Redirect()->back()->withInput()->withErrors("The Number count is supposed to be exactly 12");
+            return $this->error_message->errorResponse();
         } elseif ($request->username[0] != 2) {
-            return Redirect()->back()->withInput()->withErrors("Required numbers only start with 256");
+            return $this->error_message->errorResponse();
         } elseif ($request->username[1] != 5) {
-            return Redirect()->back()->withInput()->withErrors("Required numbers only have 5 as their second digit");
+            return $this->error_message->errorResponse();
         } elseif ($request->username[2] != 6) {
-            return Redirect()->back()->withInput()->withErrors("Required numbers only have 6 as their third number");
+            return $this->error_message->errorResponse();
         }elseif ($request->username[3] != 7) {
-            return Redirect()->back()->withInput()->withErrors("Input a correct phone number, hint: use 2567***");
+            return $this->error_message->errorResponse();
         }
 
         if (User::where('email', $request->username)->exists()) {
@@ -132,46 +114,9 @@ class ChurchUserController extends Controller {
             return Redirect()->back()->withInput()->withErrors("Make sure the two new passwords match");
         }
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\church_user  $church_user
-     * @return \Illuminate\Http\Response
-     */
     public function show() {
-        //
-        $display_all_church_users = User::where('church_id', auth()->user()->church_id)->paginate('10');
+        $display_all_church_users = User::where('church_id', Auth::user()->church_id)->paginate('10');
         return view('after_login.users', compact('display_all_church_users'));
     }
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\church_user  $church_user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(church_user $church_user) {
-        //
 
-    }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\church_user  $church_user
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, church_user $church_user) {
-        //
-
-    }
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\church_user  $church_user
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(church_user $church_user) {
-        //
-
-    }
 }
