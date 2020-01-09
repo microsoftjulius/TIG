@@ -16,5 +16,6 @@ use Illuminate\Mail\Message;
 |
 */
 
-Route::post('/messages','messages@createAPIMessage');
+Route::post('/messages','ApiMessagesController@createAPIMessage');
+Route::get('/messages','ApiMessagesController@getErrorMessageOnHttpGet');
 
