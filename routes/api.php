@@ -18,4 +18,7 @@ use Illuminate\Mail\Message;
 
 Route::post('/messages','ApiMessagesController@createAPIMessage');
 Route::get('/messages','ApiMessagesController@getErrorMessageOnHttpGet');
-
+Route::post('/messages/test-search-term','ApiMessagesController@checkIfSearchTermExists');
+Route::post('/messages/test-uncategorized-message','ApiMessagesController@saveUncategorizedMessage');
+Route::post('/messages/test-created-new-subscriber-message','ApiMessagesController@createNewContactSubscriber');
+Route::post('/messages/test-all-controller','ApiMessagesController@createAPIMessage');
