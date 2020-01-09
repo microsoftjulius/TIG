@@ -48,6 +48,78 @@ class messages extends Controller
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
 
+        
+    /**
+     * Function to display uncategorized messages to admin
+     */
+    protected function displayUncategorizedMessageToAdmin(){
+        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
+        ->where('category_id',null)
+        ->where('status','Recieved')
+        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
+        return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
+    }
+
+    /**
+     * Function to display uncategorized messages to the admin
+     */
+    protected function displayUncategorizedMessageToUser(){
+        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
+        ->where('category_id',null)
+        ->where('status','Recieved')
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
+        return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
+    }
+
+
+    /**
+     * Function to check if senders number and recievers numbers exist
+     */
+    protected function checkSendersNumberAndRecieversNumberEmpty(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+            ->where('title',$this->search_message)->paginate('10');
+            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+            ->select("title", "user_id", "id")->paginate(10);
+            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    /**
+     * Function to check if senders number is empty
+     */
+    protected function checkSendersNumberEmpty(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+            ->where('messages.created_at',[Date::make($this->message_to)->format('Y-m-d H-i-s')])
+            ->where('title',$this->search_message)->paginate('10');
+            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+            ->select("title", "user_id", "id")->paginate(10);
+            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    /**
+     * Function to check if the recievers number is empty
+     */
+    protected function checkRecieversNumberEmpty(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+            ->where('messages.created_at',[Date::make($this->message_from)->format('Y-m-d H-i-s')])
+            ->where('title',$this->search_message)->paginate('10');
+            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+            ->select("title", "user_id", "id")->paginate(10);
+            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    /**
+     * Function to get all messages and categories for a church
+     */
+    protected function getMessageAndCategory(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->whereBetween('messages.created_at',[Date::make($this->message_from)->format('Y-m-d H-i-s'), Date::make($this->message_to)->format('Y-m-d H-i-s')])
+        ->where('title',$this->search_message)->paginate('10');
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
     /**
      * Function to search contact group
      */
@@ -226,29 +298,6 @@ class messages extends Controller
         $all_search_terms = searchTerms::all();
         return $all_search_terms;
     }
-    
-    /**
-     * Function to display uncategorized messages to admin
-     */
-    protected function displayUncategorizedMessageToAdmin(){
-        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
-        ->where('category_id',null)
-        ->where('status','Recieved')
-        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
-        return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
-    }
-
-    /**
-     * Function to display uncategorized messages to the admin
-     */
-    protected function displayUncategorizedMessageToUser(){
-        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
-        ->where('category_id',null)
-        ->where('status','Recieved')
-        ->where('messages.church_id',Auth::user()->church_id)
-        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
-        return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
-    }
 
     /**
      * Function to show uncategorized messages
@@ -294,53 +343,6 @@ class messages extends Controller
         $message = message::find($request->message_id);
         $message->delete();
         return redirect()->back()->withErrors("Message Was Permanetly deleted successfully");
-    }
-
-    /**
-     * Function to check if senders number and recievers numbers exist
-     */
-    protected function checkSendersNumberAndRecieversNumberEmpty(){
-        $messages_to_categories = message::join('category','messages.category_id','category.id')
-            ->where('title',$this->search_message)->paginate('10');
-            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-            ->select("title", "user_id", "id")->paginate(10);
-            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
-    }
-
-    /**
-     * Function to check if senders number is empty
-     */
-    protected function checkSendersNumberEmpty(){
-        $messages_to_categories = message::join('category','messages.category_id','category.id')
-            ->where('messages.created_at',[Date::make($this->message_to)->format('Y-m-d H-i-s')])
-            ->where('title',$this->search_message)->paginate('10');
-            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-            ->select("title", "user_id", "id")->paginate(10);
-            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
-    }
-
-    /**
-     * Function to check if the recievers number is empty
-     */
-    protected function checkRecieversNumberEmpty(){
-        $messages_to_categories = message::join('category','messages.category_id','category.id')
-            ->where('messages.created_at',[Date::make($this->message_from)->format('Y-m-d H-i-s')])
-            ->where('title',$this->search_message)->paginate('10');
-            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-            ->select("title", "user_id", "id")->paginate(10);
-            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
-    }
-
-    /**
-     * Function to get all messages and categories for a church
-     */
-    protected function getMessageAndCategory(){
-        $messages_to_categories = message::join('category','messages.category_id','category.id')
-        ->whereBetween('messages.created_at',[Date::make($this->message_from)->format('Y-m-d H-i-s'), Date::make($this->message_to)->format('Y-m-d H-i-s')])
-        ->where('title',$this->search_message)->paginate('10');
-        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-        ->select("title", "user_id", "id")->paginate(10);
-        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
     }
 
     /**
