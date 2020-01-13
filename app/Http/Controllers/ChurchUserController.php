@@ -6,8 +6,15 @@ use App\User;
 use App\church_user;
 use Illuminate\Support\Facades\Auth;
 class ChurchUserController extends Controller {
-    public function __construct(){
+    public function __construct(Request $request){
         $this->error_message = new ErrorMessagesController();
+        $this->contacts_format = ['25677','25678','25670','25679','25671','25675','25675',
+        '25620','25639','25641'];
+        $this->contact_length = 12;
+        $this->contact_number = $request->username;
+        $this->first_name = $request->first_name;
+        $this->last_name = $request->last_name;
+        $this->password = $request->password;
     }
     public function index(Request $request) {
         $display_all_church_users = User::Where('email', $request->search)
@@ -15,87 +22,27 @@ class ChurchUserController extends Controller {
         ->where('church_id', Auth::user()->church_id)->paginate('10');
         return view('after_login.users', compact('display_all_church_users'))->with(['search_query' => $request->search]);
     }
-    public function store(Request $request) {
-        if (empty($request->username)) {  return Redirect()->back();
+    public function store(Request $request) 
+    {
+        if(empty($this->contact_number)) {
+            return $this->error_message->emptyPhoneNumber();
         }
-        if (ctype_alpha($request->username)) {
-            return $this->error_message->errorResponse();
+        if(strlen($this->contact_number) > $this->contact_length || strlen($this->contact_number) > $this->contact_length){
+            return $this->error_message->contactLengthError();
         }
-        if(preg_match('/[a-zA-Z]+$/',$request->username)){
-            return $this->error_message->errorResponse();
+        if(!ctype_digit($this->contact_number)){
+            return $this->error_message->alphabeticalCharactersErrorResponse();
         }
-        if (strpos($request->username, '.') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '!') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '@') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '#') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '$') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '%') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '^') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '&') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '*') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '"') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, ',') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, ':') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '\'') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '?') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, ';') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '/') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '}') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '{') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '[') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, ']') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '-') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '_') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '=') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '+') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, '(') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->username, ')') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strlen($request->username) > 12) {
-            return $this->error_message->errorResponse();
-        } elseif (strlen($request->username) < 12) {
-            return $this->error_message->errorResponse();
-        } elseif ($request->username[0] != 2) {
-            return $this->error_message->errorResponse();
-        } elseif ($request->username[1] != 5) {
-            return $this->error_message->errorResponse();
-        } elseif ($request->username[2] != 6) {
-            return $this->error_message->errorResponse();
-        }elseif ($request->username[3] != 7) {
-            return $this->error_message->errorResponse();
+        if(!in_array(substr($this->contact_number,0,5),$this->contacts_format)){
+            return $this->error_message->allowedContactsErrorMessage();
         }
-
-        if (User::where('email', $request->username)->exists()) {
+        if (User::where('email', $this->contact_number)->exists()) {
             return Redirect()->back()->withInput()->withErrors('Username already taken, kindly choose another username');
+        }else{
+            return $this->addUserToChurch();
         }
-        User::create(array('name' => $request->first_name . " " . $request->last_name, 'email' => $request->username, 'password' => Hash::make($request->password), 'church_id' => Auth::user()->church_id));
-        return redirect('/user');
     }
+
     public function display_user_password() {
         $display = User::where('church_id', auth()->user()->church_id)->get();
         return view('after_login.view-passwords', compact('display'));
@@ -120,4 +67,8 @@ class ChurchUserController extends Controller {
         return view('after_login.users', compact('display_all_church_users'));
     }
 
+    protected function addUserToChurch(){
+        User::create(array('name' => $this->first_name . " " . $this->last_name, 'email' => $this->contact_number, 'password' => Hash::make($this->password), 'church_id' => Auth::user()->church_id));
+        return redirect('/user');
+    }
 }
