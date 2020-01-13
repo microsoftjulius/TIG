@@ -24,7 +24,24 @@ class ErrorMessagesController extends Controller
         return redirect()->back()->withInput()->withErrors("Only digits are allowed in a phone number");
     }
     public function alphabeticalCharactersErrorResponse(){
-        //return redirect()->back()->withInput()->withErrors("Phone number cannot contain Alphabetical letters");
-        //return "Phone number cannot contain Alphabetical letters";
+        return redirect()->back()->withInput()->withErrors("Invalid Phone number, please make sure you a valid phone numnber");
+    }
+    public function numberExistsError(){
+        return redirect()->back()->withInput()->withErrors("Supplied number already exists");
+    }
+    public function emptyPhoneNumber(){
+        return Redirect()->back()->withInput()->withErrors("Please Enter a phone number to continue");
+    }
+    public function numberDeletedSuccessfully(){
+        return Redirect()->back()->withInput()->withErrors("Contact was deleted Successfully");
+    }
+    public function numberCreatedSuccessfully(){
+        return Redirect()->back()->withErrors("Contact has been created successfully");
+    }
+    public function imageExtensionError(){
+        return Redirect()->back()->withInput()->withErrors("The provided Logo is not valid. Please upload an image");
+    }
+    public function churchNameErrorResponse(){
+        return Redirect()->back()->withInput()->withErrors("The supplied church name is invalid, make sure you don't use special characters");
     }
 }

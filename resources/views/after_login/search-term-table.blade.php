@@ -37,9 +37,10 @@
                         <div class="col-lg-12">
                     @include('layouts.message')
                             <section class="box col-lg-12 col-sm-12 col-md-12 mt-3">
+                                <a href="/message-categories"><button class="btn btn-warning pull-right"><i class="fa fa-arrow-left"></i> Back</button></a>
                                 <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addSearchTerm"><i class="fa fa-plus"></i> Add search term</button>
-                                        {{-- <button class="btn btn-primary" onclick="addRow('dataTable')"><i class="fa fa-plus"></i> Row</button>
-                                    <button class="btn btn-danger" onclick="deleteRow('dataTable')"><i class="fa fa-trash"></i> Row</button> --}}
+                                        {{-- <button class="btn btn-primary pull-right" onclick="addRow('dataTable')"><i class="fa fa-plus"></i> Row</button> --}}
+                                    {{-- <button class="btn btn-danger" onclick="deleteRow('dataTable')"><i class="fa fa-trash"></i> Row</button> --}}
                                 <table id="dataTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>

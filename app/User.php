@@ -56,4 +56,12 @@ class User extends Authenticatable
         $count = Contacts::where('contact_number',"=",Auth::user()->id)->get()->count();
         return $count;
     }
+    
+    public function getLoggedInChurchLogo(){
+        $church_logo = churchdatabase::where('id',Auth::user()->church_id)->value('attached_logo');
+        if(empty($church_logo)){
+            $church_logo = 'pahappa.png';
+        }
+        return $church_logo;
+    }
 }

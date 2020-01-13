@@ -5,6 +5,7 @@ use App\category;
 use App\Contacts;
 use App\messages as message;
 use App\Groups;
+use DB;
 use App\searchTerms;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,8 +29,9 @@ class messages extends Controller
         ->join('church_databases','church_databases.id','messages.church_id')
         ->where('status','!=','Deleted')
         ->where('status','!=','Scheduled')
-        ->distinct('messages.message')
-        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name')
+        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name',
+        DB::raw('COUNT(messages.status) as messageCount'))
+        ->groupBy('messages.message')
         ->paginate('10');
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
@@ -171,10 +173,13 @@ class messages extends Controller
      * Function to search message categories
      */
     public function search_message_categories(Request $request) {
-        $category = category::join('users','users.id','category.user_id')->where('title', $request->category)
+        $category = category::join('users','users.id','category.user_id')
+        ->join('search_terms','search_terms.category_id','category.id')
+        ->where('title', $request->category)
         ->orWhere('title', 'like', '%' . $request->category . '%')
         ->orWhere('name', 'like', '%' . $request->category . '%')
-        ->where('category.church_id', Auth::user()->church_id)->paginate('10');
+        ->where('category.church_id', Auth::user()->church_id)->select(array('category.id','title', 'name', DB::raw('COUNT(search_terms.search_term) as countSearchTerms')))
+        ->groupBy('category.title')->paginate('10');
         return view('after_login.message-categories', compact('category'))
         ->with(['search_query' => $request->search_category]);
     }
@@ -210,7 +215,9 @@ class messages extends Controller
     public function message_categories_page() {
         $category = category::where('category.church_id', Auth::user()->church_id)
         ->join('users', 'users.id', 'category.user_id')
-        ->select('category.id','title', 'name')->paginate('10');
+        ->join('search_terms','search_terms.category_id','category.id')
+        ->select(array('category.id','title', 'name', DB::raw('COUNT(search_terms.search_term) as countSearchTerms')))
+        ->groupBy('category.title')->paginate('10');
         return view('after_login.message-categories', compact('category'));
     }
 

@@ -27,7 +27,8 @@ class saveContactTest extends TestCase
         /** @test */
         public function contactNumberExists(){
             $this->withoutExceptionHandling();
-            $response = $this->post('/check-if-number-exists/{id}',[
+            $id = Groups::first()->id;
+            $response = $this->post('/check-if-number-exists/'.$id,[
                 'church_id' => 1,
                 'group_id' => 88,
                 'u_name' => 'Julius Ssemakula',
@@ -64,7 +65,7 @@ class saveContactTest extends TestCase
             'update_by' => 1,
             'contact' => '2567029i345E'
         ]);
-        $response->assertSeeText("Phone number cannot contain Alphabetical letters");
+        $response->assertSeeText("Please Enter a valid phone number");
     }
     /** @test */
     public function specialCharactersContactNumber(){
@@ -78,7 +79,7 @@ class saveContactTest extends TestCase
             'update_by' => 1,
             'contact' => '2567029)345@'
         ]);
-        $response->assertOk();
+        $response->assertSeeText("Please Enter a valid phone number");
     }
 
     /** @test */
@@ -121,7 +122,7 @@ class saveContactTest extends TestCase
             'u_name' => 'Julius Ssemakula',
             'created_by' => 1,
             'update_by' => 1,
-            'contact' => '2567302913451'
+            'contact' => '256706913451'
         ]);
         $response->assertOk();
     }

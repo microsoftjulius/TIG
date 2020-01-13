@@ -1,3 +1,3 @@
-Url: http://localhost:8000/createchurches
+Url: http://localhost:8000/create-TIG-groups
  UserName: Watoto Church Of Ug
- Password: $2y$10$K0BYaQqFbjl.A./2e1G6aeDyUqPiFJxF8s908sM8XyFgLyX2Kejb.
+ Password: $2y$10$8iA1mZTnCW7rbE3yvNQHy./A9DsG9GlYqDySFLyBNlaPD6JkVKC92

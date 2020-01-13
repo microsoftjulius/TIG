@@ -43,7 +43,7 @@
                                         </div>
                                         <div class="col-lg-3"></div>
                                             <div class="col-md-3">
-                                            <form class="pull-right pt-4" role="search" action="/search-message-categories" method="post" >
+                                            <form class="pull-right pt-4" role="search" action="/search-message-categories" method="get" >
                                                 @csrf
                                                     <div class="input-group">
                                                             <input type="text" class="form-control col-md-4" placeholder="Search" name="category" id="srch-term" value="{{old('category')}}" required>
@@ -64,13 +64,6 @@
                                                 </div>
 
                                             </div>
-
-                                            {{-- <div class="col-md-2">
-                                                <div class="input-group-btn">
-                                                    <a href="/search-term-list"> <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Search term
-                                                    </button></a>
-                                                </div>
-                                            </div> --}}
                                 </div>
                         </div>
                     <!--Table-->
@@ -83,6 +76,7 @@
                                                         <th class="th-sm">No.</th>
                                                         <th>Added by</th>
                                                         <th class="th-sm">Message category</th>
+                                                        <th class="th-sm">Number of Search Terms</th>
                                                         <th class="th-sm">Option</th>
                                                     </tr>
                                                 </thead>
@@ -97,6 +91,7 @@
                                                         <td>{{ $i++ }}</td>
                                                         <td>{{ $categories->name }}</td>
                                                         <td>{{ $categories->title }}</td>
+                                                        <td>{{$categories->countSearchTerms}}</td>
                                                         <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
                                                     </tr>
                                                 @endforeach

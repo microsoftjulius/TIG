@@ -5,7 +5,7 @@
     <!-- menu profile quick info -->
     <div class="profile clearfix">
     <div class="profile_pic">
-        <img src="{{ asset('bootstrap/images/img.jpg') }}" alt="..." class="img-circle profile_img">
+        <img src="{{ asset('images/'.auth()->user()->getLoggedInChurchLogo()) }}" alt="Church Logo" class="img-circle profile_img" style="border-radius:100%; width:55px;height:60px;">
     </div>
     <div class="profile_info">
         <span>Welcome</span>

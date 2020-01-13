@@ -18,8 +18,8 @@ Route::get('/', function () {return redirect('/login');});
 Auth::routes();
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/home', 'HomeController@index')->name('home');
-    Route::get('/church/{id}','ChurchesController@index');
-    Route::get('/groups','ChurchesController@index_showall')->name('Groups');
+    Route::get('/church/{id}','ChurchesController@getChurchUsers');
+    Route::get('/groups','ChurchesController@getAllChurches')->name('Groups');
     Route::get('/user','ChurchUserController@show')->name('TIG Users');
     Route::get('/search-user','ChurchUserController@index');
     Route::get('/display-sent-messages','messages@display_sent_messages')->name('Sent Messages');
@@ -32,8 +32,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/manager',function() { return view('after_login.manager');});
     Route::get('/create-TIG-groups',function(){return view('after_login.create-church');});
     Route::post('/search','ChurchUserController@index');
-    Route::post('/create-groups','ChurchesController@create');
-    Route::post('/create-user','ChurchesController@create_church_user');
+    Route::post('/create-groups','ChurchesController@addNewChurch');
+    Route::post('/create-user','ChurchesController@addUserToChurch');
     Route::post('/adds-user','ChurchUserController@store');
     Route::get('/search-church','ChurchesController@search');
     Route::get('/contact-groups','GroupsController@index')->name('Contact Groups');

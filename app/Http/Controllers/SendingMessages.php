@@ -52,7 +52,7 @@ class SendingMessages extends Controller
                 foreach($message_response as $res){
                     array_push($empty_array, $res);
                 }
-                if($empty_array[1] == 30){
+                if(is_numeric($empty_array[1])){
                     messages::create(array('church_id' => Auth::user()->church_id, 'group_id' => $request->checkbox[$i],
                     'message' => $request->message, 'tobesent_on' => null, 'status'=>$empty_array[0], 'created_by' => Auth::user()->id));
                     return redirect()->back()->withErrors("Message sending was successful");

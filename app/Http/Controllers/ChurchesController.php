@@ -12,80 +12,31 @@ use Illuminate\Support\Facades\Auth;
 
 class ChurchesController extends Controller
 {
-    //Redirect to a page showing all churches and creating all churches
-    public function index_showall()
+    public function __construct(){
+        $this->error_message = new ErrorMessagesController();
+        $this->allowed_fileExtensions = ['jpg','png','gif','jpeg','ico'];
+    }
+    public function getAllChurches()
     {
-        $churches     = churchdatabase::where('id','>',1)->paginate('10');
+        $churches = churchdatabase::where('id','>',1)
+        ->orderBy('created_at','Desc')
+        ->paginate('10');
         if(auth()->user()->church_id == 1){
-        return view('after_login.churches',compact('churches'));
-        }
-        else{
+            return view('after_login.churches',compact('churches'));
+        }else{
             return Redirect()->back();
         }
     }
-    //Redirect to a page showing churches with this Id
-    public function index($id)
+    public function getChurchUsers($id)
     {
         $all_users_in_this_church = User::where('church_id',$id)->get();
         $all_churches = churchdatabase::where('id',$id)->get('id');
         return view('after_login.create-users',compact('all_churches','all_users_in_this_church'));
     }
-
-    //Create a new Church
-    public function create(Request $request)
+    public function addNewChurch(Request $request)
     {
-        if (strpos($request->church_name, '.') == true) {
-            return Redirect()->back()->withInput()->withErrors("Church name can't contain a full stop");
-        } elseif (strpos($request->church_name, '!') == true) {
-            return Redirect()->back()->withInput()->withErrors("Church name can't contain an exclamation mark");
-        } elseif (strpos($request->church_name, '@') == true) {
-            return Redirect()->back()->withInput()->withErrors("Church name can't contain an @ sign");
-        } elseif (strpos($request->church_name, '#') == true) {
-            return Redirect()->back()->withInput()->withErrors("Church name can't contain a hash");
-        } elseif (strpos($request->church_name, '$') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a dollar sign");
-        } elseif (strpos($request->church_name, '%') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a percentage symbol");
-        } elseif (strpos($request->church_name, '^') == true) {
-            return Redirect()->back()->withInput()->withErrors("Church name can't contain a ^ sign");
-        } elseif (strpos($request->church_name, '&') == true) {
-            return Redirect()->back()->withInput()->withErrors("Church name can't contain an ampasand sign");
-        } elseif (strpos($request->church_name, '*') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain an asteric");
-        } elseif (strpos($request->church_name, '"') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a double quote");
-        } elseif (strpos($request->church_name, ',') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a comma");
-        } elseif (strpos($request->church_name, ':') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain full quotes");
-        } elseif (strpos($request->church_name, '\'') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a backslash");
-        } elseif (strpos($request->church_name, '?') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a question mark");
-        } elseif (strpos($request->church_name, ';') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a semi-column");
-        } elseif (strpos($request->church_name, '/') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain contain a forward slash");
-        } elseif (strpos($request->church_name, '}') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain curl brackets");
-        } elseif (strpos($request->church_name, '{') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain curl brackets");
-        } elseif (strpos($request->church_name, '[') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain angular brackets");
-        } elseif (strpos($request->church_name, ']') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain angular brackets");
-        } elseif (strpos($request->church_name, '-') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain an hyphen");
-        } elseif (strpos($request->church_name, '_') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain an under-scope");
-        } elseif (strpos($request->church_name, '=') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain an equals sign");
-        } elseif (strpos($request->church_name, '+') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a plus sign");
-        } elseif (strpos($request->church_name, '(') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a bracket");
-        } elseif (strpos($request->church_name, ')') == true) {
-            return Redirect()->back()->withInput()->withErrors("church name can't contain a bracket");
+        if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $request->church_name)){
+            return $this->error_message->churchNameErrorResponse();
         }
         if(churchdatabase::where('church_name',$request->church_name)->exists())
         {
@@ -94,19 +45,22 @@ class ChurchesController extends Controller
         if(User::where('email',$request->church_name)->exists()){
             return Redirect()->back()->withInput()->withErrors('User Name Already Taken, Choose a different name');
         }
-        // Contacts::create(array(
-        //     'church_id' => Auth::user()->id,
-        //     'group_id' => 38,
-        //     'created_by' => Auth::user()->id,
-        //     'update_by' =>Auth::user()->id,
-        //     'contact_number' => '[{"Contact":"","name":""}]'
-        // ));
+        if(!empty(request()->logo)){
+            if(!in_array(strtolower(request()->logo->getClientOriginalExtension()), $this->allowed_fileExtensions)){
+                return $this->error_message->imageExtensionError();
+            }
+            $filename = time().'.'.request()->logo->getClientOriginalExtension();
+            request()->logo->move(public_path('images'), $filename);
+        }else{
+            $filename = '';
+        }
+        
         churchdatabase::create(array(
             'church_name'       =>  $request->church_name,
             'database_name'     =>  $request->database_name,
             'database_url'      =>  $request->url,
             'database_password' =>  $request->password,
-            'attached_logo'     =>  $request->logo
+            'attached_logo'     =>  $filename
         ));
         $church_id = churchdatabase::where('church_name',$request->church_name)->value('id');
         User::create([
@@ -130,7 +84,7 @@ class ChurchesController extends Controller
         return redirect('/groups');
     }
 
-    public function create_church_user(Request $request){
+    public function addUserToChurch(Request $request){
         User::create([
             'name'      =>  $request->name,
             'email'     =>  $request->email,
@@ -143,7 +97,7 @@ class ChurchesController extends Controller
     }
 
     //Edit the Church information
-    public function edit(Request $request)
+    public function editChurchBackgroudColor(Request $request)
     {
         churchdatabase::where('id',$request->church_id)->update(array(
             'background_color'=>$request->background_color
@@ -152,7 +106,7 @@ class ChurchesController extends Controller
     }
 
     //Update church as Active
-    public function update(Request $request, churches $churches)
+    public function activateChurch(Request $request, churches $churches)
     {
         churchdatabase::where('id',$request->church_id)->update(array(
             'status'=>'active'
@@ -160,7 +114,7 @@ class ChurchesController extends Controller
     }
 
     //Mark Church as Deleted
-    public function destroy(Request $request)
+    public function destroyChurch(Request $request)
     {
         churchdatabase::where('id',$request->church_id)->update(array(
             'status'=>'deleted'
@@ -169,11 +123,7 @@ class ChurchesController extends Controller
 
     public function search(Request $request){
         $churches  = churchdatabase::where('church_name',$request->church_name)
-        //->orWhere('church_name',$request->church_name)
-        // ->orWhere('database_name',$request->church_name)
         ->orWhere('church_name', 'like', '%' . $request->church_name. '%')
-        // ->orWhere('database_url', 'like', '%' . $request->church_name. '%')
-        // ->orWhere('database_name', 'like', '%' . $request->church_name. '%')
         ->paginate('10');
 
         return view('after_login.churches',compact('churches'))->with([

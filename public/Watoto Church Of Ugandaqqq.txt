@@ -1,0 +1,3 @@
+Url: http://localhost:8000/create-TIG-groups
+ UserName: Watoto Church Of Ugandaqqq
+ Password: $2y$10$sVOm79tS7JwmAHziqXJMmu/2PmDwn2MX7kymLH/1uPMEAmOVbzc86

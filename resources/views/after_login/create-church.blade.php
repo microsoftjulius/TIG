@@ -33,10 +33,11 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     <!--Setupform-->
-                        @include('layouts.errormessage')
-                    <form class="col-md-offset-3 col-sm-6" style="border: 1px solid black ;border-width: 4px 4px 4px 4px; padding :1em; border: ridge #ccc; background-color:white;" action="/create-groups" method="POST">
+                        
+                    <form class="col-md-offset-3 col-sm-6" style="border: 1px solid black ;border-width: 4px 4px 4px 4px; padding :1em; border: ridge #ccc; background-color:white;" action="/create-groups" method="POST" enctype="multipart/form-data">
                         @csrf
-                    <div class="panel-heading text-center"><h4>Please enter group details</h4></div>
+                        @include('layouts.errormessage')
+                    <div class="panel-heading text-center"><h4>Please enter the campaign details</h4></div>
                             <div class="form-group row md-form">
                                 <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
                                 <div class="col-sm-10">
@@ -64,7 +65,7 @@
                             <div class="form-group row">
                                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Logo</label>
                                 <div class="col-sm-10">
-                                <input type="file" class="form-control form-control-lg" name="logo" id="colFormLabelLg" placeholder="attach logo">
+                                <input type="file" class="form-control form-control-lg" name="logo" id="colFormLabelLg" placeholder="attach logo" accept="image/*">
                                 </div>
                             </div>
                             <div class="form-group row">
