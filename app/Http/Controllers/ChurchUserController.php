@@ -106,7 +106,8 @@ class ChurchUserController extends Controller {
         if ($request->new_password == $request->confirm_password) {
             if (Hash::check($current_password, $get_users_current_password)) {
                 User::where("id", Auth::user()->id)->update(array('password' => Hash::make($request->new_password)));
-                return Redirect()->back()->withInput()->withErrors("Password update was successful");
+                return Redirect()->back()->with('message', 'Password was Updated successfully');
+                Auth::logout();
             } else {
                 return Redirect()->back()->withInput()->withErrors("Incorrect password has been supplied");
             }

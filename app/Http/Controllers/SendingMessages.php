@@ -55,7 +55,7 @@ class SendingMessages extends Controller
                 if(is_numeric($empty_array[1])){
                     messages::create(array('church_id' => Auth::user()->church_id, 'group_id' => $request->checkbox[$i],
                     'message' => $request->message, 'tobesent_on' => null, 'status'=>$empty_array[0], 'created_by' => Auth::user()->id));
-                    return redirect()->back()->withErrors("Message sending was successful");
+                    return redirect()->back()->with('message',"Message sending was successful");
                 }else{
                     messages::create(array('church_id' => Auth::user()->church_id, 'group_id' => $request->checkbox[$i],
                     'message' => $request->message, 'tobesent_on' => null, 'status'=>$empty_array[0], 'created_by' => Auth::user()->id));
@@ -64,7 +64,7 @@ class SendingMessages extends Controller
             }else{
                 messages::create(array('church_id' => Auth::user()->church_id, 'group_id' => $request->checkbox[$i],
                 'message' => $request->message, 'tobesent_on' => Carbon::createFromTimeStamp(strtotime($request->scheduled_date))->format('Y-m-d H:i:s'), 'status'=>'Scheduled', 'created_by' => Auth::user()->id));
-                return redirect()->back()->withErrors("Message has been scheduled for " . Carbon::createFromTimeStamp(strtotime($request->scheduled_date))->format('Y-m-d H:i:s'));
+                return redirect()->back()->with('message',"Message has been scheduled for " . Carbon::createFromTimeStamp(strtotime($request->scheduled_date))->format('Y-m-d H:i:s'));
             }
         }
     }

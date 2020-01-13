@@ -39,7 +39,7 @@
                             <h4></h4>
                             <hr>
                         </div>
-                        @include('layouts.errormessage')
+                        @include('layouts.message')
                         <div class="form-group row md-form">
                             <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Contact groups</label>
                             <div class="col-sm-10">

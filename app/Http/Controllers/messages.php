@@ -196,10 +196,22 @@ class messages extends Controller
      */
     public function save_message_category(Request $request) {
         if(category::where('church_id',Auth::user()->church_id)->where('title',$request->category)->exists()){
-            return Redirect()->back()->withInput()->withErrors("Message category already registered");
+            return Redirect()->back()->withInput()->withErrors("Message category is already registered");
+        }else{
+            category::create(array(
+                'church_id' => Auth::user()->church_id, 
+                'title'     => $request->category,
+                'user_id'   =>  Auth::user()->id
+            ));
+            $id = category::where('title',$request->category)->value('id');
+            searchTerms::create(array(
+            'user_id'       => Auth::user()->id,
+            'church_id'     => Auth::user()->church_id,
+            'category_id'   => $id,
+            'search_term'   => 'default',
+            ));
+            return redirect('/message-categories')->with('message', 'Message Category was added Successfully');
         }
-        category::create(array('church_id' => Auth::user()->church_id, 'title' => $request->category,'user_id'=>Auth::user()->id));
-        return redirect('/message-categories')->withErrors("Category added successfully");
     }
 
     /**
@@ -213,11 +225,13 @@ class messages extends Controller
      * Function to display message categories page
      */
     public function message_categories_page() {
-        $category = category::where('category.church_id', Auth::user()->church_id)
-        ->join('users', 'users.id', 'category.user_id')
-        ->join('search_terms','search_terms.category_id','category.id')
+        $category = searchTerms::join('users', 'users.id', 'search_terms.user_id')
+        ->join('church_databases','church_databases.id','search_terms.church_id')
+        ->join('category','category.id','search_terms.category_id')
+        ->where('church_databases.id',Auth::user()->church_id)
         ->select(array('category.id','title', 'name', DB::raw('COUNT(search_terms.search_term) as countSearchTerms')))
-        ->groupBy('category.title')->paginate('10');
+        ->groupBy('category.title')
+        ->paginate('10');
         return view('after_login.message-categories', compact('category'));
     }
 
@@ -238,6 +252,10 @@ class messages extends Controller
         if(empty($request->new_search_term)){
             return redirect()->back()->withErrors("Search term cannot be null");
         }
+        if($request->new_search_term == "default"){
+            return redirect()->back()->withErrors("Default is a reserved word, Choose another word.
+            We greatly appologise for the inconviniences caused");
+        }
         if(searchTerms::where('church_id',Auth::user()->church_id)->where('search_term',$request->new_search_term)->exists()){
             return redirect()->back()->withErrors("Search term is already registered, choose another search term");
         }
@@ -247,7 +265,7 @@ class messages extends Controller
             'category_id'   => $id,
             'search_term'   => $request->new_search_term
         ));
-        return Redirect()->back()->withInput()->withErrors('Search term added successfully');
+        return Redirect()->back()->with('message', 'Such Term Added Successfully');     
     }
 
     /**
@@ -255,7 +273,7 @@ class messages extends Controller
      */
     public function deleteSearchTerm($id, Request $request){
         searchTerms::where('id',$id)->delete();
-        return Redirect()->back()->withInput()->withErrors("Search Term was deleted Successfully");
+        return Redirect()->back()->with('message', 'Such Term was deleted Successfully');
     }
 
     /**
@@ -265,6 +283,7 @@ class messages extends Controller
         $all_search_terms = searchTerms::join('category','category.id','search_terms.category_id')
         ->join('users','users.id','search_terms.user_id')
         ->where('search_terms.church_id',Auth::user()->church_id)
+        ->where('search_terms.search_term','!=','default')
         ->where('category_id',$id)
         ->select('users.name','category.title','search_terms.*')
         ->paginate(10);
@@ -281,7 +300,7 @@ class messages extends Controller
         category::where('id',$id)->update(
             array('title'=> $request->new_category_title)
         );
-        return redirect('/message-categories')->withErrors('Category update was successful ');
+        return redirect('/message-categories')->with('message', 'Category Update Was Successful');
     }
 
     /**
@@ -326,7 +345,7 @@ class messages extends Controller
             'status' => 'Deleted',
             'created_by' => Auth::user()->id
         ));
-        return Redirect()->back()->withErrors("Messages was deleted successfully");
+        return Redirect()->back()->with('message', 'Message Deletion Was Successful');
     }
 
     /**
@@ -349,7 +368,7 @@ class messages extends Controller
     public function permanetlyDeleteMessage(Request $request){
         $message = message::find($request->message_id);
         $message->delete();
-        return redirect()->back()->withErrors("Message Was Permanetly deleted successfully");
+        return redirect()->back()->with('message', 'Message was Permanently Deleted Successfully');
     }
 
     /**

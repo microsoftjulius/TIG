@@ -42,7 +42,7 @@ class GroupsController extends Controller
             'church_id' => Auth::user()->church_id,
             'created_by' => Auth::user()->id
         ));
-        return redirect('/contact-groups');
+        return redirect('/contact-groups')->with('message',"New Group has been created successfully");
     }
 
     public function search_group(Request $request)

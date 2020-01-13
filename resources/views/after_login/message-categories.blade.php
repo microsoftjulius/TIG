@@ -34,8 +34,8 @@
                 <div class="right_col" role="main">
                 <!-- Search form -->
                 <div class="row">
-                        @include('layouts.message')
                                 <div class="col-md-12">
+                                    @include('layouts.message')
                                         <div class="col-md-3">
                                             <div class="input-group">
                                                 @include('layouts.breadcrumbs')
@@ -91,7 +91,7 @@
                                                         <td>{{ $i++ }}</td>
                                                         <td>{{ $categories->name }}</td>
                                                         <td>{{ $categories->title }}</td>
-                                                        <td>{{$categories->countSearchTerms}}</td>
+                                                        <td>{{$categories->countSearchTerms -1}}</td>
                                                         <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
                                                     </tr>
                                                 @endforeach
@@ -101,9 +101,6 @@
                                 {{ $category->links() }}
                             </div>
                     </div>
-
-
-
                     <div class="row">
                     </div>
                 </div>

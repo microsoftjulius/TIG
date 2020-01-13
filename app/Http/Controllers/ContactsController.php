@@ -20,7 +20,7 @@ class ContactsController extends Controller {
         if(Auth::user()->id == 1){
             return $this->adminsViewOfContactsForGroup($id);
         }else{
-            return $this->usersViewOfContactsForGroup();
+            return $this->usersViewOfContactsForGroup($id);
         }
     }
     public function save_contact_to_group($id){
@@ -51,11 +51,11 @@ class ContactsController extends Controller {
     }
     protected function addContactToGroup($id){
         $contact = new Contacts();
-        $contact->church_id = 1;
+        $contact->church_id = Auth::user()->church_id;
         $contact->group_id = $id;
         $contact->u_name = $this->user_name;
-        $contact->created_by = 1;
-        $contact->update_by = 1;
+        $contact->created_by = Auth::user()->id;
+        $contact->update_by = Auth::user()->id;
         $contact->contact_number = $this->contact_number;
         $contact->save();
         Groups::find($id)->update(array('number_of_contacts'=>Contacts::where('group_id',$id)->count()));
@@ -71,7 +71,7 @@ class ContactsController extends Controller {
         ->paginate(10);
         return view('after_login.contacts', compact('contacts'));
     }
-    protected function usersViewOfContactsForGroup(){
+    protected function usersViewOfContactsForGroup($id){
         $contacts = Contacts::join('Groups', 'contacts.group_id', 'Groups.id')
         ->join('church_databases', 'church_databases.id', 'contacts.church_id')
         ->join('users', 'users.id', 'contacts.created_by')

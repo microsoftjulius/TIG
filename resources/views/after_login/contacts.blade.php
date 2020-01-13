@@ -35,7 +35,7 @@
                     <!--table -->
                     <div class="row">
                         <div class="col-lg-12">
-                    @include('layouts.errormessage')
+                    @include('layouts.message')
                             <section class="box col-lg-12 col-sm-12 col-md-12 mt-3">
                                 <table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
                                     <thead>
@@ -77,7 +77,7 @@
                                                 <td></td>
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
-                                                <td><input type="text" name="name" value="" class="form-control"></td>
+                                                <td><input type="text" name="name" class="form-control" value="{{old('name')}}"></td>
                                                 <td><input type="number" name="contact" value="{{old('contact')}}" class="form-control"></td>
                                                 <td></td>
                                             </tr>

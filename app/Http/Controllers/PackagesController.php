@@ -32,7 +32,7 @@ class PackagesController extends Controller
             'Amount'         => $request->amount,
             'type'           => 'Automatic'
         ));
-        return redirect('/packages')->withErrors("New Package Subscription has been created");
+        return redirect('/packages')->with('message', 'New Package Subscription has been created  Successfully');
     }
 
     public function selectSubscribedForMessagesTitle(){
@@ -130,7 +130,7 @@ class PackagesController extends Controller
             'Amount'         => $request->Amount,
             'type'           => 'Manual'
         ));
-        return redirect('/packages')->withErrors("New Package Subscription has been created");
+        return redirect('/packages')->with('message', 'New Package subscription has been created Successfully');;
     }
 
     public function getPaymentLogs(){

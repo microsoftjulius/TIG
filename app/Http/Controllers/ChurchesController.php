@@ -93,7 +93,7 @@ class ChurchesController extends Controller
         User::where('church_id',null)->update(array(
             'church_id' =>  $request->church_id,
         ));
-        return Redirect()->back()->withInput()->withErrors('User Created Successfully');
+        return Redirect()->back()->with('message', 'User has been created Successfully');
     }
 
     //Edit the Church information
@@ -102,7 +102,7 @@ class ChurchesController extends Controller
         churchdatabase::where('id',$request->church_id)->update(array(
             'background_color'=>$request->background_color
         ));
-        return Redirect()->back()->withInput()->withErrors('Background Color Edited Successfully');
+        return Redirect()->back()->withInput()->with('message', 'Background Color Edited Successfully');
     }
 
     //Update church as Active
