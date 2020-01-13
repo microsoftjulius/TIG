@@ -8,15 +8,36 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
 class ContactsController extends Controller {
-    public function __construct(){
+    public function __construct(Request $request){
         $this->error_message = new ErrorMessagesController();
+        $this->contacts_format = ['25677','25678','25670','25679','25671','25675','25675',
+        '25620','25639','25641'];
+        $this->special_characters = ['~','`','@','!','#','$','%','^','&','*','(',')','"',';',':','.',',','?','/','=','+',"'"];
+        $this->contact_length = 12;
+        $this->alphabetic_letters = array_merge(range('A', 'Z'), range('a', 'z'));
+        $this->contact_number = $request->contact;
+        $this->user_name = $request->name;
+        $this->group_id = 88;
     }
-    public function view_for_group($id, Request $request) {
+    protected function addContactToGroup(){
+        $contact = new Contacts();
+        $contact->church_id = 1;
+        $contact->group_id = $this->group_id;
+        $contact->u_name = $this->user_name;
+        $contact->created_by = 1;
+        $contact->update_by = 1;
+        $contact->contact_number = $this->contact_number;
+        $contact->save();
+        Groups::find($this->group_id)->update(array('number_of_contacts'=>Contacts::where('group_id',$this->group_id)->count()));
+        //return Redirect()->back()->withErrors('Contact has been created successfully');
+        return "Contact created";
+    }
+    public function view_for_group(Request $request) {
         if(Auth::user()->id == 1){
             $contacts = Contacts::join('Groups', 'contacts.group_id', 'Groups.id')
             ->join('church_databases', 'church_databases.id', 'contacts.church_id')
             ->join('users', 'users.id', 'contacts.created_by')
-            ->where('group_id',$id)
+            ->where('group_id',$this->group_id)
             ->select('contacts.contact_number','users.name','Groups.group_name','users.email','contacts.id','contacts.u_name')
             ->orderBy('id','Desc')
             ->paginate(10);
@@ -25,107 +46,45 @@ class ContactsController extends Controller {
             ->join('church_databases', 'church_databases.id', 'contacts.church_id')
             ->join('users', 'users.id', 'contacts.created_by')
             ->where('contacts.church_id',Auth::user()->church_id)
-            ->where('contacts.group_id',$id)
+            ->where('contacts.group_id',$this->group_id)
             ->select('contacts.contact_number','users.name','Groups.group_name','users.email','contacts.id','contacts.u_name')
             ->paginate(10);
         }
         return view('after_login.contacts', compact('contacts'));
     }
-    public function save_contact_to_group($id, Request $request) {
-        if(Contacts::where('church_id',Auth::user()->church_id)
-        ->where('contact_number',$request->contact)->exists()){
-            return redirect()->back()->withInput()->withErrors("Supplied number already exists or it is registered under another group");
+    public function save_contact_to_group() {
+        if(Contacts::where('church_id',1)->where('contact_number',$this->contact_number)->where('group_id',$this->group_id)->exists()){
+            //return redirect()->back()->withInput()->withErrors("Supplied number already exists or it is registered under another group");
+            return "Supplied number already exists or it is registered under another group";
+        } //-- passed
+        if (empty($this->contact_number)) {
+            //return Redirect()->back()->withErrors("Contact information cannot be null");
+            return "Contact information cannot be null";
         }
-        if (empty($request->contact)) {
-            return Redirect()->back()->withErrors("Contact information cannot be null");
+        for($i=0; $i<= count($this->alphabetic_letters); $i++){
+            if(in_array($i, explode(' ', $this->contact_number)) == true){
+                //return $this->error_message->alphabeticalCharactersErrorResponse();
+                return "Phone number cannot contain Alphabetical letters";
+            }else{
+                for($j=0; $j <= count($this->special_characters); $j++){
+                    if(in_array($j, explode(' ', $this->contact_number)) == true) {
+                        return $this->error_message->specialCharactersErrorResponse();
+                    } 
+                }
+            }
         }
-        if (ctype_alpha($request->contact)) {
-            return $this->error_message->errorResponse();
+        if(strlen($this->contact_number) > 12 || strlen($this->contact_number) > 12){
+            return $this->error_message->contactLengthError();
         }
-        if  (preg_match('/[a-zA-Z]+$/', $request->contact)) {
-            return Redirect()->back()->withInput()->withErrors("Please input a correct number, it should not be alpha numeric");
+        if(in_array($this->contacts_format,substr($this->contact_number,0,5))){
+            return $this->error_message->allowedContactsErrorMessage();
         }
-        if (strpos($request->contact, '.') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '!') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '@') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '#') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '$') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '%') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '^') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '&') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '*') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '"') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, ',') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, ':') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '\'') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '?') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, ';') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '/') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '}') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '{') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '[') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, ']') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '-') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '_') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '=') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '+') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, '(') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strpos($request->contact, ')') == true) {
-            return $this->error_message->errorResponse();
-        } elseif (strlen($request->contact) > 12) {
-            return $this->error_message->errorResponse();
-        } elseif (strlen($request->contact) < 12) {
-            return $this->error_message->errorResponse();
-        } elseif ($request->contact[0] != 2) {
-            return $this->error_message->errorResponse();
-        } elseif ($request->contact[1] != 5) {
-            return $this->error_message->errorResponse();
-        } elseif ($request->contact[2] != 6) {
-            return $this->error_message->errorResponse();
-        }
-        elseif ($request->contact[2] != 6) {
-            return $this->error_message->errorResponse();
-        }elseif ($request->contact[3] != 7) {
-            return $this->error_message->errorResponse();
-        }
-        if(Contacts::where('contact_number',$request->contact)->where('church_id',Auth::user()->id)->exists()){
+        if(Contacts::where('contact_number',$this->contact_number)->where('church_id',Auth::user()->id)->exists()){
             return redirect()->back()->withInput()->withErrors('The supplied contact is already registered under a certain group, please add another contact');
         }
-        $contact = new Contacts();
-        $contact->church_id = Auth::user()->church_id;
-        $contact->group_id = $id;
-        $contact->u_name = $request->name;
-        $contact->created_by = Auth::user()->id;
-        $contact->update_by = Auth::user()->id;
-        $contact->contact_number = $request->contact;
-        $contact->save();
-        Groups::find($id)->update(array('number_of_contacts'=>Contacts::where('group_id',$id)->count()));
-        return Redirect()->back()->withErrors('Contact has been created successfully');
+        else{
+            return $this->addContactToGroup();
+        }
     }
     public function deleteContact($contact_id) {
         $group_id = Contacts::where('id',$contact_id)->value('group_id');

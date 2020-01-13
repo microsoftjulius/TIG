@@ -78,7 +78,7 @@
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
                                                 <td><input type="text" name="name" value="" class="form-control"></td>
-                                                <td><input type="text" name="contact" value="{{old('contact')}}" class="form-control"></td>
+                                                <td><input type="number" name="contact" value="{{old('contact')}}" class="form-control"></td>
                                                 <td></td>
                                             </tr>
 

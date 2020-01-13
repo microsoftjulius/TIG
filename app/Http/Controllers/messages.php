@@ -25,13 +25,13 @@ class messages extends Controller
      */
     protected function displaySentMessagesToAdmin(){
         $display_sent_message_details = message::join('users', 'users.id', 'messages.created_by')
-            ->join('church_databases','church_databases.id','messages.church_id')
-            ->where('status','!=','Deleted')
-            ->where('status','!=','Scheduled')
-            ->distinct('messages.message')
-            ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name')
-            ->paginate('10');
-            return view('after_login.sent-messages', compact('display_sent_message_details'));
+        ->join('church_databases','church_databases.id','messages.church_id')
+        ->where('status','!=','Deleted')
+        ->where('status','!=','Scheduled')
+        ->distinct('messages.message')
+        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name')
+        ->paginate('10');
+        return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
 
     /**
@@ -78,10 +78,10 @@ class messages extends Controller
      */
     protected function checkSendersNumberAndRecieversNumberEmpty(){
         $messages_to_categories = message::join('category','messages.category_id','category.id')
-            ->where('title',$this->search_message)->paginate('10');
-            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-            ->select("title", "user_id", "id")->paginate(10);
-            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+        ->where('title',$this->search_message)->paginate('10');
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
     }
 
     /**
@@ -89,11 +89,11 @@ class messages extends Controller
      */
     protected function checkSendersNumberEmpty(){
         $messages_to_categories = message::join('category','messages.category_id','category.id')
-            ->where('messages.created_at',[Date::make($this->message_to)->format('Y-m-d H-i-s')])
-            ->where('title',$this->search_message)->paginate('10');
-            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-            ->select("title", "user_id", "id")->paginate(10);
-            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+        ->where('messages.created_at',[Date::make($this->message_to)->format('Y-m-d H-i-s')])
+        ->where('title',$this->search_message)->paginate('10');
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
     }
 
     /**
@@ -101,11 +101,11 @@ class messages extends Controller
      */
     protected function checkRecieversNumberEmpty(){
         $messages_to_categories = message::join('category','messages.category_id','category.id')
-            ->where('messages.created_at',[Date::make($this->message_from)->format('Y-m-d H-i-s')])
-            ->where('title',$this->search_message)->paginate('10');
-            $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-            ->select("title", "user_id", "id")->paginate(10);
-            return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+        ->where('messages.created_at',[Date::make($this->message_from)->format('Y-m-d H-i-s')])
+        ->where('title',$this->search_message)->paginate('10');
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
     }
 
     /**

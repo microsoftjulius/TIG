@@ -76,4 +76,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/show-scheduled-message','SendingMessages@sendScheduledMessage');
     Route::post('/permanetly-delete-message','messages@permanetlyDeleteMessage');
     Route::get('/display-scheduled-messages','ScheduledMessagesController@displayScheduledMessages')->name("Scheduled Messages");
+    
 });
+Route::post('/create-contact/{id}','ContactsController@save_contact_to_group');
+Route::post('/create-contact-to-group/{id}','ContactsController@addContactToGroup');
+Route::post('/check-if-number-exists/{id}','ContactsController@save_contact_to_group');
