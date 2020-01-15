@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MessagesCollection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Date;
+use GuzzleHttp\Client;
+use App\PackagesModel;
 
 class ApiMessagesController extends Controller
 {
@@ -91,48 +93,94 @@ class ApiMessagesController extends Controller
      */
     protected function createNewContactToAMessageCategory(){
         Contacts::create(array('contact_number' => $this->message_sent_to));
+        $this->contact_id = Contacts::where('contact_number', $this->message_sent_to)->value('id');
         $registered_searchTerms = searchTerms::all();
+        $search_through_array = [];
+
         foreach($registered_searchTerms as $search_term){
-            if(strpos($this->sent_message, strtolower($search_term->search_term))){
-                $category_id = searchTerms::where('search_term',strtolower($search_term->search_term))->value('category_id');
-                $message = new message();
-                $message->category_id          = $category_id;
-                $message->contact_id           = $this->contact_id;
-                $message->message_from         = $this->senders_contact;
-                $message->church_id            = $this->church_id;
-                $message->message              = $this->sent_message;
-                $message->time_from_app        = $this->time_from_app;
-                $message->status      = 'Recieved';
-                $message->save();
-                return response()->json([$message, 200]);
-            }
+            array_push($search_through_array, $search_term->search_term);
         }
+            $targets = explode(' ', $this->sent_message);
+            foreach ( $targets as $string ) 
+            {
+                foreach ( $search_through_array as $keyword ) 
+                {
+                    if ( strpos( $string, $keyword ) !== FALSE )
+                        {
+                            $category_id = searchTerms::where('search_term',strtolower($keyword))->value('category_id');
+                            $message = new message();
+                            $message->category_id          = $category_id;
+                            $message->contact_id           = $this->contact_id;
+                            $message->message_from         = $this->senders_contact;
+                            $message->church_id            = $this->church_id;
+                            $message->message              = $this->sent_message;
+                            $message->time_from_app        = $this->time_from_app;
+                            $message->status      = 'Recieved';
+                            $message->save();
+                            return response()->json([$message, 200]);
+                        }
+                }
+            }
+        return $this->saveUncategorizedMessage();
     } 
 
     /**
      * Function checks it the message has a search term
      * Maps the senders contact to the hosted contact
+     * This function pops the message on a users phone to approve the payment
      */
-    protected function checkIfSearchTermExists(){
-        $registered_searchTerms = searchTerms::all();
-        foreach($registered_searchTerms as $search_term){
-            if(strpos($this->sent_message, strtolower($search_term->search_term))){
-                $category_id = searchTerms::where('search_term',strtolower($search_term->search_term))->value('category_id');
-                $message = new message();
-                $message->category_id          = $category_id;
-                $message->contact_id           = $this->contact_id;
-                $message->message_from         = $this->senders_contact;
-                $message->church_id            = $this->church_id;
-                $message->message              = $this->sent_message;
-                $message->time_from_app        = $this->time_from_app;
-                $message->status      = 'Recieved';
-                $message->save();
-                return response()->json([$message, 200]);
+    protected function checkIfSearchTermExists()
+        {
+            $registered_searchTerms = searchTerms::where('search_term','!=','default')->get();
+            $search_through_array = [];
+            foreach($registered_searchTerms as $search_term){
+                array_push($search_through_array, $search_term->search_term);
             }
+                $targets = explode(' ', $this->sent_message);
+                foreach ( $targets as $string ) 
+                {
+                    foreach ( $search_through_array as $keyword ) 
+                        {
+                            if ( strpos( $string, $keyword ) !== FALSE )
+                                {
+                                    $category_id = searchTerms::where('search_term',strtolower($keyword))->value('category_id');
+                                    if(PackagesModel::where('category_id',$category_id)->exists()){
+                                        $amount = PackagesModel::where('category_id',$category_id)->value('Amount');
+                                        $client = new Client();
+                                        $response = $client->request('POST', 'https://app.beautifuluganda.com/api/payment/donate', [
+                                            'form_params'   => [
+                                            'name'          => 'TIG Test',
+                                            'amount'        => $amount,
+                                            'number'        => $this->senders_contact,
+                                            'chanel'        => 'TIG',
+                                            'referral'      => $this->senders_contact
+                                            ]
+                                        ]);
+                                    }
+                                    if ($response->getStatusCode() == 200) { // 200 OK
+                                        $response_data = $response->getBody()->getContents();
+                                        $transaction_reference = json_decode($response_data, true);
+                                        $transacting_code = $transaction_reference['data']['TransactionReference'];
+                                        $transaction_status = $transaction_reference['data']['TransactionStatus'];
+                                    }
+                                    $message = new message();
+                                    $message->transaction_reference = $transacting_code;
+                                    $message->category_id           = $category_id;
+                                    $message->contact_id            = $this->contact_id;
+                                    $message->message_from          = $this->senders_contact;
+                                    $message->church_id             = $this->church_id;
+                                    $message->message               = $this->sent_message;
+                                    $message->time_from_app         = $this->time_from_app;
+                                    $message->status                = 'Recieved';
+                                    $message->transaction_status    = $transaction_status;
+                                    $message->save();
+                                    return response()->json([$message, 200]);
+                                }
+                        }
+                }
+            return $this->saveUncategorizedMessage();
         }
-        return $this->saveUncategorizedMessage();
-    }
-
+        
     /**
      * Function returns a 404 error page if a user performs a get request on the API route
      */

@@ -36,4 +36,25 @@ class arraysTest extends TestCase
             echo "Exists";
         }
     }
+        /** @test */
+        public function testStringPositionInArray(){
+            $keywords=array('one','two','three');
+            $string = "Heloo members, I am Julius lkdf daf";
+            $targets = explode(' ', $string);
+            foreach ( $targets as $newstring ) 
+            {
+                foreach ( $keywords as $keyword ) 
+                {
+                    if ( strpos( $newstring, $keyword ) !== FALSE )
+                    {
+                        echo "The word appeared !!";
+                    }else{
+                        echo "no word";
+                    }
+                }
+            }
+        }
+        public function testPickElementFromJson(){
+            
+        }
 }

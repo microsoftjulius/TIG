@@ -65,11 +65,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/show-search-terms','messages@display_search_terms');
     Route::get('/packages','PackagesController@getChurchPackages')->name('Packages');
     Route::get('/addnewsubscription','PackagesController@selectSubscribedForMessagesTitle');
-    Route::get('/logs','PackagesController@getPaymentLogs')->name('Subscription Logs');
+    Route::get('/logs','PackagesController@getPaymentLogs')->name('Payment Logs');
     // Route::get('/messages/{message}/group_id/{group}/church_id/{church}','messages@incoming');
     // //Route::get('/messages/{message}/group_id/{group}/church_id/{church}/category_id/{category}','messages@incoming');
     Route::get('/packages/category/{category_id}/time_frame/{time_frame}/contact_number/{contact_number}/amount/{amount}','PackagesController@createAutomaticPackage');
-    Route::post('/save-manual-subscription','PackagesController@createManualSubscription');
+    Route::post('/create-a-subscription-period','PackagesController@createASubscriptionTimeFrame');
     Route::get('/uncategorized-messages','messages@showUnCategorizedMessages');
     Route::post('/delete-uncategorized-message/{id}','messages@deleteUncategorizedMessage');
     Route::get('/deleted-messages','messages@showDeletedMessages');

@@ -33,43 +33,35 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     <!--Setupform-->
-                    <form class="col-md-offset-3 col-sm-6" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" action="/save-manual-subscription" method="POST">
+                    <form class="col-md-offset-3 col-sm-6" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" action="/create-a-subscription-period" method="POST">
                         @csrf
                         @include('layouts.message')
-                    <div class="panel-heading text-center"><h4>Please add subscription details</h4>
+                    <div class="panel-heading text-center"><h4>Create A Subscription Type</h4>
                     <hr>
                     </div>
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Category</label>
+                        <div class="col-sm-9">
+                        <input type="text" name="category_id" list="messages_id" class="form-control" autocomplete="off">
+                            <datalist id="messages_id">
+                            @foreach ($subscribes_for_messages as $message)
+                                <option value="{{$message->title}}"></option>
+                            @endforeach
+                            </datalist> 
+                        </div>
+                    </div>
                             <div class="form-group row md-form">
-                                <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Period</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control form-control-sm" name="time_frame" id="materialFormCardNameEx" placeholder="Enter Your time frame" value="{{old('time_frame')}}" required>
+                                <label for="colFormLabelSm" class="col-sm-3 col-form-label col-form-label-sm">Period (in days)</label>
+                                <div class="col-sm-9">
+                                <input type="number" class="form-control form-control-sm" name="time_frame" id="materialFormCardNameEx" placeholder="Eg. 30 for 30 days" value="{{old('time_frame')}}" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
-                                <label for="colFormLabel" class="col-sm-2 col-form-label">Contact</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control" id="colFormLabel" name="contact_number" placeholder="Enter Your contact" value="{{old('contact_number')}}" required>
+                                <label for="colFormLabelLg" class="col-sm-3 col-form-label col-form-label-lg">Amount</label>
+                                <div class="col-sm-9">
+                                <input type="text" class="form-control form-control-lg" name="Amount" id="colFormLabelLg" placeholder="shs." value="{{old('Amount')}}" autocomplete="off" required>
                                 </div>
-                            </div>
-                            <div class="form-group row">
-                                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Amount</label>
-                                <div class="col-sm-10">
-                                <input type="text" class="form-control form-control-lg" name="Amount" id="colFormLabelLg" placeholder="shs." value="{{old('Amount')}}" required>
-                                </div>
-                            </div>
-                            
-                            <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Category</label>
-                                    <div class="col-sm-10">
-                                    <input type="text" name="category_id" list="messages_id" class="form-control">
-                                        <datalist id="messages_id">
-                                        @foreach ($subscribes_for_messages as $message)
-                                            <option value="{{$message->title}}"></option>
-                                        @endforeach
-                                        </datalist> 
-                                    </div>
-                                </div>
-                            
+                            </div>                            
                             <div class="form-group row">
                                 <div class="text-center py-4 mt-3 ">
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>

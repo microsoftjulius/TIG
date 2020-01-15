@@ -55,7 +55,7 @@
                                             <td>{{$index+1}}</td>
                                             <td>No Category</td>
                                             <td>{{$message->message}}</td>
-                                            <td>{{$message->contact_number}}</td>
+                                            <td>{{$message->message_from}}</td>
                                             <td>{{$message->created_at}}</td>
                                             <form action="/delete-uncategorized-message/{{$message->id}}" method="post">
                                                 @csrf

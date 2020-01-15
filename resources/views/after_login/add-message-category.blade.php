@@ -43,7 +43,7 @@
                                     <div class="col-md-6">
                                             <label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm">Message category</label>
                                             <div class="col-sm-8">
-                                            <input type="text" class="form-control form-control-sm" name="category" id="materialFormCardNameEx" placeholder="message category" required value="{{ old('category')}}">
+                                            <input type="text" class="form-control form-control-sm" name="category" id="materialFormCardNameEx" placeholder="message category" autocomplete="off" required value="{{ old('category')}}">
                                             </div>
                                     </div>
                             </div> 

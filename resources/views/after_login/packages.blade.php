@@ -55,7 +55,7 @@
                             </div>
                             <div class="col-md-2">
                                 <div class="input-group">
-                                <a href="/addnewsubscription"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> New subscription</i></button></a>
+                                <a href="/addnewsubscription"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> New Package</i></button></a>
                                 </div>
                             </div>
                         </div>
@@ -70,8 +70,6 @@
                                                     <tr>
                                                         <th class="th-sm">No.</th>
                                                         <th class="th-sm">Category Name</th>
-                                                        <th class="th-sm">Phone Number</th>
-                                                        <th class="th-sm">Subscription Type</th>
                                                         <th class="th-sm">Time frame</th>
                                                         <th class="th-sm">Amount</th>
                                                     </tr>
@@ -86,9 +84,7 @@
                                                 <tr>
                                                     <td>{{ $i++ }}</td>
                                                     <td>{{ $package->title }}</td>
-                                                    <td>{{ $package->contact_number }}</td>
-                                                    <td>{{ $package->type }}</td>
-                                                    <td>{{ $package->time_frame }}</td>
+                                                    <td>{{ $package->time_frame }} days</td>
                                                     <td>{{ number_format($package->Amount) }} /=</td>
                                                 </tr>
                                                 @endforeach

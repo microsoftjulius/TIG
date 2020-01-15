@@ -103,7 +103,7 @@
                                         <tr>
                                             <th class="th-sm">{{ $i++ }}</th>
                                             <th class="th-sm">{{ $messages->message }}</th>
-                                            <th class="th-sm">{{ $messages->contact_number }}</th>
+                                            <th class="th-sm">{{ $messages->message_from }}</th>
                                             <th class="th-sm">{{ $messages->created_at }}</th>
                                             <th class="th-sm">{{ $messages->title }}</th>
                                         </tr>

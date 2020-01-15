@@ -39,7 +39,7 @@
                 <li><a href="/message-categories"><i class=""></i> Message categories </a></li>
                 <li><a href="/incoming-messages"><i class=""></i> Incoming messages </a></li>
                 <li><a href="/uncategorized-messages"><i class=""></i> Uncategorized Messages</a></li>
-                <li><a href="/deleted-messages"><i class=""></i> Deleted Messages</a></li>
+                {{-- <li><a href="/deleted-messages"><i class=""></i> Deleted Messages</a></li> --}}
             </ul>
         </li>
         <li><a><i class="fa fa-cc-paypal"></i> Payments <span class="fa fa-chevron-down"></span></a>

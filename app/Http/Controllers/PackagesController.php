@@ -8,6 +8,7 @@ use App\category;
 use App\SubscribedForMessages;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use App\messages;
 
 class PackagesController extends Controller
 {
@@ -51,19 +52,8 @@ class PackagesController extends Controller
         return view('after_login.new-subscription-form',compact('subscribes_for_messages'));
     }
 
-    public function createManualSubscription(Request $request){
-        if(empty($this->contact_number)) {
-            return $this->error_message->emptyPhoneNumber();
-        }
-        if(strlen($this->contact_number) > $this->contact_length || strlen($this->contact_number) > $this->contact_length){
-            return $this->error_message->contactLengthError();
-        }
-        if(!ctype_digit($this->contact_number)){
-            return $this->error_message->alphabeticalCharactersErrorResponse();
-        }
-        if(!in_array(substr($this->contact_number,0,5),$this->contacts_format)){
-            return $this->error_message->allowedContactsErrorMessage();
-        }
+    public function createASubscriptionTimeFrame(Request $request){
+
         if(category::where('title',$request->category_id)->doesntExist()){
             return redirect()->back()->withInput()->withErrors("Kindly just choose the categories listed, or create a new category");
         }
@@ -71,20 +61,16 @@ class PackagesController extends Controller
         PackagesModel::create(array(
             'church_id'      => Auth::user()->church_id,
             'category_id'    => $category_id,
-            'contact_number' => $this->contact_number,
             'time_frame'     => $this->time_frame,
             'Amount'         => $this->Amount,
-            'type'           => 'Manual'
         ));
-        return redirect('/packages')->with('message', 'New Package subscription has been created Successfully');;
+        return redirect('/packages')->with('message', 'New Subscription Type has been created Successfully');
     }
 
     public function getPaymentLogs(){
-            $all_packages = PackagesModel::join('category','category.id','packages.category_id')
-            ->join('church_databases','church_databases.id','category.church_id')
-            ->where('church_databases.id',Auth::user()->church_id)
-            ->select('church_databases.church_name','packages.amount','category.created_at')
-            ->paginate('10');
-            return view('after_login.log',compact('all_packages'));
+        $all_packages = messages::join('category','category.id','messages.category_id')
+        ->join('packages','packages.category_id','category.id')
+        ->paginate('10');
+        return view('after_login.log',compact('all_packages'));
     }
 }

@@ -58,7 +58,7 @@ class messages extends Controller
         $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
         ->where('category_id',null)
         ->where('status','Recieved')
-        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
+        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at','messages.message_from')->paginate('10');
         return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
     }
 
@@ -70,7 +70,7 @@ class messages extends Controller
         ->where('category_id',null)
         ->where('status','Recieved')
         ->where('messages.church_id',Auth::user()->church_id)
-        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at')->paginate('10');
+        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at','messages.message_from')->paginate('10');
         return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
     }
 
@@ -311,7 +311,7 @@ class messages extends Controller
         ->join('contacts','messages.contact_id','contacts.id')
         ->where('category.church_id',Auth::user()->church_id)
         ->where('status','Recieved')
-        ->select('messages.message','category.title','contacts.contact_number','messages.created_at')->paginate('10');
+        ->select('messages.message','category.title','contacts.contact_number','messages.created_at','messages.message_from')->paginate('10');
         $drop_down_categories = category::where('church_id', Auth::user()->church_id)
         ->select("title", "user_id", "id")->paginate(10);
         return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));

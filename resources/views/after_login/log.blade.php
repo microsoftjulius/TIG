@@ -72,9 +72,11 @@
                                                 <thead>
                                                     <tr>
                                                         <th class="th-sm">No.</th>
-                                                        <th class="th-sm">Church Name</th>
-                                                        <th class="th-sm">Amount of Money Paid</th>
-                                                        <th class="th-sm">Date of Payment</th>
+                                                        <th class="th-sm">Subscriber</th>
+                                                        <th class="th-sm">Category Subscribed for</th>
+                                                        <th class="th-sm">Amount Initiated</th>
+                                                        <th class="th-sm">Payment Status</th>
+                                                        <th class="th-sm">Subscription Date</th>
                                                     </tr>
                                                 </thead>
                                             <tbody>
@@ -86,8 +88,10 @@
                                                 @foreach ($all_packages as $index=>$packages)
                                                 <tr>
                                                     <td>{{ $i++ }}</td>
-                                                    <td>{{ $packages->church_name }}</td>
-                                                    <td>{{ number_format($packages->amount)}} /=</td>
+                                                    <td>{{ $packages->message_from }}</td>
+                                                    <td>{{ $packages->title}}</td>
+                                                    <td>{{ number_format($packages->Amount)}} /=</td>
+                                                    <td>{{ $packages->transaction_status}}</td>
                                                     <td>{{ $packages->created_at }}</td>
                                                 </tr>
                                                 @endforeach
