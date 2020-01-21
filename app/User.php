@@ -39,7 +39,7 @@ class User extends Authenticatable
 
     public function count_groups(){
         $count = churchdatabase::get()->count();
-        return $count;
+        return $count-1;
     }
 
     public function count_users_in_a_group(){

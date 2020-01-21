@@ -1,0 +1,3 @@
+Url: https://stackoverflow.com/questions/23973850/model-inheritance-in-laravel
+ UserName: werrrelin
+ Password: $2y$10$T0l4TtJXvJEz3pgL4u9JCOT7vtcz62lILceuox.2aRzlz4/q/.YDm

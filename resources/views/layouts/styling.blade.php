@@ -5,7 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="images/favicon.ico" type="image/ico" />
-
     <title>TIG </title>
 
     <!-- Bootstrap -->
@@ -39,5 +38,5 @@
     <link href="{{ asset('bootstrap/charts/css/mdb.min.css') }}" rel="stylesheet">
     @endif  --}}
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" />
-
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
 </head>

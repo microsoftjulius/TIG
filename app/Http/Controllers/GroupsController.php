@@ -37,10 +37,11 @@ class GroupsController extends Controller
             // $group_id = Groups::max('id');
             // return $group_id;
         }
+        //return Auth::user()->id;
         Groups::create(array(
-            'group_name'      =>$request->group_name,
+            'group_name'=>$request->group_name,
             'church_id' => Auth::user()->church_id,
-            'created_by' => Auth::user()->id
+            'created_by'=> Auth::user()->id,
         ));
         return redirect('/contact-groups')->with('message',"New Group has been created successfully");
     }

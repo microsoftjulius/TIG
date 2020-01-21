@@ -44,8 +44,9 @@ class messages extends Controller
         ->where('status','!=','Deleted')
         ->where('status','!=','Scheduled')
         ->where('users.church_id', Auth::user()->church_id)
-        ->distinct('messages.message')
-        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email')
+        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name',
+        DB::raw('COUNT(messages.status) as messageCount'))
+        ->groupBy('messages.message')
         ->paginate('10');
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
@@ -55,10 +56,10 @@ class messages extends Controller
      * Function to display uncategorized messages to admin
      */
     protected function displayUncategorizedMessageToAdmin(){
-        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
+        $uncategorized_messages = message::join('ChurchHostedNumber','messages.contact_id','ChurchHostedNumber.id')
         ->where('category_id',null)
         ->where('status','Recieved')
-        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at','messages.message_from')->paginate('10');
+        ->select('messages.message','messages.id','ChurchHostedNumber.contact_number','messages.created_at','messages.message_from')->paginate('10');
         return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
     }
 
@@ -66,11 +67,11 @@ class messages extends Controller
      * Function to display uncategorized messages to the admin
      */
     protected function displayUncategorizedMessageToUser(){
-        $uncategorized_messages = message::join('contacts','messages.contact_id','contacts.id')
+        $uncategorized_messages = message::join('ChurchHostedNumber','messages.contact_id','ChurchHostedNumber.id')
         ->where('category_id',null)
         ->where('status','Recieved')
         ->where('messages.church_id',Auth::user()->church_id)
-        ->select('messages.message','messages.id','contacts.contact_number','messages.created_at','messages.message_from')->paginate('10');
+        ->select('messages.message','messages.id','ChurchHostedNumber.contact_number','messages.created_at','messages.message_from')->paginate('10');
         return view('after_login.uncategorized_messages',compact('uncategorized_messages'));
     }
 

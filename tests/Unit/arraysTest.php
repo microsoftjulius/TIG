@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Carbon\Carbon;
 
 class arraysTest extends TestCase
 {
@@ -54,7 +55,27 @@ class arraysTest extends TestCase
                 }
             }
         }
-        public function testPickElementFromJson(){
-            
+        /** @test */
+        public function testCarboTimeSubtraction(){
+            $mytime = Carbon::now();
+            $mytime->setTimezone('Africa/Kampala');
+            echo $mytime->subMinutes(7); 
         }
+        /** @test */
+        public function gradingStudents() {
+            $grades= [50,55,60];
+            for($i=0; $i<=100; $i++){
+                foreach($grades as $grade){
+                    if($grade[$i] < 40){
+                        continue;
+                    }elseif($grade[i+1]-$grade[i] < 3)
+                        if((($grade[i+1]-$grade[i]) % 5)< 3){
+                            echo 3;
+                        }else{
+                            echo 3;
+                        }
+                    }
+                }
+            }
+            
 }

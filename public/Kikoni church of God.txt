@@ -1,0 +1,3 @@
+Url: https://cogwa.org/?gclid=CjwKCAiAsIDxBRAsEiwAV76N807Ou2CoATgPkx33tQM2AiXKJ0D_uX348NnpcECR8D7ZvyEKCID7vRoCS3QQAvD_BwE
+ UserName: Kikoni church of God
+ Password: $2y$10$YYsJHijaNRX5/sYE7xrsnOxwZqz91O6COfaIINeHnR5CMQF8ye7ZG

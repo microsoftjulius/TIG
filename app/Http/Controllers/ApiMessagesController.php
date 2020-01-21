@@ -7,6 +7,7 @@ use App\Contacts;
 use App\messages as message;
 use App\Groups;
 use App\searchTerms;
+use App\ChurchHostedNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\MessagesCollection;
@@ -18,12 +19,12 @@ use App\PackagesModel;
 class ApiMessagesController extends Controller
 {
     /**
-     * The contact_number fiel is the hosted number litrary
+     * The contact_number field is the hosted number litrary
      */
     public function __construct(Request $request){
         $this->error404Error    = new ErrorMessagesController();
-        $this->contact_id       = Contacts::where('contact_number',$request->to)->value('id');
-        $this->church_id        = Contacts::where('contact_number',$request->to)->value('church_id');
+        $this->contact_id       = ChurchHostedNumber::where('contact_number',$request->to)->value('id');
+        $this->church_id        = ChurchHostedNumber::where('contact_number',$request->to)->value('church_id');
         $this->message_sent_to  = $request->to;
         $this->sent_message     = $request->message;
         $this->time_from_app    = $request->date_and_time;
@@ -156,29 +157,32 @@ class ApiMessagesController extends Controller
                                             'referral'      => $this->senders_contact
                                             ]
                                         ]);
+                                        if ($response->getStatusCode() == 200) { // 200 OK
+                                            $response_data = $response->getBody()->getContents();
+                                            $transaction_reference = json_decode($response_data, true);
+                                            $transacting_code = $transaction_reference['data']['TransactionReference'];
+                                            $transaction_status = $transaction_reference['data']['TransactionStatus'];
+                                        }
+                                        //Picking the church id from the number that has been hosted under the church, (the number to which the message is sent to) 
+                                        $message = new message();
+                                        $message->transaction_reference = $transacting_code;
+                                        $message->category_id           = $category_id;
+                                        $message->contact_id            = $this->contact_id;
+                                        $message->message_from          = $this->senders_contact;
+                                        $message->church_id             = $this->church_id;
+                                        $message->message               = $this->sent_message;
+                                        $message->time_from_app         = $this->time_from_app;
+                                        $message->status                = 'Recieved';
+                                        $message->transaction_status    = $transaction_status;
+                                        $message->save();
+                                        return response()->json([$message, 200]);
                                     }
-                                    if ($response->getStatusCode() == 200) { // 200 OK
-                                        $response_data = $response->getBody()->getContents();
-                                        $transaction_reference = json_decode($response_data, true);
-                                        $transacting_code = $transaction_reference['data']['TransactionReference'];
-                                        $transaction_status = $transaction_reference['data']['TransactionStatus'];
+                                    else{
+                                        return $this->saveUncategorizedMessage();
                                     }
-                                    $message = new message();
-                                    $message->transaction_reference = $transacting_code;
-                                    $message->category_id           = $category_id;
-                                    $message->contact_id            = $this->contact_id;
-                                    $message->message_from          = $this->senders_contact;
-                                    $message->church_id             = $this->church_id;
-                                    $message->message               = $this->sent_message;
-                                    $message->time_from_app         = $this->time_from_app;
-                                    $message->status                = 'Recieved';
-                                    $message->transaction_status    = $transaction_status;
-                                    $message->save();
-                                    return response()->json([$message, 200]);
                                 }
                         }
                 }
-            return $this->saveUncategorizedMessage();
         }
         
     /**

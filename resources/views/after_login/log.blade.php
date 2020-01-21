@@ -35,36 +35,6 @@
                 @include('layouts.message')
                 <!-- Search form -->
                 @include('layouts.breadcrumbs')
-                {{--<div class="row">
-                <form  class="pull-right" action="/" method="">
-                        @csrf
-                        <div class="col-md-12">
-                        <div class="col-md-4">
-                                <div class="input-group">
-
-                                </div>
-                            </div>
-                            <div class="col-md-4"></div>
-                            <div class="col-md-2">
-                                <div class="input-group">
-                                    <input type="text" class="form-control col-md-12" placeholder="Search package" name="" id="srch-term" value="" required>
-                                    <div class="input-group-btn">
-                                        <button class="btn btn-success" type="submit"><i class="glyphicon glyphicon-search"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="input-group">
-                                <a href="/"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> </i></button></a>
-                                </div>
-                            </div>
-
-                        </div>
-                    </form>
-                        </div>
-                        --}}
-                    <!--Table-->
                 <div class="row">
                             <div class="col-lg-12">
                                 <section class="box col-lg-12 col-sm-12 col-md-12 mt-3">
@@ -75,7 +45,7 @@
                                                         <th class="th-sm">Subscriber</th>
                                                         <th class="th-sm">Category Subscribed for</th>
                                                         <th class="th-sm">Amount Initiated</th>
-                                                        <th class="th-sm">Payment Status</th>
+                                                        <th class="th-sm">Transaction Status</th>
                                                         <th class="th-sm">Subscription Date</th>
                                                     </tr>
                                                 </thead>
@@ -91,8 +61,8 @@
                                                     <td>{{ $packages->message_from }}</td>
                                                     <td>{{ $packages->title}}</td>
                                                     <td>{{ number_format($packages->Amount)}} /=</td>
-                                                    <td>{{ $packages->transaction_status}}</td>
-                                                    <td>{{ $packages->created_at }}</td>
+                                                    <td id="transaction_status">{{ $packages->transaction_status}}</td>
+                                                    <td>{{ $packages->time_from_app }}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -112,5 +82,24 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $.ajaxSetup({
+                headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                    // var data = { id : $(this).val() };
+                    $.post('/logs', function(response){ // Shortcut for $.ajax({type: "post"})
+                        if(response.success)
+                        {
+                            var transactionStatus = $('#transaction_status').empty();
+                            $.each(response.all_packages, function(i, all_packages){
+                                $('<option/>', {
+                                    value:all_packages.transaction_status,
+                                }).appendTo(transactionStatus);
+                            })
+                        }
+                    }, 'json');
+                });
+        </script>
     </body>
 </html>

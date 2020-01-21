@@ -39,7 +39,9 @@ class ErrorMessagesController extends Controller
     public function churchNameErrorResponse(){
         return Redirect()->back()->withInput()->withErrors("The supplied church name is invalid, make sure you don't use special characters");
     }
-
+    public function numberExistsForChurchError(){
+        return Redirect()->back()->withInput()->withErrors("The supplied number is already registered under a church");
+    }
     /**
      * Section for success messages
      */

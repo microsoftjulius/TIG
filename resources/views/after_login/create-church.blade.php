@@ -41,25 +41,31 @@
                             <div class="form-group row md-form">
                                 <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
                                 <div class="col-sm-10">
-                                <input type="text" class="form-control form-control-sm" name="church_name" id="materialFormCardNameEx" placeholder="Enter group name" value="{{old('church_name')}}" required>
+                                <input type="text" class="form-control form-control-sm" name="church_name" id="materialFormCardNameEx" placeholder="Enter group name" value="{{old('church_name')}}" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="colFormLabel" class="col-sm-2 col-form-label">Database</label>
                                 <div class="col-sm-10">
-                                <input type="text" class="form-control" id="colFormLabel" name="database_name" placeholder="Enter Database name" value = "{{old('database_name')}}" required>
+                                <input type="text" class="form-control" id="colFormLabel" name="database_name" placeholder="Enter Database name" value = "{{old('database_name')}}" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">URL</label>
                                 <div class="col-sm-10">
-                                <input type="url" class="form-control form-control-lg" name="url" id="colFormLabelLg" placeholder="Enter Your url" value="{{old('url')}}" required>
+                                <input type="url" class="form-control form-control-lg" name="url" id="colFormLabelLg" placeholder="Enter Your url" value = "{{old('url')}}" autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">
                                 <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">DB Password</label>
                                 <div class="col-sm-10">
-                                <input type="password" class="form-control form-control-lg" name="password" id="colFormLabelLg" placeholder="xxxxxxxxxxxxxxx" required>
+                                <input type="password" class="form-control form-control-lg" name="password" id="colFormLabelLg" placeholder="xxxxxxxxxxxxxxx" autocomplete="off" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Hosted Number</label>
+                                <div class="col-sm-10">
+                                <input type="number" class="form-control form-control-lg" name="hosted_number" id="colFormLabelLg" placeholder="256*********" {{old('hosted_number')}} autocomplete="off" required>
                                 </div>
                             </div>
                             <div class="form-group row">

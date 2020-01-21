@@ -27,7 +27,7 @@ class ChurchUserController extends Controller {
         if(empty($this->contact_number)) {
             return $this->error_message->emptyPhoneNumber();
         }
-        if(strlen($this->contact_number) > $this->contact_length || strlen($this->contact_number) > $this->contact_length){
+        if(strlen($this->contact_number) > $this->contact_length || strlen($this->contact_number) < $this->contact_length){
             return $this->error_message->contactLengthError();
         }
         if(!ctype_digit($this->contact_number)){
@@ -53,8 +53,8 @@ class ChurchUserController extends Controller {
         if ($request->new_password == $request->confirm_password) {
             if (Hash::check($current_password, $get_users_current_password)) {
                 User::where("id", Auth::user()->id)->update(array('password' => Hash::make($request->new_password)));
-                return Redirect()->back()->with('message', 'Password was Updated successfully');
                 Auth::logout();
+                return Redirect()->back()->with('message', 'Password was Updated successfully');
             } else {
                 return Redirect()->back()->withInput()->withErrors("Incorrect password has been supplied");
             }

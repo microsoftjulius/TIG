@@ -1,0 +1,3 @@
+Url: http://localhost:8000/create-TIG-groups
+ UserName: dasdas
+ Password: $2y$10$AwQzQ9M9sWamaLYwG9B3HeHDICjX32BFYdJ.G.vnafirwZRQrhjwC

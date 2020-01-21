@@ -6,20 +6,27 @@ use App\User;
 use App\churches;
 use App\Contacts;
 use App\churchdatabase;
+use App\ChurchHostedNumber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
 class ChurchesController extends Controller
 {
-    public function __construct(){
+    public function __construct(Request $request){
         $this->error_message = new ErrorMessagesController();
         $this->allowed_fileExtensions = ['jpg','png','gif','jpeg','ico'];
+        $this->contact_number = $request->hosted_number;
+        $this->contacts_format = ['25677','25678','25670','25679','25671','25675','25675',
+        '25620','25639','25641'];
+        $this->contact_length = 12;
     }
     public function getAllChurches()
     {
-        $churches = churchdatabase::where('id','>',1)
-        ->orderBy('created_at','Desc')
+        $churches = churchdatabase::join('ChurchHostedNumber','ChurchHostedNumber.church_id','church_databases.id')
+        ->where('church_databases.id','>',1)
+        ->select('church_databases.*','ChurchHostedNumber.contact_number')
+        ->orderBy('church_databases.created_at','Desc')
         ->paginate('10');
         if(auth()->user()->church_id == 1){
             return view('after_login.churches',compact('churches'));
@@ -33,8 +40,24 @@ class ChurchesController extends Controller
         $all_churches = churchdatabase::where('id',$id)->get('id');
         return view('after_login.create-users',compact('all_churches','all_users_in_this_church'));
     }
+
     public function addNewChurch(Request $request)
     {
+        if(ChurchHostedNumber::where('contact_number',$this->contact_number)->exists()){
+            return $this->error_message->numberExistsForChurchError();
+        }
+        if(!in_array(substr($this->contact_number,0,5),$this->contacts_format)){
+            return $this->error_message->allowedContactsErrorMessage();
+        }
+        if(empty($this->contact_number)) {
+            return $this->error_message->emptyPhoneNumber();
+        }
+        if(strlen($this->contact_number) > $this->contact_length || strlen($this->contact_number) < $this->contact_length){
+            return $this->error_message->contactLengthError();
+        }
+        if(!ctype_digit($this->contact_number)){
+            return $this->error_message->alphabeticalCharactersErrorResponse();
+        }
         if(preg_match('/[\'\/~`\!@#\$%\^&\*\(\)_\-\+=\{\}\[\]\|;:"\<\>,\.\?\\\]/', $request->church_name)){
             return $this->error_message->churchNameErrorResponse();
         }
@@ -70,6 +93,10 @@ class ChurchesController extends Controller
         ]);
         User::where('church_id',null)->update(array(
             'church_id' =>  $church_id,
+        ));
+        ChurchHostedNumber::create(array(
+            'church_id'      => $church_id,
+            'contact_number' => $request->hosted_number 
         ));
         //creating the churches properties file
 

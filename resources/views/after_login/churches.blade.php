@@ -71,6 +71,7 @@
                                             <th class="th-sm">Database name</th>
                                             <th class="th-sm">Database url</th>
                                             <th class="th-sm">Logo</th>
+                                            <th class="th-sm">Hosted Number</th>
                                             <th class="th-sm"> Options</th>
                                         </tr>
                                     </thead>
@@ -85,8 +86,9 @@
                                             <td>{{ $i++ }}</td>
                                             <td>{{ $church->church_name }}</td>
                                             <td>{{ $church->database_name }}</td>
-                                            <td>{{ $church->database_url }}</td>
+                                            <td style="width:100px">{{ $church->database_url }}</td>
                                             <td>{{ $church->attached_logo }}</td>
+                                            <td>{{$church->contact_number}}</td>
                                             <td><a href="/view-church-user/{{$church->id}}">View user</a></td>
                                         </tr>
                                         @endforeach
