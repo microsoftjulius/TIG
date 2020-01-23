@@ -70,6 +70,7 @@ class PackagesController extends Controller
     public function getPaymentLogs(){
         $all_packages = messages::join('category','category.id','messages.category_id')
         ->join('packages','packages.category_id','category.id')
+        ->where('packages.church_id',Auth::user()->church_id)
         ->paginate('10');
         return view('after_login.log',compact('all_packages'));
     }

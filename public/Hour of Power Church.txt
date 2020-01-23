@@ -1,0 +1,3 @@
+Url: http://localhost:8000/create-TIG-groups
+ UserName: Hour of Power Church
+ Password: $2y$10$W3efADXMFHCKxWyvnSC29u8ONLLr3xU./hYVWZ1W16/bYWK.1AEOe

@@ -40,7 +40,7 @@ class arraysTest extends TestCase
         /** @test */
         public function testStringPositionInArray(){
             $keywords=array('one','two','three');
-            $string = "Heloo members, I am Julius lkdf daf";
+            $string = "Heloo members, I am Julius lkdf daf one";
             $targets = explode(' ', $string);
             foreach ( $targets as $newstring ) 
             {
@@ -49,8 +49,6 @@ class arraysTest extends TestCase
                     if ( strpos( $newstring, $keyword ) !== FALSE )
                     {
                         echo "The word appeared !!";
-                    }else{
-                        echo "no word";
                     }
                 }
             }

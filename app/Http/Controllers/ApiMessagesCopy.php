@@ -39,91 +39,113 @@ class ApiMessagesController extends Controller
         if(empty($this->message_sent_to) || empty($this->sent_message) || empty($this->time_from_app) || empty($this->senders_contact)){
             return "All the supplied parameters are required";
         }
-        if($this->getRecieverContact()){
-            return $this->getFirstSearchTerm();
+        if($this->contact_id){
+            return $this->checkIfSearchTermExists();
         }
         else{
-            //return $this->saveUncategorizedMessage();
+            return $this->createNewContactSubscriber();
         }
     }
 
-    protected function getRecieverContact(){
-        return $this->contact_id;
-    }
-
     /**
-     * This function gets the church that has registered the recieved number
+     * Function saves uncategorized Message
+     * Maps the Hosted contact number with the senders number
      */
-    protected function getContactsChurch(){
-        return $this->church_id;
-    }
-
-    /**
-     * This function gets all the search terms registered under this church
-     */
-    protected function getChurchSearchTerms(){
-        $church_search_terms = searchTerms::where('church_id', $this->getContactsChurch())
-        ->where('search_term','!=','default')
-        ->get();
-        return $church_search_terms;
-    }
-
-    /**
-     * This function save a categorized message. it only saves it if the category
-     * has no payment package attached to it
-     */
-    protected function saveCategorizedMessage(){
-        
-        $message = new message();
-        $message->category_id           = $category_id;
-        $message->contact_id            = $this->getRecieverContact();
-        $message->message_from          = $this->senders_contact;
-        $message->church_id             = $this->getContactsChurch();
-        $message->message               = $this->sent_message;
-        $message->time_from_app         = $this->time_from_app;
-        $message->status                = 'Recieved';
-        $message->save();
-    }
-    /**
-     * This function saves checks if the message does not belong to any category
-     * Saves the message as uncategorized under a church that has the message to as hosted
-     */
-
     protected function saveUncategorizedMessage(){
         $message = new message();
         $message->category_id = null;
-        $message->contact_id           = $this->getRecieverContact();
+        $message->contact_id           = $this->contact_id;
         $message->message_from         = $this->senders_contact;
         $message->message              = $this->sent_message;
         $message->time_from_app        = $this->time_from_app;
         $message->status               = 'Recieved';
-        $message->church_id            = $this->getContactsChurch();
+        $message->church_id            = $this->church_id;
         $message->save();
         return response()->json([$message, 200]);
     }
 
     /**
-     * This function searches through the message to find the registered search term
+     * Function creates a new hosted contact
+     * contact_number field is the hosted contact
+     * it saves if a system recieves a message that is sent to an unhosted number 
      */
+    protected function createNewContactSubscriber(){
+        if($this->contact_id){
+            Contacts::create(array('contact_number' => $this->message_sent_to));
+            $message = new message();
+            $message->category_id = null;
+            $message->contact_id           = $this->contact_id;
+            $message->message_from         = $this->senders_contact;
+            $message->message              = $this->sent_message;
+            $message->time_from_app        = $this->time_from_app;
+            $message->status               = 'Recieved';
+            $message->church_id            = $this->church_id;
+            $message->save();
+            return response()->json([$message]);
+        }
+        else{
+            return $this->createNewContactToAMessageCategory();
+        }
+    }
+    /**
+     * Contact doesn't exist but message has a category
+     * It occurs if the Message has been sent but to an unhosted contact
+     * Its quite impossible since a number must have been hosted
+     */
+    protected function createNewContactToAMessageCategory(){
+        Contacts::create(array('contact_number' => $this->message_sent_to));
+        $this->contact_id = Contacts::where('contact_number', $this->message_sent_to)->value('id');
+        $registered_searchTerms = searchTerms::all();
+        $search_through_array = [];
 
-    protected function getFirstSearchTerm()
+        foreach($registered_searchTerms as $search_term){
+            array_push($search_through_array, $search_term->search_term);
+        }
+            $targets = explode(' ', $this->sent_message);
+            foreach ( $targets as $string ) 
+            {
+                foreach ( $search_through_array as $keyword ) 
+                {
+                    if ( strpos( $string, $keyword ) !== FALSE )
+                        {
+                            $category_id = searchTerms::where('search_term',strtolower($keyword))->value('category_id');
+                            $message = new message();
+                            $message->category_id          = $category_id;
+                            $message->contact_id           = $this->contact_id;
+                            $message->message_from         = $this->senders_contact;
+                            $message->church_id            = $this->church_id;
+                            $message->message              = $this->sent_message;
+                            $message->time_from_app        = $this->time_from_app;
+                            $message->status      = 'Recieved';
+                            $message->save();
+                            return response()->json([$message, 200]);
+                        }
+                }
+            }
+        return $this->saveUncategorizedMessage();
+    } 
+
+    /**
+     * Function checks it the message has a search term
+     * Maps the senders contact to the hosted contact
+     * This function pops the message on a users phone to approve the payment
+     */
+    protected function checkIfSearchTermExists()
         {
+            $registered_searchTerms = searchTerms::where('search_term','!=','default')->get();
             $search_through_array = [];
-            foreach($this->getChurchSearchTerms() as $search_term){
+            foreach($registered_searchTerms as $search_term){
                 array_push($search_through_array, $search_term->search_term);
             }
                 $targets = explode(' ', $this->sent_message);
                 foreach ( $targets as $string ) 
                 {
-                    if(empty($search_through_array)){
-                        return $this->saveUncategorizedMessage();
-                    }
                     foreach ( $search_through_array as $keyword ) 
                         {
                             if ( strpos( $string, $keyword ) !== FALSE )
                                 {
                                     $category_id = searchTerms::where('search_term',strtolower($keyword))->value('category_id');
-                                    if(PackagesModel::where('category_id',$category_id)->where('church_id', $this->getContactsChurch())->exists()){
+                                    if(PackagesModel::where('category_id',$category_id)->exists()){
                                         $amount = PackagesModel::where('category_id',$category_id)->value('Amount');
                                         $client = new Client();
                                         $response = $client->request('POST', 'https://app.beautifuluganda.com/api/payment/donate', [
@@ -155,29 +177,17 @@ class ApiMessagesController extends Controller
                                         $message->save();
                                         return response()->json([$message, 200]);
                                     }
-                                    
                                     else{
-                                        $message = new message();
-                                        $message->category_id           = $category_id;
-                                        $message->contact_id            = $this->getRecieverContact();
-                                        $message->message_from          = $this->senders_contact;
-                                        $message->church_id             = $this->getContactsChurch();
-                                        $message->message               = $this->sent_message;
-                                        $message->time_from_app         = $this->time_from_app;
-                                        $message->status                = 'Recieved';
-                                        $message->save();
-                                        return response()->json([$message, 200]);
+                                        return $this->saveUncategorizedMessage();
                                     }
                                 }
-                                
                         }
-                        
                 }
-                return $this->saveUncategorizedMessage();
         }
-    protected function checkIfMessageBelongsToCategory(){
         
-    }
+    /**
+     * Function returns a 404 error page if a user performs a get request on the API route
+     */
     public function getErrorMessageOnHttpGet(){
         return $this->error404Error->get404ErrorMessage();
     }

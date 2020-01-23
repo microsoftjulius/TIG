@@ -29,7 +29,7 @@ class messages extends Controller
         ->join('church_databases','church_databases.id','messages.church_id')
         ->where('status','!=','Deleted')
         ->where('status','!=','Scheduled')
-        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name',
+        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email',
         DB::raw('COUNT(messages.status) as messageCount'))
         ->groupBy('messages.message')
         ->paginate('10');
@@ -44,7 +44,7 @@ class messages extends Controller
         ->where('status','!=','Deleted')
         ->where('status','!=','Scheduled')
         ->where('users.church_id', Auth::user()->church_id)
-        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email','church_databases.church_name',
+        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email',
         DB::raw('COUNT(messages.status) as messageCount'))
         ->groupBy('messages.message')
         ->paginate('10');
@@ -307,12 +307,12 @@ class messages extends Controller
     /**
      * Function to show incoming messages
      */
-    public function show_incoming_messages(Request $request){
-        $messages_to_categories = category::join('messages','messages.category_id','category.id')
-        ->join('contacts','messages.contact_id','contacts.id')
-        ->where('category.church_id',Auth::user()->church_id)
-        ->where('status','Recieved')
-        ->select('messages.message','category.title','contacts.contact_number','messages.created_at','messages.message_from')->paginate('10');
+    public function show_incoming_messages(){
+        $messages_to_categories = message::join('category','category.id','messages.category_id')
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from')->paginate('10');
+        
+        
         $drop_down_categories = category::where('church_id', Auth::user()->church_id)
         ->select("title", "user_id", "id")->paginate(10);
         return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
