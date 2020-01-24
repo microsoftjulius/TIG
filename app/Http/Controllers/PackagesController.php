@@ -33,20 +33,6 @@ class PackagesController extends Controller
         return view('after_login.packages',compact('all_packages'));
     }
 
-    public function createAutomaticPackage(Request $request){
-        $church_id = 1;
-        $category_id = 2;
-        PackagesModel::create(array(
-            'church_id'      => $church_id,
-            'category_id'    => $category_id,
-            'contact_number' => $this->contact_number,
-            'time_frame'     => $this->time_frame,
-            'Amount'         => $this->amount,
-            'type'           => 'Automatic'
-        ));
-        return redirect('/packages')->with('message', 'New Package Subscription has been created  Successfully');
-    }
-
     public function selectSubscribedForMessagesTitle(){
         $subscribes_for_messages = category::where('church_id',Auth::user()->church_id)->get();
         return view('after_login.new-subscription-form',compact('subscribes_for_messages'));
@@ -68,9 +54,25 @@ class PackagesController extends Controller
     }
 
     public function getPaymentLogs(){
+        if(Auth::user()->church_id == 1){
+            return $this->getPaymentLogsForAdmin();
+        }
+        else{
+            return $this->getPaymentLogsForChurch();
+        }
+    }
+
+    protected function getPaymentLogsForChurch(){
         $all_packages = messages::join('category','category.id','messages.category_id')
         ->join('packages','packages.category_id','category.id')
         ->where('packages.church_id',Auth::user()->church_id)
+        ->paginate('10');
+        return view('after_login.log',compact('all_packages'));
+    }
+
+    protected function getPaymentLogsForAdmin(){
+        $all_packages = messages::join('category','category.id','messages.category_id')
+        ->join('packages','packages.category_id','category.id')
         ->paginate('10');
         return view('after_login.log',compact('all_packages'));
     }

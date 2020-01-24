@@ -23,7 +23,7 @@ class ContactsController extends Controller {
             return $this->usersViewOfContactsForGroup($id);
         }
     }
-    public function save_contact_to_group($id){
+    public function save_contact_to_group(Request $request, $id){
         if(Contacts::where('group_id',$id)->where('contact_number',$this->contact_number)->exists()){
             return $this->error_message->numberExistsError();
         }

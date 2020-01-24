@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Redirect;
 class GroupsController extends Controller
 {
 
+    public function __construct(){
+        $this->networkMessage = new ErrorMessagesController();
+    }
+
     public function index()
     {
         $contacts = Groups::join('church_databases','church_databases.id','Groups.church_id')
@@ -34,8 +38,6 @@ class GroupsController extends Controller
         if(Groups::where('church_id',Auth::user()->church_id)->where('group_name',$request->group_name)
         ->exists()){
             return Redirect()->back()->withInput()->withErrors('Group Already Exists, Kindly Create a new Group');
-            // $group_id = Groups::max('id');
-            // return $group_id;
         }
         //return Auth::user()->id;
         Groups::create(array(

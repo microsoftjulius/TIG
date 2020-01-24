@@ -57,7 +57,7 @@
                                             <td>{{$message->message}}</td>
                                             <td>{{$message->message_from}}</td>
                                             <td>{{$message->created_at}}</td>
-                                            <form action="/delete-uncategorized-message/{{$message->id}}" method="post">
+                                            <form action="/delete-uncategorized-message/{{$message->id}}" method="get">
                                                 @csrf
                                                 <td><button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
                                             </form>

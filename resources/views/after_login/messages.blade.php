@@ -33,7 +33,7 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     @include('layouts.message')
-                <form  class="pull-right" action="/search-church" method="POST">
+                <form  class="pull-right" action="/search-church" method="get">
                     @csrf
                     <div class="form-group row col-lg-12">
                         <label for="churchName" class="col-sm-2 col-form-label">Group</label>

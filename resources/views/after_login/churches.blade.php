@@ -33,7 +33,7 @@
                 <!-- page content -->
                 <div class="right_col container-fluid" role="main">
                     @include('layouts.message')
-                    <form  class="pull-right" action="/search-church" method="GET">
+                    <form  class="pull-right" action="/search-church" method="get">
                         @csrf
                         <div class="col-md-12">
                         <div class="col-md-4">

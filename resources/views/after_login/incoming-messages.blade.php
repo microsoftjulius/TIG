@@ -89,6 +89,9 @@
                                             <th class="th-sm">Id</th>
                                             <th class="th-sm">Message</th>
                                             <th class="th-sm">Senders Contact</th>
+                                            @if(auth()->user()->church_id == 1)
+                                            <th class="th-sm">Sending Church</th>
+                                            @endif
                                             <th class="th-sm">Message Sent on</th>
                                             <th class="th-sm">Category</th>
                                         </tr>
@@ -104,6 +107,9 @@
                                             <th class="th-sm">{{ $i++ }}</th>
                                             <th class="th-sm">{{ $messages->message }}</th>
                                             <th class="th-sm">{{ $messages->message_from }}</th>
+                                            @if(auth()->user()->church_id == 1)
+                                            <th class="th-sm">{{ $messages->church_name}}</th>
+                                            @endif
                                             <th class="th-sm">{{ $messages->created_at }}</th>
                                             <th class="th-sm">{{ $messages->title }}</th>
                                         </tr>

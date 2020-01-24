@@ -33,7 +33,7 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     <!--Setupform-->
-                    <form class=" col-sm-12" style="border-width: 4px 4px 4px 4px; padding :4em; background-color:white;" action="/add-message-categories" method="POST">
+                    <form class=" col-sm-12" style="border-width: 4px 4px 4px 4px; padding :4em; background-color:white;" action="/add-message-categories" method="get">
                         @csrf
                         @include('layouts.message')
                     <div class="panel-heading text-center"><h4>Please Enter The Message Category</h4>

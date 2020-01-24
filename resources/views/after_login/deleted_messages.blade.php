@@ -66,7 +66,7 @@
                             </section>
                         </div>
                     </div>
-                    <form action="/permanetly-delete-message" method="post">
+                    <form action="/permanetly-delete-message" method="get">
                         @csrf
                         <div class="modal fade" id="addSearchTerm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">

@@ -308,16 +308,39 @@ class messages extends Controller
      * Function to show incoming messages
      */
     public function show_incoming_messages(){
+        if(Auth::user()->church_id == 1){
+            return $this->showIncomingMessagesToAdmin();
+        }
+        else{
+            return $this->showIncomingMessagesToChurch();
+        }
+    }
+
+    /**
+     * This function shows incoming messages to the admin
+     */
+    protected function showIncomingMessagesToAdmin(){
         $messages_to_categories = message::join('category','category.id','messages.category_id')
-        ->where('messages.church_id',Auth::user()->church_id)
-        ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from')->paginate('10');
-        
-        
+        ->join('church_databases','church_databases.id','messages.church_id')
+        ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from','church_databases.church_name')->paginate('10');
+
         $drop_down_categories = category::where('church_id', Auth::user()->church_id)
         ->select("title", "user_id", "id")->paginate(10);
         return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
     }
 
+    /**
+     * This function shows incoming messages to the church
+     */
+    protected function showIncomingMessagesToChurch(){
+        $messages_to_categories = message::join('category','category.id','messages.category_id')
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from')->paginate('10');
+        
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
     /**
      * Function to display search terms
      */

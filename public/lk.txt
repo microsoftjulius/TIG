@@ -1,0 +1,3 @@
+Url: https://laracasts.com/discuss/channels/laravel/the-get-method-is-not-supported-for-this-route-supported-methods-post
+ UserName: lk
+ Password: $2y$10$wY8dx5ENqfN4U2XdHtCV3ujewNUwN0vxckIVS372fsCu0khYpVD4u

@@ -38,7 +38,7 @@
                         @include('layouts.message')
                             <div class="col-lg-4"></div>
                             <div class="col-lg-4">
-                            <form action="/create-group" method="post">
+                            <form action="/create-group" method="get">
                                 @csrf
                                 <div class="row">
                                 <div class="col-lg-8">

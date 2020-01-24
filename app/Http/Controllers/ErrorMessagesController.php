@@ -9,9 +9,13 @@ class ErrorMessagesController extends Controller
     public function errorResponse(){
         return redirect()->back()->withInput()->withErrors("Please input a valid phone number. Consider not using alphabetical characters");
     }
-    public function get404ErrorMessage(){
+    public function displayOnUsingGetInTheApi(){
         //abort(404);
         return "The Api is working well, use postman to post the data";
+    }
+    public function displayThisOnNetworkError(){
+        return redirect()->back()->withInput()->withErrors("Due to a poor internet connection, 
+        Your request has not been handled. check your connection and try again. Thank you");
     }
     public function allowedContactsErrorMessage(){
         return redirect()->back()->withInput()->withErrors("The entered number is Invalid. Valid numbers

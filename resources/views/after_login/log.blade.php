@@ -47,6 +47,7 @@
                                                         <th class="th-sm">Amount Initiated</th>
                                                         <th class="th-sm">Transaction Status</th>
                                                         <th class="th-sm">Subscription Date</th>
+                                                        <th class="th-sm">Creation Date</th>
                                                     </tr>
                                                 </thead>
                                             <tbody>
@@ -63,6 +64,7 @@
                                                     <td>{{ number_format($packages->Amount)}} /=</td>
                                                     <td id="transaction_status">{{ $packages->transaction_status}}</td>
                                                     <td>{{ $packages->time_from_app }}</td>
+                                                    <td>{{ $packages->created_at}}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>

@@ -68,7 +68,10 @@ class ChurchUserController extends Controller {
     }
 
     protected function addUserToChurch(){
-        User::create(array('name' => $this->first_name . " " . $this->last_name, 'email' => $this->contact_number, 'password' => Hash::make($this->password), 'church_id' => Auth::user()->church_id));
+        User::create(array('name' => $this->first_name . " " . $this->last_name,
+        'email' => $this->contact_number, 
+        'password' => Hash::make($this->password), 
+        'church_id' => Auth::user()->church_id));
         return redirect('/user');
     }
 }

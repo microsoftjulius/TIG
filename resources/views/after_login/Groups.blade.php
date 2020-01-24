@@ -35,7 +35,7 @@
                 @include('layouts.message')
                 <!-- Search form -->
                 <div class="row">
-                            <form class="pull-right pt-4" role="search" action="/search" method="Post" >
+                            <form class="pull-right pt-4" role="search" action="/search" method="get">
                             @csrf
                                 <div class="col-md-12">
                                         <div class="col-md-8"></div>

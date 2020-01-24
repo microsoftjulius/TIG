@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class SendingMessages extends Controller
 {
+    /**
+     * The contact_number field is the hosted number litrary
+     */
+    public function __construct(Request $request){
+        $this->error_message    = new ErrorMessagesController();
+    }
+
     public function sendImmediateMessage(Request $request) {
             $mytime = Carbon::now();
             $mytime->setTimezone('Africa/Kampala');

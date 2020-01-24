@@ -57,7 +57,7 @@
                                             @else
                                             @php($i = $index + 1)
                                             @endif
-                                            <form action="/delete-contact/{{ $contact->id }}" method="POST">
+                                            <form action="/delete-contact/{{ $contact->id }}" method="get">
                                                 @csrf
                                                 <td hidden><input type="hidden" name="index_to_delete" id="" value="{{ $contact->id }}"></td>
                                                 <td>{{ $i }}</td>
@@ -70,7 +70,7 @@
                                             </form>
                                         </tr>
                                         @endforeach
-                                        <form action="/save-contact-to-group/{{ \Request::segment(2) }}" method="POST">
+                                        <form action="/save-contact-to-group/{{ \Request::segment(2) }}" method="get">
                                             @csrf
                                             <tr>
                                                 <td></td>

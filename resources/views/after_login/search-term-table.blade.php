@@ -59,7 +59,7 @@
                                             <td>{{$search_term->title}}</td>
                                             <td>{{$search_term->search_term}}</td>
                                             <td>{{$search_term->name}}</td>
-                                            <form action="/delete-search-term/{{$search_term->id}}" method="post">
+                                            <form action="/delete-search-term/{{$search_term->id}}" method="get">
                                                 @csrf
                                                 <td><button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
                                             </form>

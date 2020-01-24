@@ -42,7 +42,7 @@ class ChurchesController extends Controller
     }
 
     public function addNewChurch(Request $request)
-    {
+    {        
         if(ChurchHostedNumber::where('contact_number',$this->contact_number)->exists()){
             return $this->error_message->numberExistsForChurchError();
         }
@@ -68,6 +68,7 @@ class ChurchesController extends Controller
         if(User::where('email',$request->church_name)->exists()){
             return Redirect()->back()->withInput()->withErrors('User Name Already Taken, Choose a different name');
         }
+
         if(!empty(request()->logo)){
             if(!in_array(strtolower(request()->logo->getClientOriginalExtension()), $this->allowed_fileExtensions)){
                 return $this->error_message->imageExtensionError();

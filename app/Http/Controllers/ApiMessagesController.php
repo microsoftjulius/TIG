@@ -73,7 +73,6 @@ class ApiMessagesController extends Controller
      * has no payment package attached to it
      */
     protected function saveCategorizedMessage(){
-        
         $message = new message();
         $message->category_id           = $category_id;
         $message->contact_id            = $this->getRecieverContact();
@@ -124,7 +123,7 @@ class ApiMessagesController extends Controller
                                 {
                                     $category_id = searchTerms::where('search_term',strtolower($keyword))->value('category_id');
                                     if(PackagesModel::where('category_id',$category_id)->where('church_id', $this->getContactsChurch())->exists()){
-                                        $amount = PackagesModel::where('category_id',$category_id)->value('Amount');
+                                        $amount = PackagesModel::where('category_id',$category_id)->where('church_id', $this->getContactsChurch())->value('Amount');
                                         $client = new Client();
                                         $response = $client->request('POST', 'https://app.beautifuluganda.com/api/payment/donate', [
                                             'form_params'   => [
@@ -175,10 +174,7 @@ class ApiMessagesController extends Controller
                 }
                 return $this->saveUncategorizedMessage();
         }
-    protected function checkIfMessageBelongsToCategory(){
-        
-    }
     public function getErrorMessageOnHttpGet(){
-        return $this->error404Error->get404ErrorMessage();
+        return $this->error404Error->displayOnUsingGetInTheApi();
     }
 }
