@@ -33,7 +33,7 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     <!--Setupform-->
-                    <form class="col-md-offset-1 col-sm-10" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" action="/store-sent-messages" method="get">
+                    <form class="col-md-offset-1 col-sm-10" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" id="messagesForm" action="/store-sent-messages" method="get">
                         @csrf
                         <div class="panel-heading text-center">
                             <h4></h4>
@@ -59,6 +59,9 @@
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+                        <div id="pageloader">
+                            <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
                         </div>
                         <div class="form-group row">
                             <label for="colFormLabel" class="col-sm-2 col-form-label">Date and time</label>
@@ -99,6 +102,12 @@
         </div>
         @include('layouts.javascript')
         <script>
+            $(document).ready(function(){
+                $("#messagesForm").on("submit", function(){
+                    $("#pageloader").fadeIn();
+                });//submit
+            });
+
             $('.dropdown-menu').click(e => {
                 $selected = $('.checkbox input[type="checkbox"]:checked');
                 var total = 0;

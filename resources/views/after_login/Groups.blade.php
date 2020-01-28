@@ -41,7 +41,7 @@
                                         <div class="col-md-8"></div>
                                             <div class="col-md-4">
                                                     <div class="input-group">
-                                                            <input type="text" class="form-control col-md-12" placeholder="Search" name="search" id="srch-term" required>
+                                                            <input type="text" class="form-control col-md-12" placeholder="Search" name="search" id="createGroup" required>
                                                             <div class="input-group-btn">
                                                                 <button class="btn btn-success" type="submit"><i class="glyphicon glyphicon-search"></i>
                                                                 </button>
@@ -80,7 +80,9 @@
                         <a href="{{url()->previous()}}"><button type="button" class="btn btn-danger"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back</i></button></a>
                         </div>
                 </div>
-
+                <div id="pageloader">
+                    <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                </div>
                     <div class="row">
                     </div>
                 </div>
@@ -91,5 +93,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#createGroup").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

@@ -69,11 +69,14 @@
                                 </section>
                         </div>
                     </div>
-                    <form action="/save-search-term/{{\Request::route('id')}}" method="get">
+                    <form action="/save-search-term/{{\Request::route('id')}}" method="get" id="createCampaign">
                         <div class="modal fade" id="addSearchTerm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
                                 <div class="modal-content">
                                     <div class="modal-header">
+                                        <div id="pageloader">
+                                            <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                                        </div>
                                     <h5 class="modal-title" id="exampleModalLabel">Type Search Term</h5>
                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
@@ -99,5 +102,13 @@
         </div>
         <!-- Modal -->
         @include('layouts.javascript')
+
+        <script>
+            $(document).ready(function(){
+            $("#createCampaign").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

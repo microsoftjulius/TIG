@@ -33,8 +33,11 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     <!--Setupform-->
-                    <form class="col-md-offset-3 col-sm-6" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" action="/create-a-subscription-period" method="get">
+                    <form class="col-md-offset-3 col-sm-6" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" action="/create-a-subscription-period" method="get" id="newSubscription">
                         @csrf
+                        <div id="pageloader">
+                            <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                        </div>
                         @include('layouts.message')
                     <div class="panel-heading text-center"><h4>Create A Subscription Type</h4>
                     <hr>
@@ -80,5 +83,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#newSubscription").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

@@ -38,13 +38,16 @@
                         @include('layouts.message')
                             <div class="col-lg-4"></div>
                             <div class="col-lg-4">
-                            <form action="/create-group" method="get">
+                            <form action="/create-group" method="get" id="addGroup">
                                 @csrf
                                 <div class="row">
                                 <div class="col-lg-8">
                                     <input type="text" value="" name="group_name" class="form-control" placeholder="Add Group" value="{{ old('group_name') }}">
                                 </div></div>
                                 <div class="row">
+                                    <div id="pageloader">
+                                        <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                                    </div>
                                 <div class="col-lg-8 text-center">
                                     <label for="groupName"></label><br>
                                     <button input type="submit" value="Save" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
@@ -64,5 +67,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#addGroup").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

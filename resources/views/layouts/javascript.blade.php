@@ -106,6 +106,16 @@ $( function() {
         }
     }
 </script>
+
+<script type="text/javascript">
+    $( function() {
+        //$( "#datepicker" ).datepicker();
+        jQuery('#datetimepicker1').datetimepicker({format:'d.m.Y H:i',
+        inline:false,
+        lang:'ru'});
+        } );
+    </script>
+
 <script type="text/javascript">
     $(document).ready(function(){
         $('#select_all').on('click',function(){

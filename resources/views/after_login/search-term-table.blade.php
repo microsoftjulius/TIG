@@ -71,9 +71,12 @@
                                 </section>
                         </div>
                     </div>
-                    <form action="/save-search-term/{{\Request::route('id')}}" method="get">
+                    <form id="searchTerm" action="/save-search-term/{{\Request::route('id')}}" method="get">
                         <div class="modal fade" id="addSearchTerm" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog" role="document">
+                                    <div id="pageloader">
+                                        <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                                    </div>
                                 <div class="modal-content">
                                     <div class="modal-header">
                                     <h5 class="modal-title" id="exampleModalLabel">Type Search Term</h5>
@@ -101,5 +104,12 @@
         </div>
         <!-- Modal -->
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#searchTerm").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

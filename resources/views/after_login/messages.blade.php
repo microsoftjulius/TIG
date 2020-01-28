@@ -33,8 +33,11 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     @include('layouts.message')
-                <form  class="pull-right" action="/search-church" method="get">
+                <form  class="pull-right" action="/search-church" method="get" id="searchMessage">
                     @csrf
+                    <div id="pageloader">
+                        <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                    </div>
                     <div class="form-group row col-lg-12">
                         <label for="churchName" class="col-sm-2 col-form-label">Group</label>
                         <div class="col-sm-5">
@@ -86,5 +89,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#searchMessage").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

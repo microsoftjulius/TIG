@@ -29,7 +29,7 @@ class messages extends Controller
         ->join('church_databases','church_databases.id','messages.church_id')
         ->where('status','!=','Deleted')
         ->where('status','!=','Scheduled')
-        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email',
+        ->select('messages.id', 'messages.message','church_databases.church_name', 'messages.created_at', 'messages.status', 'users.email',
         DB::raw('COUNT(messages.status) as messageCount'))
         ->groupBy('messages.message')
         ->paginate('10');
@@ -117,7 +117,8 @@ class messages extends Controller
     protected function getMessageAndCategory(){
         $messages_to_categories = message::join('category','messages.category_id','category.id')
         ->whereBetween('messages.created_at',[Date::make($this->message_from)->format('Y-m-d H-i-s'), Date::make($this->message_to)->format('Y-m-d H-i-s')])
-        ->where('title',$this->search_message)->paginate('10');
+        ->where('title',$this->search_message)->where('category.church_id',Auth::user()->church_id)->orderBy('messages.id','desc')->paginate('10');
+
         $drop_down_categories = category::where('church_id', Auth::user()->church_id)
         ->select("title", "user_id", "id")->paginate(10);
         return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
@@ -129,7 +130,7 @@ class messages extends Controller
     public function search_use_contact_group_attributes(Request $request){
         $search = $request->search;
         $display_sent_message_details = message::where('created_by', $search)->where('church_id', Auth::user()->church_id)
-        ->where('status','!=','Deleted')
+        ->where('status','!=','Deleted')->orderBy('id','desc')
         ->paginate('10');
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
@@ -174,12 +175,13 @@ class messages extends Controller
      * Function to search message categories
      */
     public function search_message_categories(Request $request) {
-        $category = category::join('users','users.id','category.user_id')
-        ->join('search_terms','search_terms.category_id','category.id')
-        ->where('title', $request->category)
-        ->orWhere('title', 'like', '%' . $request->category . '%')
+        $category = searchTerms::join('users', 'users.id', 'search_terms.user_id')
+        ->join('church_databases','church_databases.id','search_terms.church_id')
+        ->join('category','category.id','search_terms.category_id')
+        ->where('church_databases.id',Auth::user()->church_id)
+        ->Where('title', 'like', '%' . $request->category . '%')
         ->orWhere('name', 'like', '%' . $request->category . '%')
-        ->where('category.church_id', Auth::user()->church_id)->select(array('category.id','title', 'name', DB::raw('COUNT(search_terms.search_term) as countSearchTerms')))
+        ->select(array('category.id','title', 'name', DB::raw('COUNT(search_terms.search_term) as countSearchTerms')))
         ->groupBy('category.title')->paginate('10');
         return view('after_login.message-categories', compact('category'))
         ->with(['search_query' => $request->search_category]);
@@ -324,8 +326,7 @@ class messages extends Controller
         ->join('church_databases','church_databases.id','messages.church_id')
         ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from','church_databases.church_name')->paginate('10');
 
-        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
-        ->select("title", "user_id", "id")->paginate(10);
+        $drop_down_categories = category::select("title", "user_id", "id")->paginate(10);
         return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
     }
 
@@ -334,6 +335,7 @@ class messages extends Controller
      */
     protected function showIncomingMessagesToChurch(){
         $messages_to_categories = message::join('category','category.id','messages.category_id')
+        ->join('church_databases','church_databases.id','messages.church_id')
         ->where('messages.church_id',Auth::user()->church_id)
         ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from')->paginate('10');
         
@@ -397,20 +399,115 @@ class messages extends Controller
 
     /**
      * Function to search incoming messages
+     * 
      */
+    protected function searchWithStartDateonly(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->where('messages.created_at','>=',Date::make($this->message_from)->format('Y-m-d H-i-s'))
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')->paginate('10');
+
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    protected function searchWithEndDateOnly(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->where('messages.created_at','<=',Date::make($this->message_to)->format('Y-m-d H-i-s'))
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')->paginate('10');
+
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    protected function searchWithStartAndEndDates(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->whereBetween('messages.created_at',
+        [Date::make($this->message_from)->format('Y-m-d H-i-s'), Date::make($this->message_to)->format('Y-m-d H-i-s')])
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')->paginate('10');
+
+        $drop_down_categories = category::join('category','messages.category_id','category.id')
+        ->where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    protected function searchWithCategoryOnly(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->where('title',$this->search_message)
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')->paginate('10');
+
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    protected function searchwithStartDateAndCategory(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->where('title',$this->search_message)
+        ->whereBetween('messages.created_at',
+        [Date::make($this->message_from)->format('Y-m-d H-i-s'), Date::make($this->message_to)->format('Y-m-d H-i-s')])
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')->paginate('10');
+
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    protected function searchwithEndDateAndCategory(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->where('title',$this->search_message)
+        ->where('messages.created_at','<=',Date::make($this->message_to)->format('Y-m-d H-i-s'))
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')->paginate('10');
+
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
+
+    protected function searchWithStartEndDatesAndCategory(){
+        $messages_to_categories = message::join('category','messages.category_id','category.id')
+        ->where('title',$this->search_message)
+        ->where('messages.created_at','<=',Date::make($this->message_to)->format('Y-m-d H-i-s'))
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')->paginate('10');
+
+        $drop_down_categories = category::where('church_id', Auth::user()->church_id)
+        ->select("title", "user_id", "id")->paginate(10);
+        return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
+    }
     public function searchIncomingMessages(Request $request)
     {
-        if(empty($this->message_from) && empty($this->message_to)){ 
-            return $this->checkSendersNumberAndRecieversNumberEmpty();
+        if(!empty($this->message_from) && empty($this->message_to) && empty($this->search_message)){
+            return $this->searchWithStartDateonly();
         }
-        if(empty($this->message_from)){ 
-            return $this->checkSendersNumberEmpty(); 
+        if(!empty($this->message_to) && empty($this->message_from) && empty($this->search_message)){
+            return $this->searchWithEndDateOnly();
         }
-        if(empty($this->message_to)){ 
-            return $this->checkRecieversNumberEmpty(); 
+        if(!empty($this->message_to) && !empty($this->message_from) && empty($this->search_message)){
+            return $this->searchWithEndDateOnly();
         }
-        else{ 
-            return $this->getMessageAndCategory(); 
+        if(empty($this->message_to) && empty($this->message_from) && !empty($this->search_message)){
+            return $this->searchWithCategoryOnly();
+        }
+        if(empty($this->message_to) && !empty($this->message_from) && !empty($this->search_message)){
+            return $this->searchwithStartDateAndCategory();
+        }
+        if(!empty($this->message_to) && empty($this->message_from) && !empty($this->search_message)){
+            return $this->searchwithEndDateAndCategory();
+        }
+        if(!empty($this->message_to) && !empty($this->message_from) && !empty($this->search_message)){
+            return $this->searchWithStartEndDatesAndCategory();
+        }
+        else{
+            return redirect()->back();
         }
     }
 }

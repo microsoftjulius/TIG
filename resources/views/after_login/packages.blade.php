@@ -35,9 +35,12 @@
                 @include('layouts.message')
                 <!-- Search form -->
                 <div class="row">
-                <form  class="pull-right" action="/" method="">
+                <form id="packages"  class="pull-right" action="/" method="">
                         @csrf
                         <div class="col-md-12">
+                            <div id="pageloader">
+                                <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                            </div>
                         <div class="col-md-4">
                                 <div class="input-group">
                                 @include('layouts.breadcrumbs')
@@ -110,5 +113,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#packages").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

@@ -34,7 +34,7 @@
                 <div class="right_col" role="main">
                     @include('layouts.message')
                     <!-- Search form -->
-                    <form action="/search-incoming-messages" method="get">
+                    <form action="/search-incoming-messages" method="get" id="incomingMessages">
                         @csrf
                         <div class="row">
                             <div class="col-lg-12">
@@ -42,13 +42,13 @@
                                     <div class="col-lg-5">
                                         <div class="input-group">
                                             <div class="input-group-btn">
-                                                <input type="datetime-local" class="form-control col-sm-2 mr-2" name="from" placeholder=" start date">
+                                                <input type="text" id="datetimepicker" class="form-control col-sm-2 mr-2" name="from" placeholder=" start date">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-5">
                                         <div class="input-group-btn">
-                                            <input type="datetime-local" class="form-control col-sm-2" name="to" placeholder="End date">
+                                            <input type="text" id="datetimepicker1" class="form-control col-sm-2" name="to" placeholder="End date">
                                         </div>
                                     </div>
                                 </div>
@@ -134,5 +134,13 @@
             </div>
         </div>
         @include('layouts.javascript')
+        
+        <script>
+            $(document).ready(function(){
+            $("#incomingMessages").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

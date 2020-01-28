@@ -34,9 +34,12 @@
                 <div class="right_col" role="main">
                     <!--Setupform-->
                         
-                    <form class="col-md-offset-3 col-sm-6" style="border: 1px solid black ;border-width: 4px 4px 4px 4px; padding :1em; border: ridge #ccc; background-color:white;" action="/create-groups" method="get" enctype="multipart/form-data">
+                    <form class="col-md-offset-3 col-sm-6" id="createCampaign" style="border: 1px solid black ;border-width: 4px 4px 4px 4px; padding :1em; border: ridge #ccc; background-color:white;" action="/create-groups" method="get" enctype="multipart/form-data">
                         @csrf
                         @include('layouts.message')
+                        <div id="pageloader">
+                            <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                        </div>
                     <div class="panel-heading text-center"><h4>Please enter the campaign details</h4></div>
                             <div class="form-group row md-form">
                                 <label for="colFormLabelSm" class="col-sm-2 col-form-label col-form-label-sm">Name</label>
@@ -91,5 +94,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#createCampaign").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

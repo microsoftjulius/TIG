@@ -43,8 +43,11 @@
                                         </div>
                                         <div class="col-lg-3"></div>
                                             <div class="col-md-3">
-                                            <form class="pull-right pt-4" role="search" action="/search-message-categories" method="get" >
+                                            <form class="pull-right pt-4" role="search" action="/search-message-categories" method="get" id="searchMessageCategory">
                                                 @csrf
+                                                <div id="pageloader">
+                                                    <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                                                </div>
                                                     <div class="input-group">
                                                             <input type="text" class="form-control col-md-4" placeholder="Search" name="category" id="srch-term" value="{{old('category')}}" required>
                                                             <div class="input-group-btn">
@@ -111,5 +114,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#searchMessageCategory").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

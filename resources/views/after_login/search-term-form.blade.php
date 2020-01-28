@@ -38,11 +38,14 @@
                     <div class="col-lg-6"></div>
                     <!--Setupform-->
                     @foreach ($category as $cats)
-                    <form class=" col-sm-12" style="border-width: 4px 4px 4px 4px; padding :4em; background-color:white;" action="/edit-category-term/{{ $cats->id }}" method="get">
+                    <form id="searchTerm" class="col-sm-12" style="border-width: 4px 4px 4px 4px; padding :4em; background-color:white;" action="/edit-category-term/{{ $cats->id }}" method="get">
                         @csrf
                         @include('layouts.message')
                     <div class="panel-heading text-center"><h4>Edit message category</h4>
                     <hr>
+                    </div>
+                    <div id="pageloader">
+                        <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
                     </div>
                                 <div class="form-group row md-form">
                                     <div class="col-md-12">
@@ -97,5 +100,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#searchTerm").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

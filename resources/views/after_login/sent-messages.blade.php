@@ -35,13 +35,16 @@
                     @include('layouts.message')
                     <!-- Search form -->
                     <div class="row">
-                        <form class="pull-right pt-4" role="search" action="/search-sent-messages" method="get" >
+                        <form class="pull-right pt-4" id="createCampaign" role="search" action="/search-sent-messages" method="get" >
                             @csrf
                             <div class="col-md-12">
                                 <div class="col-md-4">
                                     <div class="input-group">
                                         @include('layouts.breadcrumbs')
                                     </div>
+                                </div>
+                                <div id="pageloader">
+                                    <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
                                 </div>
                                 <div class="col-md-4"></div>
                                 <div class="col-md-4">
@@ -83,7 +86,7 @@
                                         @foreach ($display_sent_message_details as $message_details)
                                         <tr>
                                             <td>{{ $i++}}</td>
-                                            <td>{{ $message_details->message }}</td>
+                                            <td><div style="word-break:break-all;">{{ $message_details->message }}</div></td>
                                             <td>{{ $message_details->created_at }}</td>
                                             <td>{{ $message_details->email }}</td>
                                             @if(auth()->user()->id == 1)
@@ -113,5 +116,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#createCampaign").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>

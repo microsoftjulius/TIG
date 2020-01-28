@@ -39,4 +39,25 @@
     @endif  --}}
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.css" />
     <meta name="csrf-token" content="{{ csrf_token() }}" />
+
+    <style>
+        #pageloader
+        {
+        background: rgba( 255, 255, 255, 0.8 );
+        display: none;
+        height: 100%;
+        position: fixed;
+        width: 100%;
+        z-index: 9999;
+        }
+        #pageloader img
+        {
+        left: 55%;
+        margin-left: -10px;
+        margin-top: -40px;
+        position: fixed;
+        top: 50%;
+}
+
+    </style>
 </head>

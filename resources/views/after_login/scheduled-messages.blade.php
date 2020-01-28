@@ -35,8 +35,11 @@
                 @include('layouts.message')
                 <!-- Search form -->
                 <div class="row">
-                            <form class="pull-right pt-4" role="search" action="/search-scheduled-messages" method="get" >
+                            <form id="scheduledMessage" class="pull-right pt-4" role="search" action="/search-scheduled-messages" method="get" >
                             @csrf
+                            <div id="pageloader">
+                                <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
+                            </div>
                                 <div class="col-md-12">
                                     <div class="col-md-4">
                                             <div class="input-group">
@@ -111,5 +114,12 @@
             </div>
         </div>
         @include('layouts.javascript')
+        <script>
+            $(document).ready(function(){
+            $("#scheduledMessage").on("submit", function(){
+                $("#pageloader").fadeIn();
+            });//submit
+        });
+        </script>
     </body>
 </html>
