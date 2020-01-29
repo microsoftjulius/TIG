@@ -54,7 +54,7 @@ class SendingMessages extends Controller
                 $empty_array = array();
                 $message_response = json_decode($ch_result, true);
                 if(empty($message_response)){
-                    return Redirect()->back()->withInput()->withErrors("check your internet connection");
+                    return $this->error_message->checkBrowsersInternetConnection();
                 }
                 foreach($message_response as $res){
                     array_push($empty_array, $res);

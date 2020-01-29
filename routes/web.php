@@ -47,6 +47,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/save-contact-to-group/{id}','ContactsController@save_contact_to_group');
     Route::get('/search-sent-messages','messages@search_messages');
     Route::get('/read-file','messages@read_file');
+    Route::get('/send-categorized-message','sendCategorizedMessageController@sendCategorizedMessage');
     Route::get('/file-reading',function(){return view('after_login.file-reading');});
     Route::get('/search-term-list/{id}','messages@show_search_terms')->name("Search terms");
     Route::get('/message-categories','messages@message_categories_page')->name("Message categories");

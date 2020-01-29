@@ -138,3 +138,8 @@ $( function() {
         });
     });
 </script>
+<script>
+    $('#textBoxId').bind('keyup', function(e){
+    document.getElementById('numberOfChars').innerHTML = $(this).val().length + "  characters [1message is 160 characters,2messages 310 characters]";
+    });
+</script>

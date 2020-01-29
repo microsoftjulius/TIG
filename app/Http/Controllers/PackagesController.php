@@ -39,11 +39,10 @@ class PackagesController extends Controller
     }
 
     public function createASubscriptionTimeFrame(Request $request){
-
         if(category::where('title',$request->category_id)->doesntExist()){
             return redirect()->back()->withInput()->withErrors("Kindly just choose the categories listed, or create a new category");
         }
-        $category_id = category::where('title',$request->category_id)->value('id');
+        $category_id = category::where('title',$request->category_id)->where('church_id',Auth::user()->church_id)->value('id');
         PackagesModel::create(array(
             'church_id'      => Auth::user()->church_id,
             'category_id'    => $category_id,
@@ -66,6 +65,7 @@ class PackagesController extends Controller
         $all_packages = messages::join('category','category.id','messages.category_id')
         ->join('packages','packages.category_id','category.id')
         ->where('packages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','Desc')
         ->paginate('10');
         return view('after_login.log',compact('all_packages'));
     }
@@ -73,6 +73,7 @@ class PackagesController extends Controller
     protected function getPaymentLogsForAdmin(){
         $all_packages = messages::join('category','category.id','messages.category_id')
         ->join('packages','packages.category_id','category.id')
+        ->orderBy('messages.id','Desc')
         ->paginate('10');
         return view('after_login.log',compact('all_packages'));
     }

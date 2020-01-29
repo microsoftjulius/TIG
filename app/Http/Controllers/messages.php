@@ -32,6 +32,7 @@ class messages extends Controller
         ->select('messages.id', 'messages.message','church_databases.church_name', 'messages.created_at', 'messages.status', 'users.email',
         DB::raw('COUNT(messages.status) as messageCount'))
         ->groupBy('messages.message')
+        ->orderBy('messages.id','Desc')
         ->paginate('10');
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
@@ -47,6 +48,7 @@ class messages extends Controller
         ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email',
         DB::raw('COUNT(messages.status) as messageCount'))
         ->groupBy('messages.message')
+        ->orderBy('messages.id','Desc')
         ->paginate('10');
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
@@ -150,8 +152,27 @@ class messages extends Controller
      * Function to get Groups for quick sms dropdown
      */
     public function drop_down_groups() {
-        $drop_down_groups = Groups::where('church_id', Auth::user()->church_id)->select("group_name", "number_of_contacts", "id")->get();
-        return view('after_login.Quicksms', compact('drop_down_groups'));
+        if(Auth::user()->church_id == 1){
+            return $this->getCategoriesForAdmin();
+        }else{
+            return $this->getCategoriesForChurch();
+        }
+    }
+
+    protected function getCategoriesForAdmin(){
+        $drop_down_groups = Groups::select("group_name", "number_of_contacts", "id")->get();
+        
+        $categories = category::select('title','id')->get();
+        return view('after_login.Quicksms', compact('drop_down_groups','categories'));
+    }
+
+    protected function getCategoriesForChurch(){
+        $drop_down_groups = Groups::where('church_id', Auth::user()->church_id)
+        ->select("group_name", "number_of_contacts", "id")->get();
+        
+        $categories = category::where('church_id',Auth::user()->church_id)
+        ->select('title','id')->get();
+        return view('after_login.Quicksms', compact('drop_down_groups','categories'));
     }
 
     /**

@@ -46,6 +46,9 @@ class ErrorMessagesController extends Controller
     public function numberExistsForChurchError(){
         return Redirect()->back()->withInput()->withErrors("The supplied number is already registered under a church");
     }
+    public function checkBrowsersInternetConnection(){
+        return redirect()->back()->withErrors("Check your internet connection and try again");
+    }
     /**
      * Section for success messages
      */
