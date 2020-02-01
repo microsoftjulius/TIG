@@ -138,6 +138,29 @@ $( function() {
         });
     });
 </script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#select_all2').on('click',function(){
+            if(this.checked){
+                $('.checkbox').each(function(){
+                    this.checked = true;
+                });
+            }else{
+                $('.checkbox').each(function(){
+                    this.checked = false;
+                });
+            }
+        });
+        $('.checkbox').on('click',function(){
+            if($('.checkbox:checked').length == $('.checkbox').length){
+                $('#select_all2').prop('checked',true);
+            }else{
+                $('#select_all2').prop('checked',false);
+            }
+        });
+    });
+</script>
 <script>
     $('#textBoxId').bind('keyup', function(e){
     document.getElementById('numberOfChars').innerHTML = $(this).val().length + "  characters [1message is 160 characters,2messages 310 characters]";

@@ -1,3 +1,3 @@
-Url: http://localhost:8000/create-TIG-groups
+Url: http://localhost/phpmyadmin/sql.php?server=1&db=church&table=users&pos=0
  UserName: Kasenge ministries
- Password: $2y$10$zXOl6I/9MJiBL0zYs9O5m.adEipcXsMrEn.4.8S1STKcvO4ON.Iuq
+ Password: $2y$10$T6rM9K03dwYIFWCJOZ7XU.Q06rDlFFQf7UcXKGyf08E/lWTqnMbBm

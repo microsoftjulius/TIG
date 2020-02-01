@@ -14,10 +14,11 @@
                     Select a category &nbsp;<span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" style="padding: 5px;" id="myDiv">
+                        <li><input type="checkbox" id="select_all2"/> All Categories</li>
                         @foreach($categories as $category)
-                        <div class="checkbox">
+                        <div class="checkbox2 checkbox">
                             <label>
-                            <input type="radio" name="category" value="{{$category->id}}" data-count="{{ $category->number_of_contacts }}" /> {{ $category->title }}
+                            <input type="checkbox" class="checkbox  dropdown-item checkbox-primary" name="category[]" value="{{$category->id}}" data-count="{{ $category->number_of_subscribers }}" /> {{ $category->title }}
                             </label>
                         </div>
                         @endforeach
@@ -42,12 +43,12 @@
                 <br>
             </div>
         </div>
-        {{-- <div class="form-group row">
+        <div class="form-group row">
             <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg"> Number of Contacts</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control form-control-lg" name="contact_character" id="contact_character" placeholder="">
+                <input type="text" class="form-control form-control-lg" name="contact_character" id="category_contacts_count" placeholder="">
             </div>
-        </div> --}}
+        </div>
         <div class="form-group row">
             <div class="text-center py-4 mt-3 ">
                 <button type="submit" class="btn btn-primary">

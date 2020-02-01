@@ -49,6 +49,9 @@ class ErrorMessagesController extends Controller
     public function checkBrowsersInternetConnection(){
         return redirect()->back()->withErrors("Check your internet connection and try again");
     }
+    public function emptyCategoryError(){
+        return redirect()->back()->withErrors("The Selected category has no subscribers");
+    }
     /**
      * Section for success messages
      */

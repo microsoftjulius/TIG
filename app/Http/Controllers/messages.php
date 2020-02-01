@@ -25,15 +25,11 @@ class messages extends Controller
      * Function to display Sent messages to the administrator
      */
     protected function displaySentMessagesToAdmin(){
-        $display_sent_message_details = message::join('users', 'users.id', 'messages.created_by')
-        ->join('church_databases','church_databases.id','messages.church_id')
-        ->where('status','!=','Deleted')
-        ->where('status','!=','Scheduled')
-        ->select('messages.id', 'messages.message','church_databases.church_name', 'messages.created_at', 'messages.status', 'users.email',
-        DB::raw('COUNT(messages.status) as messageCount'))
+        $display_sent_message_details = message::where('status','OK')
+        ->join('users','users.id','messages.created_by')
+        ->orderBy('messages.id','desc')
         ->groupBy('messages.message')
-        ->orderBy('messages.id','Desc')
-        ->paginate('10');
+        ->paginate(10);
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
 
@@ -41,15 +37,12 @@ class messages extends Controller
      * Function to display Sent messages to the Individual Users
      */
     protected function displaySentMessagesToUsers(){
-        $display_sent_message_details = message::join('users', 'users.id', 'messages.created_by')
-        ->where('status','!=','Deleted')
-        ->where('status','!=','Scheduled')
-        ->where('users.church_id', Auth::user()->church_id)
-        ->select('messages.id', 'messages.message', 'messages.created_at', 'messages.status', 'users.email',
-        DB::raw('COUNT(messages.status) as messageCount'))
+        $display_sent_message_details = message::where('status','OK')
+        ->join('users','users.id','messages.created_by')
+        ->where('messages.church_id',Auth::user()->church_id)
+        ->orderBy('messages.id','desc')
         ->groupBy('messages.message')
-        ->orderBy('messages.id','Desc')
-        ->paginate('10');
+        ->paginate(10);
         return view('after_login.sent-messages', compact('display_sent_message_details'));
     }
 
@@ -152,17 +145,17 @@ class messages extends Controller
      * Function to get Groups for quick sms dropdown
      */
     public function drop_down_groups() {
-        if(Auth::user()->church_id == 1){
-            return $this->getCategoriesForAdmin();
-        }else{
+        // if(Auth::user()->church_id == 1){
+        //     return $this->getCategoriesForChurch();
+        // }else{
             return $this->getCategoriesForChurch();
-        }
+       //}
     }
 
     protected function getCategoriesForAdmin(){
         $drop_down_groups = Groups::select("group_name", "number_of_contacts", "id")->get();
         
-        $categories = category::select('title','id')->get();
+        $categories = category::select('title','id','number_of_subscribers')->get();
         return view('after_login.Quicksms', compact('drop_down_groups','categories'));
     }
 
@@ -171,7 +164,7 @@ class messages extends Controller
         ->select("group_name", "number_of_contacts", "id")->get();
         
         $categories = category::where('church_id',Auth::user()->church_id)
-        ->select('title','id')->get();
+        ->select('title','id','number_of_subscribers')->get();
         return view('after_login.Quicksms', compact('drop_down_groups','categories'));
     }
 
@@ -225,7 +218,7 @@ class messages extends Controller
             category::create(array(
                 'church_id' => Auth::user()->church_id, 
                 'title'     => $request->category,
-                'user_id'   =>  Auth::user()->id
+                'user_id'   =>  Auth::user()->id,
             ));
             $id = category::where('title',$request->category)->value('id');
             searchTerms::create(array(
@@ -283,12 +276,13 @@ class messages extends Controller
         if(searchTerms::where('church_id',Auth::user()->church_id)->where('search_term',$request->new_search_term)->exists()){
             return redirect()->back()->withErrors("Search term is already registered, choose another search term");
         }
-        searchTerms::create(array(
-            'user_id'       => Auth::user()->id,
-            'church_id'     => Auth::user()->church_id,
-            'category_id'   => $id,
-            'search_term'   => $request->new_search_term
-        ));
+        
+        $search_term = new searchTerms();
+        $search_term->user_id = Auth::user()->id;
+        $search_term->church_id = Auth::user()->church_id;
+        $search_term->category_id = $id;
+        $search_term->search_term = $request->new_search_term;
+        $search_term->save();
         return Redirect()->back()->with('message', 'Such Term Added Successfully');     
     }
 
@@ -345,6 +339,7 @@ class messages extends Controller
     protected function showIncomingMessagesToAdmin(){
         $messages_to_categories = message::join('category','category.id','messages.category_id')
         ->join('church_databases','church_databases.id','messages.church_id')
+        ->where('messages.status','Recieved')
         ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from','church_databases.church_name')->paginate('10');
 
         $drop_down_categories = category::select("title", "user_id", "id")->paginate(10);
@@ -358,6 +353,7 @@ class messages extends Controller
         $messages_to_categories = message::join('category','category.id','messages.category_id')
         ->join('church_databases','church_databases.id','messages.church_id')
         ->where('messages.church_id',Auth::user()->church_id)
+        ->where('messages.status','Recieved')
         ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from')->paginate('10');
         
         $drop_down_categories = category::where('church_id', Auth::user()->church_id)

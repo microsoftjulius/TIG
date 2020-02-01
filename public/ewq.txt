@@ -1,0 +1,3 @@
+Url: http://localhost:8000/create-TIG-groups
+ UserName: ewq
+ Password: $2y$10$YUWgDLX3ckJn3jihbdNzxOu7MvSwaY8fEPM8s6k5DGbYgoHfwo5k.

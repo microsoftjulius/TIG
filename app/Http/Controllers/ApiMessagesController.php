@@ -15,6 +15,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Date;
 use GuzzleHttp\Client;
 use App\PackagesModel;
+use App\package_category;
 
 class ApiMessagesController extends Controller
 {
@@ -29,6 +30,10 @@ class ApiMessagesController extends Controller
         $this->sent_message     = $request->message;
         $this->time_from_app    = $request->date_and_time;
         $this->senders_contact  = $request->from;
+        $this->status_response  = "OK";
+        $this->status_code      = 200;
+
+        //return $request->to;
     }
 
     /**
@@ -55,6 +60,7 @@ class ApiMessagesController extends Controller
      * This function gets the church that has registered the recieved number
      */
     protected function getContactsChurch(){
+        $this->church_id = ChurchHostedNumber::where('contact_number',request()->to)->value('church_id');
         return $this->church_id;
     }
 
@@ -68,11 +74,18 @@ class ApiMessagesController extends Controller
         return $church_search_terms;
     }
 
+    protected function incrementCategoryNumbersCount($category_id){
+        if(message::where('category_id',$category_id)->where('message_from',$this->senders_contact)->doesntExist()){
+            $number_of_registered_subscribers = category::where('id',$category_id)->value('number_of_subscribers');
+            category::where('id',$category_id)->update(array('number_of_subscribers'=>$number_of_registered_subscribers + 1));
+        }
+    }
     /**
-     * This function save a categorized message. it only saves it if the category
+     * This function save a categorized message. It only saves it if the category
      * has no payment package attached to it
      */
     protected function saveCategorizedMessage(){
+        $this->incrementCategoryNumbersCount($category_id);
         $message = new message();
         $message->category_id           = $category_id;
         $message->contact_id            = $this->getRecieverContact();
@@ -98,7 +111,7 @@ class ApiMessagesController extends Controller
         $message->status               = 'Recieved';
         $message->church_id            = $this->getContactsChurch();
         $message->save();
-        return response()->json([$message, 200]);
+        return response()->json([$message, $this->status_response]);
     }
 
     /**
@@ -121,9 +134,10 @@ class ApiMessagesController extends Controller
                         {
                             if ( strpos( $string, $keyword ) !== FALSE )
                                 {
-                                    $category_id = searchTerms::where('search_term',strtolower($keyword))->value('category_id');
-                                    if(PackagesModel::where('category_id',$category_id)->where('church_id', $this->getContactsChurch())->exists()){
-                                        $amount = PackagesModel::where('category_id',$category_id)->where('church_id', $this->getContactsChurch())->value('Amount');
+                                    $category_id = searchTerms::where('search_term',strtolower($keyword))->where('church_id', $this->getContactsChurch())->value('category_id');
+                                    if(package_category::where('category_id',$category_id)->where('church_id', $this->getContactsChurch())->exists()){
+                                        $amount = PackagesModel::join('package_category','package_category.package_id','packages.id')
+                                        ->where('package_category.category_id',$category_id)->where('package_category.church_id', $this->getContactsChurch())->value('Amount');
                                         $client = new Client();
                                         $response = $client->request('POST', 'https://app.beautifuluganda.com/api/payment/donate', [
                                             'form_params'   => [
@@ -134,13 +148,14 @@ class ApiMessagesController extends Controller
                                             'referral'      => $this->senders_contact
                                             ]
                                         ]);
-                                        if ($response->getStatusCode() == 200) { // 200 OK
+                                        if ($response->getStatusCode() == $this->status_code) { // $this->status_response OK
                                             $response_data = $response->getBody()->getContents();
                                             $transaction_reference = json_decode($response_data, true);
                                             $transacting_code = $transaction_reference['data']['TransactionReference'];
                                             $transaction_status = $transaction_reference['data']['TransactionStatus'];
                                         }
                                         //Picking the church id from the number that has been hosted under the church, (the number to which the message is sent to) 
+                                        $this->incrementCategoryNumbersCount($category_id);
                                         $message = new message();
                                         $message->transaction_reference = $transacting_code;
                                         $message->category_id           = $category_id;
@@ -152,10 +167,11 @@ class ApiMessagesController extends Controller
                                         $message->status                = 'Recieved';
                                         $message->transaction_status    = $transaction_status;
                                         $message->save();
-                                        return response()->json([$message, 200]);
+                                        return response()->json([$message, $this->status_response]);
                                     }
                                     
                                     else{
+                                        $this->incrementCategoryNumbersCount($category_id);
                                         $message = new message();
                                         $message->category_id           = $category_id;
                                         $message->contact_id            = $this->getRecieverContact();
@@ -165,7 +181,7 @@ class ApiMessagesController extends Controller
                                         $message->time_from_app         = $this->time_from_app;
                                         $message->status                = 'Recieved';
                                         $message->save();
-                                        return response()->json([$message, 200]);
+                                        return response()->json([$message, $this->status_response]);
                                     }
                                 }
                                 

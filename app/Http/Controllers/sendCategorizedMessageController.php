@@ -8,12 +8,14 @@ use App\PackagesModel as packages;
 use App\messages as message;
 use Carbon\Carbon;
 use Auth;
+use App\package_category;
 use GuzzleHttp\Client;
 
 class sendCategorizedMessageController extends Controller
 {
     public function __construct(){
         $this->error_message = new ErrorMessagesController();
+        $this->api_response  = new APIResponseMessage();
         $this->category_id = request()->category;
         $this->message = request()->message;
         $this->contacts_array = [];
@@ -27,9 +29,12 @@ class sendCategorizedMessageController extends Controller
     protected function categoryWithPackage(){
         $mytime = Carbon::now();
         $mytime->setTimezone('Africa/Kampala');
-        $packaged_categories = message::join('packages','packages.category_id','messages.category_id')
-        ->where('messages.category_id',$this->category_id)->where('messages.transaction_status','like', 'F%')->get();
+        //return $this->category_id;
+        $packaged_categories = message::join('package_category','package_category.category_id','messages.category_id')
+        ->where('messages.category_id',$this->category_id)->get(); //->where('messages.transaction_status','like', 'F%')
+        //return $packaged_categories;
         foreach($packaged_categories as $packaged_category){
+            //return $packaged_category;
             $final_day_of_subscription = Carbon::parse($packaged_category->time_from_app)->addDays($packaged_category->time_frame);
             $subscription_final_day = $final_day_of_subscription->toDateTimeString();
             //check if the contact subscription days are still on
@@ -42,7 +47,7 @@ class sendCategorizedMessageController extends Controller
             }
         }
         if(count($this->contacts_array) == 0){
-            return redirect()->back()->withErrors("The Selected category has no subscribers");
+            return $this->error_message->emptyCategoryError();
         } 
         return $this->sendMessageOnConnectedInternet();
     }
@@ -52,12 +57,11 @@ class sendCategorizedMessageController extends Controller
     }
 
     protected function categoryWithNoPackage(){
-        
         if(empty($this->message)){
             return redirect()->back()->withErrors("The Message Body cannot be empty");
         }
         if(!empty(request()->category)){
-            if(packages::where('category_id',$this->category_id)->doesntExist()){
+            if(package_category::where('category_id',$this->category_id)->doesntExist()){
                 return $this->sendPackagelessMessage();
             }else{
                 return $this->categoryWithPackage();
@@ -76,37 +80,31 @@ class sendCategorizedMessageController extends Controller
         return $this->sendMessageOnConnectedInternet();
     }
 
-    protected function saveSentMessage(){
-        $message = new message();
-        $message->category_id = $this->category_id;
-        $message->created_by  = Auth::user()->id;
-        $message->message     = $this->message;
-        $message->church_id   = Auth::user()->church_id;
-        $message->tobesent_on = request()->scheduled_date;
-        empty(request()->scheduled_date) ? $message->status  = '' : $message->status  = 'Scheduled';
-
-        empty(request()->scheduled_date) ? $msg = "Message has been sent Successfully" : $msg = "Message has successfully been Scheduled for ".request()->scheduled_date;
-        $message->save();
-        return redirect()->back()->with('message',$msg);
-        
-    }
-
     public function sendCategorizedMessage(){
         if(empty(request()->scheduled_date)){
-            if(packages::where('category_id',$this->category_id)->exists()){
+            if(package_category::where('category_id',$this->category_id)->exists()){
                 return $this->categoryWithPackage();
             }else{
                 return $this->categoryWithNoPackage();
             }
         }
-        return $this->saveSentMessage();
+        return $this->api_response->saveSentMessage();
     }
 
     protected function apiCall(){
-        if(count($this->contacts_array)<1){
-            return redirect()->back()->withErrors("The selected category has no subscribers");
+        $unique_array = [];
+        foreach($this->contacts_array as $unique){
+            if(in_array($unique, $unique_array)){
+                continue;
+            }
+            else{
+                array_push($unique_array, $unique);
+            }
         }
-        //removing identical numbers before sending the message
+        $counted_valid = count($unique_array);
+        if(count($this->contacts_array)<1){
+            return $this->error_message->emptyCategoryError();
+        }
         $unique_numbers = [];
         for($i=0; $i<count($this->contacts_array); $i++){
             if(in_array($this->contacts_array[$i], $unique_numbers)){
@@ -115,10 +113,19 @@ class sendCategorizedMessageController extends Controller
                 array_push($unique_numbers, $this->contacts_array[$i]);
             }
         }
+        $this->api_response->saveCategoriesSentMessage($counted_valid);
+
+        $msgData_array = [];
         foreach($unique_numbers as $contacts){
-            $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft',
-        'password' => '123456'
-        ), 'msgdata' => array(array('number' => $contacts, 'message' => $this->message, 'senderid' => 'Good')));
+            if(in_array(array('number' => $contacts, 'message' => $this->message, 'senderid' => 'Good'), $msgData_array)){
+                continue;
+            }else{
+                array_push($msgData_array, array('number' => $contacts, 'message' => $this->message, 'senderid' => 'Good'));
+            }
+        }
+
+
+        $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft','password' => '123456'),'msgdata' => $msgData_array);
         $json_builder = json_encode($data);
         $ch = curl_init('http://www.egosms.co/api/v1/json/');
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
@@ -129,20 +136,7 @@ class sendCategorizedMessageController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $ch_result = curl_exec($ch);
         curl_close($ch);
-        }
 
-        $empty_array = [];
-        $message_response = json_decode($ch_result, true);
-        if(empty($message_response)){
-            return $this->error_message->checkBrowsersInternetConnection();
-        }
-        foreach($message_response as $res){
-            array_push($empty_array, $res);
-        }
-        if(is_numeric($empty_array[1])){
-            return redirect()->back()->with('message',"Message sending was successful");
-        }else{
-            return redirect()->back()->withErrors("You have insufficient balance on your account. Please recharge and try again");
-        }
+        return $this->api_response->getApiResponse($ch_result);
     }
 }

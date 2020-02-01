@@ -62,13 +62,23 @@
             });
 
             $('.dropdown-menu').click(e => {
-                $selected = $('.checkbox input[type="checkbox"]:checked');
+                $selected = $('.checkbox1 input[type="checkbox"]:checked');
                 var total = 0;
                 const count = $selected.length;
                 for (var i = 0; i < count; ++i) {
                     total += parseInt($selected[i].getAttribute('data-count'));
                 }
                 $('#contact_character').val(total);
+            });
+
+            $('.dropdown-menu').click(e => {
+                $selected = $('.checkbox2 input[type="checkbox"]:checked');
+                var total = 0;
+                const count = $selected.length;
+                for (var i = 0; i < count; ++i) {
+                    total += parseInt($selected[i].getAttribute('data-count'));
+                }
+                $('#category_contacts_count').val(total);
             });
         </script>
     </body>

@@ -34,7 +34,7 @@
                 <div class="right_col" role="main">
                     <!--Setupform-->
                         
-                    <form class="col-md-offset-3 col-sm-6" id="createCampaign" style="border: 1px solid black ;border-width: 4px 4px 4px 4px; padding :1em; border: ridge #ccc; background-color:white;" action="/create-groups" method="get" enctype="multipart/form-data">
+                    <form class="col-md-offset-3 col-sm-6" id="createCampaign" style="border: 1px solid black ;border-width: 4px 4px 4px 4px; padding :1em; border: ridge #ccc; background-color:white;" action="/create-groups" method="post" enctype="multipart/form-data">
                         @csrf
                         @include('layouts.message')
                         <div id="pageloader">

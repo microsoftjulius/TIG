@@ -94,7 +94,7 @@
                                                         <td>{{ $i++ }}</td>
                                                         <td>{{ $categories->name }}</td>
                                                         <td>{{ $categories->title }}</td>
-                                                        <td>{{$categories->countSearchTerms -1}}</td>
+                                                        <td>{{  $categories->countSearchTerms -1}}</td>
                                                         <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
                                                     </tr>
                                                 @endforeach

@@ -32,7 +32,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/manager',function() { return view('after_login.manager');});
     Route::get('/create-TIG-groups',function(){return view('after_login.create-church');});
     Route::get('/search','ChurchUserController@index');
-    Route::get('/create-groups','ChurchesController@addNewChurch');
+    Route::post('/create-groups','ChurchesController@addNewChurch');
     Route::post('/create-user','ChurchesController@addUserToChurch');
     Route::get('/adds-user','ChurchUserController@store');
     Route::get('/search-church','ChurchesController@search');
@@ -73,6 +73,8 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/deleted-messages','messages@showDeletedMessages');
     Route::get('/show-scheduled-message','SendingMessages@sendScheduledMessage');
     Route::get('/permanetly-delete-message','messages@permanetlyDeleteMessage');
+    Route::get('/create-a-package','PackagesController@createPackage');
+    Route::get('/map-package-to-category','PackagesController@mapCategoryToPackage');
     Route::get('/display-scheduled-messages','ScheduledMessagesController@displayScheduledMessages')->name("Scheduled Messages");
 });
 Route::post('/create-contact/{id}','ContactsController@save_contact_to_group');

@@ -33,7 +33,7 @@
                 <!-- page content -->
                 <div class="right_col" role="main">
                     <!--Setupform-->
-                    <form class="col-md-offset-3 col-sm-6" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" action="/create-a-subscription-period" method="get" id="newSubscription">
+                    <form class="col-md-offset-3 col-sm-6" style="border-width: 4px 4px 4px 4px; padding :1em; background-color:white;" action="/create-a-package" method="get" id="newSubscription">
                         @csrf
                         <div id="pageloader">
                             <img src="http://cdnjs.cloudflare.com/ajax/libs/semantic-ui/0.16.1/images/loader-large.gif" alt="processing..." />
@@ -43,14 +43,9 @@
                     <hr>
                     </div>
                     <div class="form-group row">
-                        <label class="col-sm-3 col-form-label">Category</label>
+                        <label class="col-sm-3 col-form-label">Package Name</label>
                         <div class="col-sm-9">
-                        <input type="text" name="category_id" list="messages_id" class="form-control" autocomplete="off">
-                            <datalist id="messages_id">
-                            @foreach ($subscribes_for_messages as $message)
-                                <option value="{{$message->title}}"></option>
-                            @endforeach
-                            </datalist> 
+                        <input type="text" name="package" class="form-control" autocomplete="off">
                         </div>
                     </div>
                             <div class="form-group row md-form">

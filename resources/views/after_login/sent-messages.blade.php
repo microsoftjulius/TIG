@@ -93,7 +93,7 @@
                                             <td>{{ $message_details->church_name}}</td>
                                             @endif
                                             <td>{{ $message_details->status }}</td>
-                                            <td>{{ $message_details->messageCount }}</td>
+                                            <td>{{ $message_details->number_of_contacts }}</td>
                                         </tr>
                                         @endforeach
                                     </tbody>

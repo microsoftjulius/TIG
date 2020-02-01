@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 
+
 class ChurchesController extends Controller
 {
     public function __construct(Request $request){
@@ -69,6 +70,12 @@ class ChurchesController extends Controller
             return Redirect()->back()->withInput()->withErrors('User Name Already Taken, Choose a different name');
         }
 
+        //check the http method used for sending the data, if its not post, then redirect
+        //back with an error
+        $method = $request->method();
+        if(strtolower($method) != "post"){
+            return redirect()->back()->withInput()->withErrors("Due to poor internet connection, we are un able to handle your request");
+        }
         if(!empty(request()->logo)){
             if(!in_array(strtolower(request()->logo->getClientOriginalExtension()), $this->allowed_fileExtensions)){
                 return $this->error_message->imageExtensionError();

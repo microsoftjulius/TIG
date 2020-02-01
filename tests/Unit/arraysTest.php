@@ -40,7 +40,7 @@ class arraysTest extends TestCase
         /** @test */
         public function testStringPositionInArray(){
             $keywords=array('one','two','three');
-            $string = "Heloo members, I am Julius lkdf daf one";
+            $string = "Heloo members, I am Julius lkdf daf. ghhsghhsghhsghhsghhs ghhsghhsghhs ghhsghhsghhs ghhsghhs ghhsghhs. jhasd bndas one nda jhad";
             $targets = explode(' ', $string);
             foreach ( $targets as $newstring ) 
             {

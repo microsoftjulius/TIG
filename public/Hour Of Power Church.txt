@@ -1,0 +1,3 @@
+Url: http://localhost/phpmyadmin/sql.php?server=1&db=church&table=users&pos=0
+ UserName: Hour Of Power Church
+ Password: $2y$10$z7lI2iTMQ7VIfD1Ch.re0ObsI.KDDr.4jnrCI65EwkRBhoKPtLjoe
