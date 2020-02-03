@@ -77,8 +77,8 @@
                                                 <td></td>
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
                                                 <td><input type="text" name="created_by" value="{{ auth()->user()->email }}" class="form-control" disabled></td>
-                                                <td><input type="text" name="name" class="form-control" value="{{old('name')}}"></td>
-                                                <td><input type="number" name="contact" value="{{old('contact')}}" class="form-control"></td>
+                                                <td><input type="text" name="name" class="form-control" value="{{old('name')}}" required></td>
+                                                <td><input type="number" name="contact" value="{{old('contact')}}" class="form-control" required></td>
                                                 <td></td>
                                             </tr>
 
@@ -90,13 +90,29 @@
                                         </form>
 
                                     </tbody>
-
+                                    
                                 </table>
                                 {{ $contacts->links() }} 
                             </section>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row pull-right">
+                        <form action="{{ route('import') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
+                            <div class="col-lg-12">
+                                <div class="col-lg-4">
+                                    <input type="file" name="file" class="form-control" required>
+                                    <input type="hidden" name="group_id" value="{{ \Request::segment(2) }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-8">
+                                    <br>
+                                    <button class="btn btn-success"><i class="fa fa-paperclip"></i> Import User Data</button>
+                                    <a class="btn btn-warning" href="/export-group-contact/{{ \Request::segment(2) }}"><i class="fa fa-file"></i> Export User Data</a>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 <!-- /page content -->

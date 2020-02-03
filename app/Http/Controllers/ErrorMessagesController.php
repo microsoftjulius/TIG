@@ -52,6 +52,9 @@ class ErrorMessagesController extends Controller
     public function emptyCategoryError(){
         return redirect()->back()->withErrors("The Selected category has no subscribers");
     }
+    public function excelFileOrCsvFileError(){
+        return redirect()->back()->withErrors("The Uploaded file is not Excel or Csv. Please Attach an Excel Or Csv File");
+    }
     /**
      * Section for success messages
      */

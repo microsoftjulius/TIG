@@ -12,6 +12,6 @@ class ContactsExport implements FromCollection
     */
     public function collection()
     {
-        return Contacts::all();
+        return Contacts::where('group_id',request()->group_id)->get();
     }
 }

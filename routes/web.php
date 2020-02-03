@@ -76,7 +76,10 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/create-a-package','PackagesController@createPackage');
     Route::get('/map-package-to-category','PackagesController@mapCategoryToPackage');
     Route::get('/display-scheduled-messages','ScheduledMessagesController@displayScheduledMessages')->name("Scheduled Messages");
+    Route::post('/create-contact/{id}','ContactsController@save_contact_to_group');
+    Route::post('/create-contact-to-group/{id}','ContactsController@addContactToGroup');
+    Route::post('/check-if-number-exists/{id}','ContactsController@save_contact_to_group');
+    Route::post('/upload-excel-file','ImportAndExportContactsController@uploadExcel')->name('import');
+    Route::get('/export-group-contact/{id}','ImportAndExportContactsController@exportContacts')->name('export');
 });
-Route::post('/create-contact/{id}','ContactsController@save_contact_to_group');
-Route::post('/create-contact-to-group/{id}','ContactsController@addContactToGroup');
-Route::post('/check-if-number-exists/{id}','ContactsController@save_contact_to_group');
+
