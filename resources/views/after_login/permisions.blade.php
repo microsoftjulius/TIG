@@ -85,6 +85,12 @@
                     <div class="row">
                     </div>
                 </div>
+                <div class="container">
+                    <!-- Trigger the modal with a button -->
+                    <button type="button" class="btn btn-info btn-lg" id="sample">Open Modal</button>
+
+                    <!-- Modal -->
+                    @include('layouts.notifications_modal')
                 <!-- /page content -->
                 <!-- footer content -->
                 @include('layouts.footer')
@@ -97,6 +103,13 @@
             $("#packages").on("submit", function(){
                 $("#pageloader").fadeIn();
             });//submit
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                setTimeout(function () {
+                    $("#myModal").modal('show')
+                }, 3000);
             });
         </script>
     </body>
