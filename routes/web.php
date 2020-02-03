@@ -81,5 +81,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/check-if-number-exists/{id}','ContactsController@save_contact_to_group');
     Route::post('/upload-excel-file','ImportAndExportContactsController@uploadExcel')->name('import');
     Route::get('/export-group-contact/{id}','ImportAndExportContactsController@exportContacts')->name('export');
+    Route::get('/roles-and-permision','PermisionsController@rolesAndPermisionsView')->name('Roles and Permisions');
 });
 

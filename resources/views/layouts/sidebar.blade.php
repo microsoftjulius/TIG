@@ -48,7 +48,7 @@
                 <li><a href="/logs">Logs</a></li>
             </ul>
         </li>
-        
+        <li><a href="/roles-and-permision"><i class="fa fa-key"></i> User Permission </a></li>
         <li><a href="/change-passwords"><i class="fa fa-lock"></i> Change Password </a></li>
         </ul>
     </div>
