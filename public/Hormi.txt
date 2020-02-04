@@ -1,0 +1,3 @@
+Url: http://localhost:8000/create-TIG-groups
+ UserName: Hormi
+ Password: $2y$10$jYKXA9BByf7w.z8DqyMDCejeam4pmFnWJvPr2G8gzGsC5Zito8vma

@@ -22,6 +22,9 @@ class APIResponseMessage extends Controller
     }
 
     public function getValidAndEmptyGroups(){
+        if(empty($this->groups_array)){
+            return redirect()->back()->withErrors("Please Add a Group to continue");
+        }
         foreach($this->groups_array as $group_id){
             if(Contacts::where('group_id',$group_id)->where('church_id',Auth::user()->church_id)->exists()){
                 $group_contacts = Contacts::where('group_id',$group_id)
@@ -42,6 +45,9 @@ class APIResponseMessage extends Controller
     }
 
     public function saveGroupsSentMessage(){
+        if(empty($this->groups_array)){
+            return redirect()->back()->withErrors("Please Add a Group to continue");
+        }
         foreach($this->groups_array as $group_id){
             $message = new messages();
             $message->group_id    = $group_id;

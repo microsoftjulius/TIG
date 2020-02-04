@@ -83,4 +83,3 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/export-group-contact/{id}','ImportAndExportContactsController@exportContacts')->name('export');
     Route::get('/roles-and-permision','PermisionsController@rolesAndPermisionsView')->name('Roles and Permisions');
 });
-
