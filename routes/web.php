@@ -82,4 +82,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/upload-excel-file','ImportAndExportContactsController@uploadExcel')->name('import');
     Route::get('/export-group-contact/{id}','ImportAndExportContactsController@exportContacts')->name('export');
     Route::get('/roles-and-permision','PermisionsController@rolesAndPermisionsView')->name('Roles and Permisions');
+    Route::get('/contact-not-found-messages','messages@displayWrongMessageToAdmin')->name('Contacts Not Hosted');
 });

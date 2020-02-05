@@ -59,6 +59,15 @@ class messages extends Controller
     }
 
     /**
+     * Function to display wrong contact messages to admin
+     */
+    public function displayWrongMessageToAdmin(){
+        $uncategorized_messages = message::where('wrong_contact','!=','')
+        ->select('messages.message','messages.id','messages.created_at','messages.message_from','messages.wrong_contact')->paginate('10');
+        return view('after_login.Wrong-contacts',compact('uncategorized_messages'));
+    }
+
+    /**
      * Function to display uncategorized messages to the admin
      */
     protected function displayUncategorizedMessageToUser(){

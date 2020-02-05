@@ -48,7 +48,7 @@ class ApiMessagesController extends Controller
             return $this->getFirstSearchTerm();
         }
         else{
-            //return $this->saveUncategorizedMessage();
+            return $this->saveMessageWithNoContact();
         }
     }
 
@@ -114,6 +114,19 @@ class ApiMessagesController extends Controller
         return response()->json([$message, $this->status_response]);
     }
 
+    protected function saveMessageWithNoContact(){
+        $message = new message();
+        $message->category_id = null;
+        $message->contact_id           = null;
+        $message->wrong_contact        = $this->message_sent_to;
+        $message->message_from         = $this->senders_contact;
+        $message->message              = $this->sent_message;
+        $message->time_from_app        = $this->time_from_app;
+        $message->status               = 'Recieved';
+        $message->church_id            = $this->getContactsChurch();
+        $message->save();
+        return response()->json([$message, $this->status_response]);
+    }
     /**
      * This function searches through the message to find the registered search term
      */
