@@ -1,0 +1,3 @@
+Url: https://mail.google.com/mail/u/0/#inbox
+ UserName: Church
+ Password: $2y$10$rOYsXAEj.82jHkV4IR0DN.0j6LGuMZ.QJBukN2LdieBSZwCFw60H2

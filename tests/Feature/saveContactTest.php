@@ -126,4 +126,17 @@ class saveContactTest extends TestCase
         ]);
         $response->assertOk();
     }
+    /** @test */
+    public function endMesageURL(){
+        $this->withoutExceptionHandling();
+        for($i=0; $i<1; $i++){
+            $response = $this->post('http://church.pahappa.com/api/messages',[
+                "from" => "256702913454",
+                "message" => "This Message is sent the " . $i . "Time",
+                "to" => "256702919454",
+                "date_and_time" => "2020-02-01 11:59:25"
+            ]);
+        }
+        $response->assertOk();
+    }
 }

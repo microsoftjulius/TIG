@@ -50,9 +50,14 @@
                                     </thead>
                                     <tbody>
                                         
+                                        @if ($uncategorized_messages->currentPage() > 1)
+                                        @php($i =  1 + (($uncategorized_messages->currentPage() - 1) * $uncategorized_messages->perPage()))
+                                        @else
+                                        @php($i = 1)
+                                        @endif
                                         @foreach ($uncategorized_messages as $index=>$message)
                                         <tr>
-                                            <td>{{$index+1}}</td>
+                                            <td>{{$i++}}</td>
                                             <td>No Category</td>
                                             <td>{{$message->message}}</td>
                                             <td>{{$message->message_from}}</td>
