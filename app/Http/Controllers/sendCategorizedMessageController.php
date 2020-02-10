@@ -10,6 +10,7 @@ use Carbon\Carbon;
 use Auth;
 use App\package_category;
 use GuzzleHttp\Client;
+use App\SendersNumber;
 
 class sendCategorizedMessageController extends Controller
 {
@@ -30,8 +31,8 @@ class sendCategorizedMessageController extends Controller
         $mytime = Carbon::now();
         $mytime->setTimezone('Africa/Kampala');
         //return $this->category_id;
-        $packaged_categories = message::join('package_category','package_category.category_id','messages.category_id')
-        ->where('messages.category_id',$this->category_id)->get(); //->where('messages.transaction_status','like', 'F%')
+        $packaged_categories = SendersNumber::join('package_category','package_category.category_id','senders_number.category_id')
+        ->where('senders_number.category_id',$this->category_id)->get(); //->where('messages.transaction_status','like', 'F%')
         //return $packaged_categories;
         foreach($packaged_categories as $packaged_category){
             //return $packaged_category;
@@ -72,8 +73,7 @@ class sendCategorizedMessageController extends Controller
     }
 
     protected function sendPackagelessMessage(){
-        $no_package = message::where('category_id',$this->category_id)
-        ->where('message_from','!=',null)->get();
+        $no_package = SendersNumber::where('category_id',$this->category_id)->get();
         foreach($no_package as $no_package_subscription){
             array_push($this->contacts_array, $no_package_subscription->message_from);
         }

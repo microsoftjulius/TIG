@@ -5,6 +5,9 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
+use DB;
+use App\messages;
+use App\category;
 
 class User extends Authenticatable
 {
@@ -63,5 +66,298 @@ class User extends Authenticatable
             $church_logo = 'pahappa.png';
         }
         return $church_logo;
+    }
+    public function getClientsRegisteredMonths(){
+        $months_array = [];
+        $employees = messages::whereYear('created_at', date('Y'))
+        ->where('transaction_status','SUCCESSFUL')
+        ->select(DB::raw('MONTHNAME(created_at) month'))
+        ->orderBy('month', 'Asc')
+        ->groupBy('month')
+        ->get();
+        foreach($employees as $employe){
+            array_push($months_array, $employe->month);
+        }
+        $months_array = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+        return $months_array;
+    }
+
+    public function countScheduledMessages(){
+        $scheduled_messages = messages::where('status','Scheduled')->get()->count();
+        return $scheduled_messages;
+    }
+    public function countFailedMessages(){
+        $failed_messages = messages::where('status','Failed')->get()->count();
+        return $failed_messages;
+    }
+    public function getJanuaryRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"January")->get()->count();
+        return $count;
+    }
+    public function getFebrauryRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"February")->get()->count();
+        return $count;
+    }
+    public function getMarchRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"March")->get()->count();
+        return $count;
+    }
+    public function getAprilRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"April")->get()->count();
+        return $count;
+    }
+    public function getMayRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"May")->get()->count();
+        return $count;
+    }
+    public function getJuneRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"June")->get()->count();
+        return $count;
+    }
+    public function getJulyRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"July")->get()->count();
+        return $count;
+    }
+    public function getAugustRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"August")->get()->count();
+        return $count;
+    }
+    public function getSeptemberRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"September")->get()->count();
+        return $count;
+    }
+    public function getOctoberRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"October")->get()->count();
+        return $count;
+    }
+    public function getNovemberRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"November")->get()->count();
+        return $count;
+    }
+    public function getDecemberRequests(){
+        $count = CustomerRequests::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"December")->get()->count();
+        return $count;
+    }
+
+    public function getCountOfGamesWithWorkers(){
+        $games = messages::join('games','games.id','employees.game_id')->where('employees.status','active')->count();
+        $games_all = DB::table('games')->count();
+        return (($games/$games_all)*100);
+    }
+
+    public function getCountOfGamesWithNoWorkers(){
+        $games_all = DB::table('games')->count();
+        return (100-$this->getCountOfGamesWithWorkers());
+    }
+
+    public function getSubscribersInJanuary(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"January")
+        ->where('category_id','!=',null)
+        ->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"January")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInFebruary(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"February")
+        ->where('category_id','!=',null)
+        ->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"February")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInMarch(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"March")
+        ->where('category_id','!=',null)
+        ->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"March")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInApril(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"April")
+        ->where('category_id','!=',null)
+        ->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"April")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInMay(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"May")
+        ->where('category_id','!=',null)->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"May")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInJune(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"June")
+        ->where('category_id','!=',null)
+        ->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"June")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInjuly(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"July")
+        ->where('category_id','!=',null)->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"July")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInAugust(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"August")
+        ->where('category_id','!=',null)->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"August")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInSeptember(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"September")
+        ->where('category_id','!=',null)
+        ->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"September")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInOctober(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"October")
+        ->where('category_id','!=',null)->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"October")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInNovember(){
+        if(Auth::user()->church_id == 1){
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"November")
+        ->where('category_id','!=',null)
+        ->get()->count();
+        }else{
+        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"November")
+        ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+        ->get()->count();
+        }
+        return $count;
+    }
+    public function getSubscribersInDecember(){
+        if(Auth::user()->church_id == 1){
+            $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"December")
+            ->where('category_id','!=',null)->get()->count();
+        }else{
+            $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"December")
+            ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
+            ->get()->count();
+        }
+
+        return $count;
+    }
+
+    public function getMaximumsubscribersOfACategory(){
+        if(Auth::user()->church_id == 1){
+            $max_category_id = messages::where('category_id','!=',null)->max('category_id');
+            $count = messages::where('category_id',$max_category_id)->get();
+        }else{
+            $max_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->max('category_id');
+            $count = messages::where('category_id',$max_category_id)->get()->count();
+        }
+        return $count;
+    }
+    public function getMinimumsubscribersOfACategory(){
+        if(Auth::user()->church_id == 1){
+            $max_category_id = messages::where('category_id','!=',null)->min('category_id');
+            $count = messages::where('category_id',$max_category_id)->get();
+        }else{
+            $max_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->min('category_id');
+            $count = messages::where('category_id',$max_category_id)->get()->count();
+        }
+        return $count;
+    }
+
+
+    public function getMaximumCategoryOfAChurch(){
+        if(Auth::user()->church_id == 1){
+            $max_category_id = messages::where('category_id','!=',null)->get()->max('category_id');
+            $category = category::where('id',$max_category_id)->value('title');
+        }else{
+            $max_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->get()->max('category_id');
+            $category = category::where('id',$max_category_id)->value('title');
+        }
+        return $category;
+    }
+
+
+    public function getMinimumCategoryOfAChurch(){
+        if(Auth::user()->church_id == 1){
+            $min_category_id = messages::where('category_id','!=',null)->min('category_id');
+            $category = category::where('id',$min_category_id)->value('title');
+        }else{
+            $min_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->min('category_id');
+            $category = category::where('id',$min_category_id)->value('title');
+        }
+        return $category;
+    }
+    public function countGroupsTotalContactsOfAChurch(){
+        if(Auth::user()->church_id == 1){
+            $contacts = Contacts::count();
+            return $contacts;
+        }else{
+            $contacts = Contacts::where('church_id',Auth::user()->church_id)->count();
+            return $contacts;
+        }
+    }
+    public function countCategoriesTotalContactsOfAChurch(){
+        if(Auth::user()->church_id == 1){
+            $contacts = messages::where('message_from','!=',null)->groupBy('category_id')->count();
+            return $contacts;
+        }else{
+            $contacts = messages::where('church_id',Auth::user()->church_id)->where('message_from','!=',null)->groupBy('category_id')->count();
+            return $contacts;
+        }
+    }
+    public function getTotalAmountLeft(){
+        $url = "http://www.egosms.co/api/v1/plain/?method=Balance&username=microsoft&password=123456";
+        return file_get_contents($url);
+    }
+    public function getTotalSmsLeft(){
+        $number_of_sms = $this->getTotalAmountLeft()/33.3;
+        return floor($number_of_sms);
     }
 }

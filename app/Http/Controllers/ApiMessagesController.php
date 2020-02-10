@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Date;
 use GuzzleHttp\Client;
 use App\PackagesModel;
 use App\package_category;
+use App\SendersNumber;
 
 class ApiMessagesController extends Controller
 {
@@ -75,7 +76,7 @@ class ApiMessagesController extends Controller
     }
 
     protected function incrementCategoryNumbersCount($category_id){
-        if(message::where('category_id',$category_id)->where('message_from',$this->senders_contact)->doesntExist()){
+        if(message::where('category_id',$category_id)->where('contact',$this->senders_contact)->doesntExist()){
             $number_of_registered_subscribers = category::where('id',$category_id)->value('number_of_subscribers');
             category::where('id',$category_id)->update(array('number_of_subscribers'=>$number_of_registered_subscribers + 1));
         }
@@ -86,10 +87,16 @@ class ApiMessagesController extends Controller
      */
     protected function saveCategorizedMessage(){
         $this->incrementCategoryNumbersCount($category_id);
+        $senders_contact = new SendersNumber();
+        if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
+            $senders_contact->contact = $this->senders_contact;
+            $senders_contact->category_id           = $category_id;
+            $senders_contact->save();
+        }
+        $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
         $message = new message();
-        $message->category_id           = $category_id;
         $message->contact_id            = $this->getRecieverContact();
-        $message->message_from          = $this->senders_contact;
+        $message->message_from          = $senders_contact_id;
         $message->church_id             = $this->getContactsChurch();
         $message->message               = $this->sent_message;
         $message->time_from_app         = $this->time_from_app;
@@ -102,10 +109,16 @@ class ApiMessagesController extends Controller
      */
 
     protected function saveUncategorizedMessage(){
+        $senders_contact = new SendersNumber();
+        if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
+            $senders_contact->contact = $this->senders_contact;
+            $senders_contact->category_id = null;
+            $senders_contact->save();
+        }
+        $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
         $message = new message();
-        $message->category_id = null;
         $message->contact_id           = $this->getRecieverContact();
-        $message->message_from         = $this->senders_contact;
+        $message->message_from         = $senders_contact_id;
         $message->message              = $this->sent_message;
         $message->time_from_app        = $this->time_from_app;
         $message->status               = 'Recieved';
@@ -115,11 +128,17 @@ class ApiMessagesController extends Controller
     }
 
     protected function saveMessageWithNoContact(){
+        $senders_contact = new SendersNumber();
+        if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
+            $senders_contact->contact = $this->senders_contact;
+            $senders_contact->category_id = null;
+            $senders_contact->save();
+        }
+        $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
         $message = new message();
-        $message->category_id = null;
         $message->contact_id           = null;
         $message->wrong_contact        = $this->message_sent_to;
-        $message->message_from         = $this->senders_contact;
+        $message->message_from         = $senders_contact_id;
         $message->message              = $this->sent_message;
         $message->time_from_app        = $this->time_from_app;
         $message->status               = 'Recieved';
@@ -169,11 +188,17 @@ class ApiMessagesController extends Controller
                                         }
                                         //Picking the church id from the number that has been hosted under the church, (the number to which the message is sent to) 
                                         $this->incrementCategoryNumbersCount($category_id);
+                                        $senders_contact = new SendersNumber();
+                                        if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
+                                            $senders_contact->contact = $this->senders_contact;
+                                            $senders_contact->category_id           = $category_id;
+                                            $senders_contact->save();
+                                        }
+                                        $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
                                         $message = new message();
                                         $message->transaction_reference = $transacting_code;
-                                        $message->category_id           = $category_id;
                                         $message->contact_id            = $this->contact_id;
-                                        $message->message_from          = $this->senders_contact;
+                                        $message->message_from          = $senders_contact_id;
                                         $message->church_id             = $this->church_id;
                                         $message->message               = $this->sent_message;
                                         $message->time_from_app         = $this->time_from_app;
@@ -185,10 +210,16 @@ class ApiMessagesController extends Controller
                                     
                                     else{
                                         $this->incrementCategoryNumbersCount($category_id);
+                                        $senders_contact = new SendersNumber();
+                                        if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
+                                            $senders_contact->contact = $this->senders_contact;
+                                            $senders_contact->category_id = $category_id;
+                                            $senders_contact->save();
+                                        }
+                                        $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
                                         $message = new message();
-                                        $message->category_id           = $category_id;
                                         $message->contact_id            = $this->getRecieverContact();
-                                        $message->message_from          = $this->senders_contact;
+                                        $message->message_from          = $senders_contact_id;
                                         $message->church_id             = $this->getContactsChurch();
                                         $message->message               = $this->sent_message;
                                         $message->time_from_app         = $this->time_from_app;

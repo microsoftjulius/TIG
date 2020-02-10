@@ -52,6 +52,7 @@ class messages extends Controller
      */
     protected function displayUncategorizedMessageToAdmin(){
         $uncategorized_messages = message::join('ChurchHostedNumber','messages.contact_id','ChurchHostedNumber.id')
+        ->join('senders_numbers','senders_numbers.id','messages.message_from')
         ->where('category_id',null)
         ->where('status','Recieved')
         ->select('messages.message','messages.id','ChurchHostedNumber.contact_number','messages.created_at','messages.message_from')->paginate('10');
@@ -72,6 +73,7 @@ class messages extends Controller
      */
     protected function displayUncategorizedMessageToUser(){
         $uncategorized_messages = message::join('ChurchHostedNumber','messages.contact_id','ChurchHostedNumber.id')
+        ->join('senders_numbers','senders_numbers.id','messages.message_from')
         ->where('category_id',null)
         ->where('status','Recieved')
         ->where('messages.church_id',Auth::user()->church_id)
@@ -346,10 +348,11 @@ class messages extends Controller
      * This function shows incoming messages to the admin
      */
     protected function showIncomingMessagesToAdmin(){
-        $messages_to_categories = message::join('category','category.id','messages.category_id')
+        $messages_to_categories = message::join('senders_numbers','senders_numbers.id','messages.message_from')
         ->join('church_databases','church_databases.id','messages.church_id')
         ->where('messages.status','Recieved')
-        ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from','church_databases.church_name')->paginate('10');
+        ->select('messages.message','category.title','messages.message_from','messages.created_at','messages.message_from','church_databases.church_name')
+        ->paginate('10');
 
         $drop_down_categories = category::select("title", "user_id", "id")->paginate(10);
         return view('after_login.incoming-messages',compact('messages_to_categories','drop_down_categories'));
@@ -359,7 +362,7 @@ class messages extends Controller
      * This function shows incoming messages to the church
      */
     protected function showIncomingMessagesToChurch(){
-        $messages_to_categories = message::join('category','category.id','messages.category_id')
+        $messages_to_categories = message::join('senders_numbers','senders_numbers.id','messages.message_from')
         ->join('church_databases','church_databases.id','messages.church_id')
         ->where('messages.church_id',Auth::user()->church_id)
         ->where('messages.status','Recieved')

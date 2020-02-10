@@ -43,7 +43,7 @@
                                                     <tr>
                                                         <th class="th-sm">No.</th>
                                                         <th class="th-sm">Subscriber</th>
-                                                        <th class="th-sm">Category Subscribed for</th>
+                                                        {{-- <th class="th-sm">Category Subscribed for</th> --}}
                                                         <th class="th-sm">Amount Initiated</th>
                                                         <th class="th-sm">Transaction Status</th>
                                                         <th class="th-sm">Subscription Date</th>
@@ -59,8 +59,8 @@
                                                 @foreach ($all_packages as $index=>$packages)
                                                 <tr>
                                                     <td>{{ $i++ }}</td>
-                                                    <td>{{ $packages->message_from }}</td>
-                                                    <td>{{ $packages->title}}</td>
+                                                    <td>{{ $packages->contact }}</td>
+                                                    {{-- <td>{{ $packages->title}}</td> --}}
                                                     <td>{{ number_format($packages->Amount)}} /=</td>
                                                     <td id="transaction_status">{{ $packages->transaction_status}}</td>
                                                     <td>{{ $packages->time_from_app }}</td>

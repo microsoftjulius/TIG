@@ -45,11 +45,18 @@ class SendScheduledMessage extends Command
         if(messages::where('tobesent_on','<=',$mytime->toDateTimeString())->where('status','Scheduled')->exists()){
             $message_to_send = messages::where('tobesent_on','<=',$mytime->toDateTimeString())->where('status','Scheduled')->get();
             foreach($message_to_send as $message){
+                $msgData_array = [];
                 $contact = Contacts::where('contacts.group_id', $message->group_id)->get();
                 foreach ($contact as $contacts) {
+                    if(in_array(array('number' => $contacts, 'message' => $message->message, 'senderid' => 'Good'), $msgData_array)){
+                        continue;
+                    }else{
+                        array_push($msgData_array, array('number' => $contacts, 'message' => $message->message, 'senderid' => 'Good'));
+                    }
+                }
                     $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft',
                     'password' => '123456'
-                    ), 'msgdata' => array(array('number' => $contacts->contact_number, 'message' => $message->message, 'senderid' => 'Good')));
+                    ), 'msgdata' => $msgData_array);
                     $json_builder = json_encode($data);
                     $ch = curl_init('http://www.egosms.co/api/v1/json/');
                     curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
@@ -60,12 +67,10 @@ class SendScheduledMessage extends Command
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                     $ch_result = curl_exec($ch);
                     curl_close($ch);
+                    echo "sent";
+                    messages::where('id',$message->id)->where('tobesent_on','<=',$mytime->toDateTimeString())
+                    ->where('status','Scheduled')->update(array('status'=>'OK'));
                 }
             }
-            messages::where('tobesent_on','<=',$mytime->toDateTimeString())
-            ->where('status','Scheduled')
-            ->update(array('status'=>'OK'));
-            echo "sent";
         }
-    }
 }

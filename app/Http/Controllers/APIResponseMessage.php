@@ -27,8 +27,7 @@ class APIResponseMessage extends Controller
         }
         foreach($this->groups_array as $group_id){
             if(Contacts::where('group_id',$group_id)->where('church_id',Auth::user()->church_id)->exists()){
-                $group_contacts = Contacts::where('group_id',$group_id)
-                ->where('church_id',Auth::user()->church_id)
+                $group_contacts = Contacts::where('group_id',$group_id)->where('church_id',Auth::user()->church_id)
                 ->get();
                 foreach($group_contacts as $contacts){
                     array_push($this->valid_array, $contacts->contact_number);
@@ -109,13 +108,14 @@ class APIResponseMessage extends Controller
                 return redirect()->back()->with('message',"Message sending was successful. 
                 However, the folowing Group(s) : " . implode(' ,', $this->empty_array) . " were Empty");
             }elseif(empty(request()->scheduled_date)){
-                return redirect()->back()->with('message','Message was scheduled');
+                return redirect()->back()->with('message','Message has been sent successfully');
             }
-            
             else{
-                return redirect()->back()->with('message',"Message sending was successful");
+                return redirect()->back()->with('message', "Message has successfully been Scheduled for ".request()->scheduled_date);
             }
         }else{
+            messages::where('message',$this->message)->where('church_id',Auth::user()->church_id)
+            ->update(array('status'=>'Failed'));
             return redirect()->back()->withErrors($empty_array[1]);
         }
     }

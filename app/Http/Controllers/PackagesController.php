@@ -80,19 +80,20 @@ class PackagesController extends Controller
     }
 
     protected function getPaymentLogsForChurch(){
-        $all_packages = messages::join('category','category.id','messages.category_id')
-        ->join('package_category','package_category.category_id','category.id')
+        $all_packages = messages::join('senders_numbers','senders_numbers.id','messages.message_from')
+        ->join('package_category','package_category.category_id','senders_numbers.category_id')
         ->join('packages','packages.id','package_category.package_id')
         ->where('package_category.church_id',Auth::user()->church_id)
         ->orderBy('messages.id','Desc')
+        ->groupBy('senders_numbers.id')
         ->paginate('10');
         return view('after_login.log',compact('all_packages'));
     }
 
     protected function getPaymentLogsForAdmin(){
-        $all_packages = messages::join('category','category.id','messages.category_id')
-        ->join('package_category','package_category.category_id','category.id')
-        ->join('packages','packages.id','package_category.package_id')
+        $all_packages = messages::join('senders_numbers','senders_numbers.id','messages.message_from')
+        ->join('packages','packages.id','senders_numbers.package_id')
+        ->groupBy('senders_numbers.id')
         ->orderBy('messages.id','Desc')
         ->paginate('10');
         return view('after_login.log',compact('all_packages'));
