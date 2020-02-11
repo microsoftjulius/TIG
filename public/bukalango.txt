@@ -1,0 +1,3 @@
+Url: http://localhost/phpmyadmin/sql.php?server=1&db=church&table=church_databases&pos=0
+ UserName: bukalango
+ Password: $2y$10$.pHRwfFWRQI15ebmAwPbKOGGAc1LhV.MpQC.CqFMBVOF6dpVaic/m

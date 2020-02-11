@@ -85,5 +85,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/roles-and-permision','PermisionsController@rolesAndPermisionsView')->name('Roles and Permisions');
     Route::get('/contact-not-found-messages','messages@displayWrongMessageToAdmin')->name('Contacts Not Hosted');
     Route::get('/add-category-contacts/{id}','CategoriesController@addContacts');
-    Route::get('/save-contact-to-group/{id}','CategoriesController@saveContact');
+    Route::get('/save-contact-to-category/{id}','CategoriesController@saveContact');
 });

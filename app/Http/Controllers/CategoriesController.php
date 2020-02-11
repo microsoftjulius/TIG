@@ -25,7 +25,7 @@ class CategoriesController extends Controller
         $contact = new SendersNumber();
         $contact->contact = $this->contact_number;
         $contact->category_id = $id;
-        $contact->church_id   = Auth::user()->id;
+        $contact->church_id   = Auth::user()->church_id;
         $contact->save();
 
         $number = category::where('id',$id)->value('number_of_subscribers');

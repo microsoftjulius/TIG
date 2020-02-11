@@ -26,7 +26,7 @@
                             </div>
                             <div class="col-lg-3"></div>
                             <div class="col-lg-6 card">
-                                <form method="get" action="/save-contact-to-group/{{request()->route('id')}}">
+                                <form method="get" action="/save-contact-to-category/{{request()->route('id')}}">
                                     <div class="form-group">
                                         <label for="exampleInputContact">Contact</label>
                                         <input type="number" class="form-control" placeholder="Enter phone_number" name="contact_number" value="{{old('contact_number')}}" autocomplete="off">
