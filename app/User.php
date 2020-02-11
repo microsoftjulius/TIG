@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use App\SendersNumber;
 use App\messages;
 use App\category;
 
@@ -152,11 +153,11 @@ class User extends Authenticatable
 
     public function getSubscribersInJanuary(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"January")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"January")
         ->where('category_id','!=',null)
         ->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"January")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"January")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -164,11 +165,11 @@ class User extends Authenticatable
     }
     public function getSubscribersInFebruary(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"February")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"February")
         ->where('category_id','!=',null)
         ->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"February")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"February")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -176,11 +177,11 @@ class User extends Authenticatable
     }
     public function getSubscribersInMarch(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"March")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"March")
         ->where('category_id','!=',null)
         ->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"March")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"March")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -188,11 +189,11 @@ class User extends Authenticatable
     }
     public function getSubscribersInApril(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"April")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"April")
         ->where('category_id','!=',null)
         ->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"April")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"April")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -200,10 +201,10 @@ class User extends Authenticatable
     }
     public function getSubscribersInMay(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"May")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"May")
         ->where('category_id','!=',null)->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"May")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"May")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -211,11 +212,11 @@ class User extends Authenticatable
     }
     public function getSubscribersInJune(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"June")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"June")
         ->where('category_id','!=',null)
         ->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"June")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"June")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -223,20 +224,20 @@ class User extends Authenticatable
     }
     public function getSubscribersInjuly(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"July")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"July")
         ->where('category_id','!=',null)->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"July")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"July")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->get()->count();
         }
         return $count;
     }
     public function getSubscribersInAugust(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"August")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"August")
         ->where('category_id','!=',null)->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"August")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"August")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -244,11 +245,11 @@ class User extends Authenticatable
     }
     public function getSubscribersInSeptember(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"September")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"September")
         ->where('category_id','!=',null)
         ->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"September")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"September")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -256,10 +257,10 @@ class User extends Authenticatable
     }
     public function getSubscribersInOctober(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"October")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"October")
         ->where('category_id','!=',null)->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"October")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"October")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -267,11 +268,11 @@ class User extends Authenticatable
     }
     public function getSubscribersInNovember(){
         if(Auth::user()->church_id == 1){
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"November")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"November")
         ->where('category_id','!=',null)
         ->get()->count();
         }else{
-        $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"November")
+        $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"November")
         ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
         ->get()->count();
         }
@@ -279,10 +280,10 @@ class User extends Authenticatable
     }
     public function getSubscribersInDecember(){
         if(Auth::user()->church_id == 1){
-            $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"December")
+            $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"December")
             ->where('category_id','!=',null)->get()->count();
         }else{
-            $count = messages::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"December")
+            $count = SendersNumber::whereYear('created_at', date('Y'))->where(DB::raw("(MONTHNAME(created_at))"),"December")
             ->where('category_id','!=',null)->where('church_id',Auth::user()->church_id)
             ->get()->count();
         }
@@ -292,21 +293,21 @@ class User extends Authenticatable
 
     public function getMaximumsubscribersOfACategory(){
         if(Auth::user()->church_id == 1){
-            $max_category_id = messages::where('category_id','!=',null)->max('category_id');
-            $count = messages::where('category_id',$max_category_id)->get();
+            $max_category_id = SendersNumber::where('category_id','!=',null)->max('category_id');
+            $count = SendersNumber::where('category_id',$max_category_id)->get();
         }else{
-            $max_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->max('category_id');
-            $count = messages::where('category_id',$max_category_id)->get()->count();
+            $max_category_id = SendersNumber::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->max('category_id');
+            $count = SendersNumber::where('category_id',$max_category_id)->get()->count();
         }
         return $count;
     }
     public function getMinimumsubscribersOfACategory(){
         if(Auth::user()->church_id == 1){
-            $max_category_id = messages::where('category_id','!=',null)->min('category_id');
-            $count = messages::where('category_id',$max_category_id)->get();
+            $max_category_id = SendersNumber::where('category_id','!=',null)->min('category_id');
+            $count = SendersNumber::where('category_id',$max_category_id)->get();
         }else{
-            $max_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->min('category_id');
-            $count = messages::where('category_id',$max_category_id)->get()->count();
+            $max_category_id = SendersNumber::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->min('category_id');
+            $count = SendersNumber::where('category_id',$max_category_id)->get()->count();
         }
         return $count;
     }
@@ -314,10 +315,10 @@ class User extends Authenticatable
 
     public function getMaximumCategoryOfAChurch(){
         if(Auth::user()->church_id == 1){
-            $max_category_id = messages::where('category_id','!=',null)->get()->max('category_id');
+            $max_category_id = SendersNumber::where('category_id','!=',null)->get()->max('category_id');
             $category = category::where('id',$max_category_id)->value('title');
         }else{
-            $max_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->get()->max('category_id');
+            $max_category_id = SendersNumber::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->get()->max('category_id');
             $category = category::where('id',$max_category_id)->value('title');
         }
         return $category;
@@ -326,10 +327,10 @@ class User extends Authenticatable
 
     public function getMinimumCategoryOfAChurch(){
         if(Auth::user()->church_id == 1){
-            $min_category_id = messages::where('category_id','!=',null)->min('category_id');
+            $min_category_id = SendersNumber::where('category_id','!=',null)->min('category_id');
             $category = category::where('id',$min_category_id)->value('title');
         }else{
-            $min_category_id = messages::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->min('category_id');
+            $min_category_id = SendersNumber::where('category_id','!=',null)->where('church_id',Auth::user()->church_id)->min('category_id');
             $category = category::where('id',$min_category_id)->value('title');
         }
         return $category;
@@ -345,10 +346,10 @@ class User extends Authenticatable
     }
     public function countCategoriesTotalContactsOfAChurch(){
         if(Auth::user()->church_id == 1){
-            $contacts = messages::where('message_from','!=',null)->groupBy('category_id')->count();
+            $contacts = SendersNumber::where('contact','!=',null)->groupBy('category_id')->count();
             return $contacts;
         }else{
-            $contacts = messages::where('church_id',Auth::user()->church_id)->where('message_from','!=',null)->groupBy('category_id')->count();
+            $contacts = SendersNumber::where('church_id',Auth::user()->church_id)->where('contact_id','!=',null)->groupBy('category_id')->count();
             return $contacts;
         }
     }

@@ -27,11 +27,11 @@ class ContactsController extends Controller {
         if(Contacts::where('group_id',$id)->where('contact_number',$this->contact_number)->exists()){
             return $this->error_message->numberExistsError();
         }
-        if(!in_array(substr($this->contact_number,0,5),$this->contacts_format)){
-            return $this->error_message->allowedContactsErrorMessage();
-        }
         if(empty($this->contact_number)) {
             return $this->error_message->emptyPhoneNumber();
+        }
+        if(!in_array(substr($this->contact_number,0,5),$this->contacts_format)){
+            return $this->error_message->allowedContactsErrorMessage();
         }
         if(strlen($this->contact_number) > $this->contact_length || strlen($this->contact_number) < $this->contact_length){
             return $this->error_message->contactLengthError();

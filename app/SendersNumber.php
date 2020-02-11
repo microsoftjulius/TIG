@@ -8,5 +8,5 @@ class SendersNumber extends Model
 {
     protected $table = "senders_numbers";
 
-    protected $fillable = ["message_from","category_id"];
+    protected $fillable = ["contact","category_id","church_id","package_id"];
 }

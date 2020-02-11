@@ -10,20 +10,6 @@
                         @include('layouts.sidebar')
                         <!-- /sidebar menu -->
                         <!-- /menu footer buttons -->
-                        <div class="sidebar-footer hidden-small">
-                            <a data-toggle="tooltip" data-placement="top" title="Settings">
-                            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                            </a>
-                            <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-                            </a>
-                            <a data-toggle="tooltip" data-placement="top" title="Lock">
-                            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-                            </a>
-                            <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-                            </a>
-                        </div>
                         <!-- /menu footer buttons -->
                     </div>
                 </div>
@@ -39,6 +25,7 @@
                             <section class="box col-lg-12 col-sm-12 col-md-12 mt-3">
                                 <a href="/message-categories"><button class="btn btn-warning pull-right"><i class="fa fa-arrow-left"></i> Back</button></a>
                                 <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addSearchTerm"><i class="fa fa-plus"></i> Add search term</button>
+                                <a href="/add-category-contacts/{{request()->route('id')}}"><button type="button" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Add Contacts </button></a>
                                         {{-- <button class="btn btn-primary pull-right" onclick="addRow('dataTable')"><i class="fa fa-plus"></i> Row</button> --}}
                                     {{-- <button class="btn btn-danger" onclick="deleteRow('dataTable')"><i class="fa fa-trash"></i> Row</button> --}}
                                 <table id="dataTable" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%">
