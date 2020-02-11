@@ -24,7 +24,6 @@ class ImportAndExportContactsController extends Controller
             return $this->error_message->excelFileOrCsvFileError();
         }
         Excel::import(new ContactsImport,request()->file('file'));
-        Groups::find(request()->group_id)->update(array('number_of_contacts'=>Contacts::where('group_id',request()->group_id)->count()));
         return redirect()->back()->with('message','Contacts Upload was Successfull');
     }
 
