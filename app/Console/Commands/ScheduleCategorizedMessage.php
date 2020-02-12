@@ -3,25 +3,25 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\messages;
-use App\Contacts;
+use App\SendersNumber;
 use Carbon\Carbon;
+use App\messages;
 
-class SendScheduledMessage extends Command
+class ScheduleCategorizedMessage extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'scheduled:message';
+    protected $signature = 'scheduled:category';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'This Class sends a message to a subscriber when ever the scheduled time has reached';
+    protected $description = 'This Schedular sends a categorized scheduled message';
 
     /**
      * Create a new command instance.
@@ -45,20 +45,21 @@ class SendScheduledMessage extends Command
 
         if(messages::where('tobesent_on','<=',$mytime->toDateTimeString())->where('status','Scheduled')->exists()){
             $message_to_send = messages::where('tobesent_on','<=',$mytime->toDateTimeString())->where('status','Scheduled')
-            ->join('Groups','Groups.id','messages.group_id')
-            ->join('contacts','contacts.group_id','Groups.id')
-            ->select('messages.*','contacts.contact_number')
+            ->join('senders_numbers','senders_numbers.category_id','messages.category_id')
+            ->join('category','category.id','senders_numbers.category_id')
+            ->select('messages.*','senders_numbers.contact')
             ->get();
             foreach($message_to_send as $message){
                 $msgData_array = [];
-                $contact = Contacts::where('contacts.group_id', $message->group_id)->get();
+                $contact = SendersNumber::join('messages','messages.category_id','senders_numbers.category_id')
+                ->where('senders_numbers.category_id', $message->category_id)
+                ->where('tobesent_on','<=',$mytime->toDateTimeString())->get();
                 foreach ($contact as $contacts) {
-                    if(in_array(array('number' => $contacts->contact_number, 'message' => $message->message, 'senderid' => 'Good'), $msgData_array)){
+                    if(in_array(array('number' => $contacts->contact, 'message' => $message->message, 'senderid' => 'Good'), $msgData_array)){
                         continue;
                     }else{
-                        array_push($msgData_array, array('number' => $contacts->contact_number, 'message' => $message->message, 'senderid' => 'Good'));
+                        array_push($msgData_array, array('number' => $contacts->contact, 'message' => $message->message, 'senderid' => 'Good'));
                     }
-                    echo $contacts->contact_number;
                 }
                     $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft',
                     'password' => '123456'
@@ -81,5 +82,5 @@ class SendScheduledMessage extends Command
                     ));
                 }
             }
-        }
+    }
 }

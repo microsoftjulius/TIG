@@ -11,25 +11,33 @@ class ScheduledMessagesController extends Controller
 {
     public function displayScheduledMessages(){
         if(Auth::user()->church_id == 1){
-        $display_all_scheduled_messages = messages::join('Groups','messages.group_id','Groups.id')
-        ->join('church_databases','church_databases.id','messages.church_id')
-        ->where('messages.status', 'Scheduled')
-        ->select('messages.message','Groups.group_name','messages.tobesent_on','messages.status','church_databases.church_name')
-        ->orderBy('messages.id','Desc')
-        ->paginate('10');
-        return view('after_login.scheduled-messages',compact('display_all_scheduled_messages'));
-        }else{
-        $display_all_scheduled_messages = messages::join('Groups','messages.group_id','Groups.id')
-        ->join('church_databases','church_databases.id','messages.church_id')
-        ->join('users','users.church_id','church_databases.id')
-        ->where('messages.status', 'Scheduled')
-        ->where('users.id',Auth::user()->id)
-        ->select('messages.message','Groups.group_name','messages.tobesent_on','messages.status','church_databases.church_name')
-        ->orderBy('messages.id','Desc')
-        ->paginate('10');
-        return view('after_login.scheduled-messages',compact('display_all_scheduled_messages'));
+            return $this->getAllScheduledMessagesToAdmin();
+        }
+        else{
+            return $this->getAllScheduledMessagesToUsers();
         }
         
+    }
+    protected function getAllScheduledMessagesToAdmin(){
+        $display_all_scheduled_messages = messages::where('messages.status', 'Scheduled')
+        ->join('Groups','Groups.church_id','messages.church_id')
+        ->join('church_databases','church_databases.id','messages.church_id')
+        ->groupBy('messages.message')
+        ->orderBy('messages.created_at','Desc')
+        ->paginate('10');
+        return view('after_login.scheduled-messages',compact('display_all_scheduled_messages'));
+    }
+
+    protected function getAllScheduledMessagesToUsers(){
+        $display_all_scheduled_messages = messages::where('messages.status', 'Scheduled')
+        ->join('Groups','Groups.church_id','messages.church_id')
+        ->join('church_databases','church_databases.id','messages.church_id')
+        ->where('Groups.church_id',Auth::user()->church_id)
+        ->select('messages.message','Groups.group_name','messages.tobesent_on','messages.status','church_databases.church_name')
+        ->groupBy('messages.message')
+        ->orderBy('messages.created_at','Desc')
+        ->paginate('10');
+        return view('after_login.scheduled-messages',compact('display_all_scheduled_messages'));
     }
 
     public function searchScheduledMessages(Request $request){

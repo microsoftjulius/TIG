@@ -354,11 +354,28 @@ class User extends Authenticatable
         }
     }
     public function getTotalAmountLeft(){
-        $url = "http://www.egosms.co/api/v1/plain/?method=Balance&username=microsoft&password=123456";
-        return file_get_contents($url);
+        
+        
+        if(!$sock = @fsockopen('www.google.com', 80))
+        {
+            return null;
+        }
+        else
+        {
+            $url = "http://www.egosms.co/api/v1/plain/?method=Balance&username=microsoft&password=123456";
+            return file_get_contents($url);
+        }
+        
     }
     public function getTotalSmsLeft(){
         $number_of_sms = $this->getTotalAmountLeft()/33.3;
-        return floor($number_of_sms);
+        if(!$sock = @fsockopen('www.google.com', 80))
+        {
+            return null;
+        }
+        else
+        {
+            return floor($number_of_sms);
+        }
     }
 }

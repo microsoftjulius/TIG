@@ -13,7 +13,9 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        'App\Console\Commands\SendScheduledMessage'
+        'App\Console\Commands\SendScheduledMessage',
+        'App\Console\Commands\ScheduleCategorizedMessage',
+        'App\Console\Commands\checkTransactionStatus'
     ];
 
     /**
@@ -25,6 +27,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('scheduled:message')->everyMinute();
+        $schedule->command('scheduled:category')->everyMinute();
         $schedule->command('update:transactions')->cron('*/30 * * * *');
     }
 

@@ -7,6 +7,7 @@ use App\messages;
 use Auth;
 use App\Contacts;
 use App\Groups;
+use Carbon\Carbon;
 
 class APIResponseMessage extends Controller
 {
@@ -53,8 +54,8 @@ class APIResponseMessage extends Controller
             $message->created_by  = Auth::user()->id;
             $message->message     = $this->message;
             $message->church_id   = Auth::user()->church_id;
-            $message->number_of_contacts = count($this->valid_array);
-            $message->tobesent_on = request()->scheduled_date;
+            $message->number_of_contacts = request()->contact_character;
+            $message->tobesent_on = Carbon::parse(request()->scheduled_date)->format('Y-m-d H:i:s');
             empty(request()->scheduled_date) ? $message->status  = 'OK' : $message->status  = 'Scheduled';
 
             empty(request()->scheduled_date) ? $msg = "Message has been sent Successfully" : $msg = "Message has successfully been Scheduled for ".request()->scheduled_date;
@@ -69,12 +70,12 @@ class APIResponseMessage extends Controller
     public function saveCategoriesSentMessage($counted_valid){
         foreach($this->category_id as $category_id){
             $message = new messages();
-            $message->category_id = $category_id;
             $message->created_by  = Auth::user()->id;
             $message->message     = $this->message;
-            $message->number_of_contacts = $counted_valid;
+            $message->number_of_contacts = request()->contact_character;
             $message->church_id   = Auth::user()->church_id;
-            $message->tobesent_on = request()->scheduled_date;
+            $message->category_id   = $category_id;
+            $message->tobesent_on = Carbon::parse(request()->scheduled_date)->format('Y-m-d H:i:s');
             empty(request()->scheduled_date) ? $message->status  = 'OK' : $message->status  = 'Scheduled';
 
             empty(request()->scheduled_date) ? $msg = "Message has been sent Successfully" : $msg = "Message has successfully been Scheduled for ".request()->scheduled_date;

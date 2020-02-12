@@ -27,12 +27,13 @@ class sendCategorizedMessageController extends Controller
         $this->connected = (bool)@fsockopen($host_name, $port_no, $err_no, $err_str, 10);
     }
 
+    /** Function to send immediate message with category, it has a pakage attached to it*/
     protected function categoryWithPackage(){
         $mytime = Carbon::now();
         $mytime->setTimezone('Africa/Kampala');
         //return $this->category_id;
-        $packaged_categories = SendersNumber::join('package_category','package_category.category_id','senders_number.category_id')
-        ->where('senders_number.category_id',$this->category_id)->get(); //->where('messages.transaction_status','like', 'F%')
+        $packaged_categories = SendersNumber::join('package_category','package_category.category_id','senders_numbers.category_id')
+        ->where('senders_numbers.category_id',$this->category_id)->get(); //->where('messages.transaction_status','like', 'F%')
         //return $packaged_categories;
         foreach($packaged_categories as $packaged_category){
             //return $packaged_category;
@@ -43,7 +44,7 @@ class sendCategorizedMessageController extends Controller
                 if($packaged_category->message_from == null){
                     continue;
                 }else{
-                array_push($this->contacts_array, $packaged_category->message_from);
+                array_push($this->contacts_array, $packaged_category->contact);
                 }
             }
         }
@@ -52,11 +53,11 @@ class sendCategorizedMessageController extends Controller
         } 
         return $this->sendMessageOnConnectedInternet();
     }
-
+    /** Function to send message on connected internet */
     protected function sendMessageOnConnectedInternet(){
         return $this->apiCall();
     }
-
+    /** Function to send message to category with no package */
     protected function categoryWithNoPackage(){
         if(empty($this->message)){
             return redirect()->back()->withErrors("The Message Body cannot be empty");
@@ -71,11 +72,11 @@ class sendCategorizedMessageController extends Controller
             return redirect()->back()->withErrors("Please select atleast one category");
         }
     }
-
+    /** Function to send packageless message */
     protected function sendPackagelessMessage(){
         $no_package = SendersNumber::where('category_id',$this->category_id)->get();
         foreach($no_package as $no_package_subscription){
-            array_push($this->contacts_array, $no_package_subscription->message_from);
+            array_push($this->contacts_array, $no_package_subscription->contact);
         }
         return $this->sendMessageOnConnectedInternet();
     }
@@ -88,10 +89,23 @@ class sendCategorizedMessageController extends Controller
                 return $this->categoryWithNoPackage();
             }
         }
-        return $this->api_response->saveSentMessage();
+        return $this->apiCall();
     }
 
+
     protected function apiCall(){
+        //Just put this
+        if(empty(request()->scheduled_date)){
+            $contacts = SendersNumber::where('messages.category_id',$this->category_id)
+            ->join('messages','messages.message_from','senders_numbers.id')
+            ->where('status','!=','Scheduled')->get();
+            foreach($contacts as $contact){
+                array_push($this->contacts_array, $contact->contact);
+            }
+        }
+        else{
+            return $this->api_response->saveCategoriesSentMessage($this->category_id);
+        }
         $unique_array = [];
         foreach($this->contacts_array as $unique){
             if(in_array($unique, $unique_array)){
@@ -123,8 +137,6 @@ class sendCategorizedMessageController extends Controller
                 array_push($msgData_array, array('number' => $contacts, 'message' => $this->message, 'senderid' => 'Good'));
             }
         }
-
-
         $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft','password' => '123456'),'msgdata' => $msgData_array);
         $json_builder = json_encode($data);
         $ch = curl_init('http://www.egosms.co/api/v1/json/');

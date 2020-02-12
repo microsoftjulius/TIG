@@ -68,7 +68,7 @@
                                         <tr>
                                             <th class="th-sm">Id</th>
                                             <th class="th-sm">Message body</th>
-                                            <th class="th-sm">Date and time</th>
+                                            <th class="th-sm">Created at</th>
                                             <th class="th-sm"> Created by</th>
                                             @if(auth()->user()->id == 1)
                                             <th class="th-sm">Church</th>
@@ -87,7 +87,7 @@
                                         <tr>
                                             <td>{{ $i++}}</td>
                                             <td><div style="word-break:break-all;">{{ $message_details->message }}</div></td>
-                                            <td>{{ $message_details->created_at }}</td>
+                                            <td>{{ $message_details->tobesent_on }}</td>
                                             <td>{{ $message_details->email }}</td>
                                             @if(auth()->user()->id == 1)
                                             <td>{{ $message_details->church_name}}</td>

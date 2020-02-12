@@ -43,7 +43,7 @@ class ApiMessagesController extends Controller
      */
     public function createAPIMessage(){
         if(empty($this->message_sent_to) || empty($this->sent_message) || empty($this->time_from_app) || empty($this->senders_contact)){
-            return "All the supplied parameters are required";
+            return response()->json(["Status"=>"Failed","Reason"=>"Message body and To cannot be empty"]);
         }
         if($this->getRecieverContact()){
             return $this->getFirstSearchTerm();
@@ -76,7 +76,7 @@ class ApiMessagesController extends Controller
     }
 
     protected function incrementCategoryNumbersCount($category_id){
-        if(message::where('category_id',$category_id)->where('contact',$this->senders_contact)->doesntExist()){
+        if(message::where('category_id',$category_id)->where('message_from',$this->senders_contact)->doesntExist()){
             $number_of_registered_subscribers = category::where('id',$category_id)->value('number_of_subscribers');
             category::where('id',$category_id)->update(array('number_of_subscribers'=>$number_of_registered_subscribers + 1));
         }
@@ -91,6 +91,7 @@ class ApiMessagesController extends Controller
         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
             $senders_contact->contact = $this->senders_contact;
             $senders_contact->category_id           = $category_id;
+            $senders_contact = $this->getContactsChurch();
             $senders_contact->save();
         }
         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
@@ -99,6 +100,7 @@ class ApiMessagesController extends Controller
         $message->message_from          = $senders_contact_id;
         $message->church_id             = $this->getContactsChurch();
         $message->message               = $this->sent_message;
+        $message->category_id           = $category_id;
         $message->time_from_app         = $this->time_from_app;
         $message->status                = 'Recieved';
         $message->save();
@@ -107,12 +109,14 @@ class ApiMessagesController extends Controller
      * This function saves checks if the message does not belong to any category
      * Saves the message as uncategorized under a church that has the message to as hosted
      */
-
+    //category is null
     protected function saveUncategorizedMessage(){
+        
         $senders_contact = new SendersNumber();
         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
             $senders_contact->contact = $this->senders_contact;
             $senders_contact->category_id = null;
+            $senders_contact->church_id = $this->getContactsChurch();
             $senders_contact->save();
         }
         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
@@ -124,7 +128,7 @@ class ApiMessagesController extends Controller
         $message->status               = 'Recieved';
         $message->church_id            = $this->getContactsChurch();
         $message->save();
-        return response()->json([$message, $this->status_response]);
+        return response()->json(["Status" => $this->status_response]);
     }
 
     protected function saveMessageWithNoContact(){
@@ -132,6 +136,7 @@ class ApiMessagesController extends Controller
         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
             $senders_contact->contact = $this->senders_contact;
             $senders_contact->category_id = null;
+            $senders_contact = $this->getContactsChurch();
             $senders_contact->save();
         }
         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
@@ -144,7 +149,7 @@ class ApiMessagesController extends Controller
         $message->status               = 'Recieved';
         $message->church_id            = $this->getContactsChurch();
         $message->save();
-        return response()->json([$message, $this->status_response]);
+        return response()->json(["Status" => $this->status_response]);
     }
     /**
      * This function searches through the message to find the registered search term
@@ -192,6 +197,7 @@ class ApiMessagesController extends Controller
                                         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
                                             $senders_contact->contact = $this->senders_contact;
                                             $senders_contact->category_id           = $category_id;
+                                            $senders_contact = $this->getContactsChurch();
                                             $senders_contact->save();
                                         }
                                         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
@@ -200,12 +206,13 @@ class ApiMessagesController extends Controller
                                         $message->contact_id            = $this->contact_id;
                                         $message->message_from          = $senders_contact_id;
                                         $message->church_id             = $this->church_id;
+                                        $message->category_id           = $category_id;
                                         $message->message               = $this->sent_message;
                                         $message->time_from_app         = $this->time_from_app;
                                         $message->status                = 'Recieved';
                                         $message->transaction_status    = $transaction_status;
                                         $message->save();
-                                        return response()->json([$message, $this->status_response]);
+                                        return response()->json(["Status" => $this->status_response]);
                                     }
                                     
                                     else{
@@ -214,6 +221,7 @@ class ApiMessagesController extends Controller
                                         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
                                             $senders_contact->contact = $this->senders_contact;
                                             $senders_contact->category_id = $category_id;
+                                            $senders_contact->church_id = $this->getContactsChurch();
                                             $senders_contact->save();
                                         }
                                         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
@@ -221,11 +229,12 @@ class ApiMessagesController extends Controller
                                         $message->contact_id            = $this->getRecieverContact();
                                         $message->message_from          = $senders_contact_id;
                                         $message->church_id             = $this->getContactsChurch();
+                                        $message->category_id           = $category_id;
                                         $message->message               = $this->sent_message;
                                         $message->time_from_app         = $this->time_from_app;
                                         $message->status                = 'Recieved';
                                         $message->save();
-                                        return response()->json([$message, $this->status_response]);
+                                        return response()->json(["Status" => $this->status_response]);
                                     }
                                 }
                                 

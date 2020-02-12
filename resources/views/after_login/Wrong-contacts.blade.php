@@ -60,7 +60,7 @@
                                             <td>{{$i++}}</td>
                                             <td>No Category</td>
                                             <td>{{$message->message}}</td>
-                                            <td>{{$message->message_from}}</td>
+                                            <td>{{$message->contact}}</td>
                                             <td>{{$message->created_at}}</td>
                                             <form action="/delete-uncategorized-message/{{$message->id}}" method="get">
                                                 @csrf

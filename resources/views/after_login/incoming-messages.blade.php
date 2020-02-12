@@ -106,7 +106,7 @@
                                         <tr>
                                             <th class="th-sm">{{ $i++ }}</th>
                                             <th class="th-sm">{{ $messages->message }}</th>
-                                            <th class="th-sm">{{ $messages->message_from }}</th>
+                                            <th class="th-sm">{{ $messages->contact }}</th>
                                             @if(auth()->user()->church_id == 1)
                                             <th class="th-sm">{{ $messages->church_name}}</th>
                                             @endif
