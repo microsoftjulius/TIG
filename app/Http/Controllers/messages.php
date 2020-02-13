@@ -174,7 +174,8 @@ class messages extends Controller
         $drop_down_groups = Groups::select("group_name", "number_of_contacts", "id")->get();
         
         $categories = category::select('title','id','number_of_subscribers')->get();
-        return view('after_login.Quicksms', compact('drop_down_groups','categories'));
+
+        return view('after_login.Quicksms', compact('drop_down_groups','categories','no_category'));
     }
 
     protected function getCategoriesForChurch(){
@@ -264,7 +265,7 @@ class messages extends Controller
         ->join('church_databases','church_databases.id','search_terms.church_id')
         ->join('category','category.id','search_terms.category_id')
         ->where('church_databases.id',Auth::user()->church_id)
-        ->select(array('category.id','title', 'name', DB::raw('COUNT(search_terms.search_term) as countSearchTerms')))
+        ->select(array('category.id','title', 'name','category.number_of_subscribers', DB::raw('COUNT(search_terms.search_term) as countSearchTerms')))
         ->groupBy('category.title')
         ->paginate('10');
         return view('after_login.message-categories', compact('category'));

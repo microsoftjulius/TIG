@@ -39,7 +39,7 @@
             <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Text message</label>
             <div class="col-sm-8">
                 <textarea type="text" class="form-control form-control-lg" rows="7" name="message" id="message" onkeyup="countChars(this);" maxlength='310' value="{{ old('message') }}" required></textarea>
-                <p id="charNum">0   characters [1message is 160 characters,2messages 310 characters]</p>
+                <p id="charNum">0   characters [1 message is 160 characters,2messages 310 characters]</p>
                 <br>
             </div>
         </div>

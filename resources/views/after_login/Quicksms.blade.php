@@ -38,10 +38,12 @@
                         <ul id="tabs" class="nav nav-tabs col-md-offset-1 col-sm-10" data-tabs="tabs">
                             <li class="active"><a href="#groupmessage" data-toggle="tab">Send to Group</a></li>
                             <li><a href="#categorymessage" data-toggle="tab">Send To Category</a></li>
+                            <li><a href="#nocategorymessage" data-toggle="tab">Send To Un Categorized</a></li>
                         </ul>
                         <div id="my-tab-content" class="tab-content">
                             @include('layouts.groupsMessage')
                             @include('layouts.categorizedMessage')
+                            @include('layouts.unCategorizedMessage')
                         </div>
                         <div class="row">
                         </div>

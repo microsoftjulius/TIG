@@ -18,12 +18,9 @@ class SendingMessages extends Controller
         $this->error_message    = new ErrorMessagesController();
         $this->api_response     = new APIResponseMessage();
         $this->message          = request()->message;
-        $this->groups_array     = request()->checkbox;
         $this->empty_array      = [];
         $this->valid_array      = [];
     }
-
-
 
     public function sendImmediateMessage(Request $request) {
         if(!empty(request()->scheduled_date)){
@@ -38,6 +35,9 @@ class SendingMessages extends Controller
                     array_push($msgData_array, array('number' => $contacts, 'message' => $this->message, 'senderid' => 'Good'));
                 }
             }
+
+            $this->api_response->saveGroupsSentMessage();
+
             $data = array('method' => 'SendSms', 'userdata' => array('username' => 'microsoft','password' => '123456'),'msgdata' => $msgData_array);
             $json_builder = json_encode($data);
             $ch = curl_init('http://www.egosms.co/api/v1/json/');
@@ -50,7 +50,8 @@ class SendingMessages extends Controller
             $ch_result = curl_exec($ch);
             curl_close($ch);
 
-            $this->api_response->saveGroupsSentMessage();
+            messages::where('church_id',Auth::user()->church_id)->where('message',request()->message)->update(array('number_of_contacts'=>count($msgData_array)));
+
             return $this->api_response->getApiResponse($ch_result);
         }
 }

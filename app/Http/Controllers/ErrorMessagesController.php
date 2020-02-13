@@ -55,6 +55,9 @@ class ErrorMessagesController extends Controller
     public function excelFileOrCsvFileError(){
         return redirect()->back()->withErrors("The Uploaded file is not Excel or Csv. Please Attach an Excel Or Csv File");
     }
+    public function noNumbersFound(){
+        return redirect()->back()->withErrors("Ooops!!. You have no contact that sent an uncategorized message");
+    }
     /**
      * Section for success messages
      */

@@ -34,7 +34,7 @@ class CategoriesController extends Controller
     }
     
     public function saveContact($id){
-        if(SendersNumber::where('contact',$this->contact_number)->exists()){
+        if(SendersNumber::where('contact',$this->contact_number)->where('church_id',Auth::user()->church_id)->exists()){
             return $this->error_message->numberExistsError();
         }
         if(empty($this->contact_number)) {

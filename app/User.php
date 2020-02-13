@@ -378,4 +378,17 @@ class User extends Authenticatable
             return floor($number_of_sms);
         }
     }
+
+    public function getCountOfUncategorized(){
+        if(Auth::user()->church_id == 1){
+            $no_category = messages::where('messages.category_id',null)
+            ->join('senders_numbers','senders_numbers.id','messages.message_from')->where('message_from','!=', null)
+            ->count();
+        }else{
+            $no_category = messages::where('messages.church_id',Auth::user()->church_id)->where('messages.category_id',null)
+            ->join('senders_numbers','senders_numbers.id','messages.message_from')->where('message_from','!=', null)
+            ->count();
+        }
+        return $no_category;
+    }
 }

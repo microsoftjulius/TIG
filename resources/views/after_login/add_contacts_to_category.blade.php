@@ -51,12 +51,19 @@
                                         <input type="hidden" name="category" value="{{ \Request::segment(2) }}">
                                     </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <div class="col-lg-4">
-                                        <br>
-                                        <button class="btn btn-success"><i class="fa fa-paperclip"></i> Import User Data</button>
-                                    </div>
-                                </div>
+
+                        <div class="col-md-2 pull-right">
+                            <div class="input-group">
+                            <a href='/add-search-term/{{ \Request::segment(2) }}'><button type="button" class="btn btn-warning">
+                                <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back</i></button></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="col-lg-4">
+                                <br>
+                                <button class="btn btn-success"><i class="fa fa-paperclip"></i> Import User Data</button>
+                            </div>
+                        </div>
                             </form>
                         </div>
                     </div>

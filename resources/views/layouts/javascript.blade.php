@@ -37,14 +37,14 @@ $( function() {
             if(firstMessage == 160){
             document.getElementById("charNum").innerHTML = obj.value.length+'<span style="color:red;">(You have reached limit of 160 characters for 1 message)</span>';
         }else{
-            document.getElementById("charNum").innerHTML = firstMessage+'characters [1message is 160 characters,2messages 310 characters]';
+            document.getElementById("charNum").innerHTML = firstMessage+'characters [1 message is 160 characters,2messages 310 characters]';
         }
         
         if (strLength === maxLength){
             document.getElementById("charNum").innerHTML = obj.value.length+'<span style="color:red;">(You have reached limit of 160 characters for 1 message)</span>';
         } 
         else{
-            document.getElementById("charNum").innerHTML = strLength+'characters [1message is 160 characters,2messages 310 characters]';
+            document.getElementById("charNum").innerHTML = strLength+'characters [1 message is 160 characters,2messages 310 characters]';
         } 
         
     }
@@ -163,6 +163,11 @@ $( function() {
 </script>
 <script>
     $('#textBoxId').bind('keyup', function(e){
-    document.getElementById('numberOfChars').innerHTML = $(this).val().length + "  characters [1message is 160 characters,2messages 310 characters]";
+        document.getElementById('numberOfChars').innerHTML = $(this).val().length + "  characters [1 message is 160 characters,2messages 310 characters]";
+    });
+</script>
+<script>
+    $('#textBoxIduncat').bind('keyup', function(e){
+        document.getElementById('numberOfCharsuncat').innerHTML = $(this).val().length + "  characters [1 message is 160 characters,2messages 310 characters]";
     });
 </script>

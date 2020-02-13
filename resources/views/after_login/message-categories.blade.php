@@ -80,6 +80,7 @@
                                                         <th>Added by</th>
                                                         <th class="th-sm">Message category</th>
                                                         <th class="th-sm">Number of Search Terms</th>
+                                                        <th class="th-sm">Number of Subscribers</th>
                                                         <th class="th-sm">Option</th>
                                                     </tr>
                                                 </thead>
@@ -95,6 +96,7 @@
                                                         <td>{{ $categories->name }}</td>
                                                         <td>{{ $categories->title }}</td>
                                                         <td>{{  $categories->countSearchTerms -1}}</td>
+                                                        <td>{{ $categories->number_of_subscribers}}</td>
                                                         <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
                                                     </tr>
                                                 @endforeach
