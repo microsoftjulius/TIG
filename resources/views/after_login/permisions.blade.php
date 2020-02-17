@@ -8,6 +8,7 @@
                     <div class="left_col scroll-view">
                         <!-- sidebar menu -->
                         @include('layouts.sidebar')
+                        @include('layouts.message')
                         <!-- /sidebar menu -->
                         <!-- /menu footer buttons -->
                         <div class="sidebar-footer hidden-small">
@@ -47,13 +48,16 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach ($roles as $role)
                                             <tr>
-                                                <td><input type="radio" name="package" value="dsds"></td>
-                                                <td>dsds</td>
-                                                <td>dg</td>
+                                                <td><input type="radio" name="role_id" value="{{$role->id}}"></td>
+                                                <td>{{$role->role_name}}</td>
+                                                <td>2</td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addrole"><i class="fa fa-plus"></i> Add Role</button>
                                 </section>
                                 <!--link for pagination-->
                             </div>
@@ -63,17 +67,19 @@
                                         <thead>
                                             <tr>
                                                 <th class="th-sm"></th>
-                                                <th class="th-sm">Permisions </th>
-                                                <th class="th-sm">Number Of People with this Permision</th>
+                                                <th class="th-sm">Permission</th>
+                                                <th class="th-sm">Number of people</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             
+                                            @foreach ($permissions as $permission)
                                             <tr>
-                                                <td><input type="checkbox" name="category[]" value="dsd"></td>
-                                                <td>ddsd</td>
-                                                <td>ds</td>
+                                                <th class="th-sm"><input type="checkbox" name="user_permisions[]" value="{{$permission->id}}"></th>
+                                                <th class="th-sm">{{$permission->permission_description}}</th>
+                                                <th class="th-sm">1</th>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
                                 </section>
@@ -85,9 +91,32 @@
                     <div class="row">
                     </div>
                 </div>
+                <!-- Modal -->
+                <form action="/add-new-role" method="get">
+                    @csrf
+                <div class="modal fade" id="addrole" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add new Role</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="text" name="role" class="form-control" autocomplete="off">
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+
                 <div class="container">
                     <!-- Trigger the modal with a button -->
-                    <button type="button" class="btn btn-info btn-lg" id="sample">Open Modal</button>
+                    {{-- <button type="button" class="btn btn-info btn-lg" id="sample">Open Modal</button> --}}
 
                     <!-- Modal -->
                     @include('layouts.notifications_modal')
@@ -105,12 +134,12 @@
             });//submit
             });
         </script>
-        <script>
+        {{-- <script>
             $(document).ready(function () {
                 setTimeout(function () {
                     $("#myModal").modal('show')
                 }, 3000);
             });
-        </script>
+        </script> --}}
     </body>
 </html>

@@ -23,7 +23,7 @@ class UnCategorizedMessages extends Controller
             ->get();
         }else{
             $numbers = messages::where('messages.church_id',Auth::user()->church_id)->where('messages.category_id',null)
-            ->join('senders_numbers','senders_numbers.id','messages.message_from')->where('message_from','!=', null)
+            ->join('senders_numbers','senders_numbers.id','messages.message_from')->where('message_from','!=', null)->orderBy("messages.created_at","Desc")
             ->get();
         }
         return $numbers;

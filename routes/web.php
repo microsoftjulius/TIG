@@ -87,4 +87,5 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/add-category-contacts/{id}','CategoriesController@addContacts');
     Route::get('/save-contact-to-category/{id}','CategoriesController@saveContact');
     Route::get('/send-uncategorized-message','UnCategorizedMessages@sendMessage');
+    Route::get('/add-new-role','PermisionsController@createRole');
 });

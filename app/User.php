@@ -391,4 +391,17 @@ class User extends Authenticatable
         }
         return $no_category;
     }
+
+    public function getUserPermisions(){
+        $empty_permisions_array = [];
+        $permisions_array = DB::table('permisions_roles')
+        ->join('permisions','permisions.id','permisions_roles.permision_id')
+        ->where('role_id',Auth::user()->role_id)
+        ->select('permisions.permision')->get();
+        foreach(json_decode($permisions_array,true) as $permisions){
+                array_push($empty_permisions_array,$permisions["permission_description"]);
+        }
+        return $empty_permisions_array;
+    }
+
 }

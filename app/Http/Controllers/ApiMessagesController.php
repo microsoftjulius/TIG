@@ -24,6 +24,7 @@ class ApiMessagesController extends Controller
      * The contact_number field is the hosted number litrary
      */
     public function __construct(Request $request){
+        $this->reference_id  = $request->referenceId;
         $this->error404Error    = new ErrorMessagesController();
         $this->contact_id       = ChurchHostedNumber::where('contact_number',$request->to)->value('id');
         $this->church_id        = ChurchHostedNumber::where('contact_number',$request->to)->value('church_id');
@@ -33,15 +34,26 @@ class ApiMessagesController extends Controller
         $this->senders_contact  = $request->from;
         $this->status_response  = "OK";
         $this->status_code      = 200;
-
         //return $request->to;
     }
 
+    /**
+     * Function to save all messages to a text file
+     */
+    protected function saveToTextFile(){
+        return 9;
+        // $url = "http://church.pahappa.com/api/messages";
+        // $data = ["message_from"=>$this->senders_contact, "message"=>$this->sent_message];
+        // file_put_contents('all_data.txt', file_get_contents($url), FILE_APPEND); 
+    }
     /**
      * Checks if all the parameters are filled
      * Calls all other functions
      */
     public function createAPIMessage(){
+        if(message::where('referenceId',$this->reference_id)->exists()){
+            return response()->json(["Status"=>"Failed","Reason"=>" Message already exists"]);
+        }
         if(empty($this->message_sent_to) || empty($this->sent_message) || empty($this->time_from_app) || empty($this->senders_contact)){
             return response()->json(["Status"=>"Failed","Reason"=>"Message body and To cannot be empty"]);
         }
@@ -61,8 +73,8 @@ class ApiMessagesController extends Controller
      * This function gets the church that has registered the recieved number
      */
     protected function getContactsChurch(){
-        $this->church_id = ChurchHostedNumber::where('contact_number',request()->to)->value('church_id');
-        return $this->church_id;
+        $church_id = ChurchHostedNumber::where('contact_number',request()->to)->value('church_id');
+        return $church_id;
     }
 
     /**
@@ -91,7 +103,7 @@ class ApiMessagesController extends Controller
         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
             $senders_contact->contact = $this->senders_contact;
             $senders_contact->category_id           = $category_id;
-            $senders_contact = $this->getContactsChurch();
+            $senders_contact->church_id = $this->getContactsChurch();
             $senders_contact->save();
         }
         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
@@ -103,6 +115,7 @@ class ApiMessagesController extends Controller
         $message->category_id           = $category_id;
         $message->time_from_app         = $this->time_from_app;
         $message->status                = 'Recieved';
+        $message->referenceId           = $this->reference_id;
         $message->save();
     }
     /**
@@ -111,7 +124,6 @@ class ApiMessagesController extends Controller
      */
     //category is null
     protected function saveUncategorizedMessage(){
-        
         $senders_contact = new SendersNumber();
         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
             $senders_contact->contact = $this->senders_contact;
@@ -126,6 +138,7 @@ class ApiMessagesController extends Controller
         $message->message              = $this->sent_message;
         $message->time_from_app        = $this->time_from_app;
         $message->status               = 'Recieved';
+        $message->referenceId          = $this->reference_id;
         $message->church_id            = $this->getContactsChurch();
         $message->save();
         return response()->json(["Status" => $this->status_response]);
@@ -136,7 +149,7 @@ class ApiMessagesController extends Controller
         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
             $senders_contact->contact = $this->senders_contact;
             $senders_contact->category_id = null;
-            $senders_contact = $this->getContactsChurch();
+            $senders_contact->church_id = $this->getContactsChurch();
             $senders_contact->save();
         }
         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
@@ -147,6 +160,7 @@ class ApiMessagesController extends Controller
         $message->message              = $this->sent_message;
         $message->time_from_app        = $this->time_from_app;
         $message->status               = 'Recieved';
+        $message->referenceId          = $this->reference_id;
         $message->church_id            = $this->getContactsChurch();
         $message->save();
         return response()->json(["Status" => $this->status_response]);
@@ -169,10 +183,15 @@ class ApiMessagesController extends Controller
                     }
                     foreach ( $search_through_array as $keyword ) 
                         {
+                            
+                    
                             if ( strpos( $string, $keyword ) !== FALSE )
                                 {
+                                    
                                     $category_id = searchTerms::where('search_term',strtolower($keyword))->where('church_id', $this->getContactsChurch())->value('category_id');
+                                    //return $this->getContactsChurch() . $category_id;
                                     if(package_category::where('category_id',$category_id)->where('church_id', $this->getContactsChurch())->exists()){
+                                        
                                         $amount = PackagesModel::join('package_category','package_category.package_id','packages.id')
                                         ->where('package_category.category_id',$category_id)->where('package_category.church_id', $this->getContactsChurch())->value('Amount');
                                         $client = new Client();
@@ -180,11 +199,13 @@ class ApiMessagesController extends Controller
                                             'form_params'   => [
                                             'name'          => 'TIG Test',
                                             'amount'        => $amount,
-                                            'number'        => $this->senders_contact,
+                                            'number'        => str_replace('+', '',$this->senders_contact),
                                             'chanel'        => 'TIG',
-                                            'referral'      => $this->senders_contact
+                                            'referral'      => str_replace('+', '',$this->senders_contact)
                                             ]
                                         ]);
+                                        
+                                        //return $response->getBody()->getContents();
                                         if ($response->getStatusCode() == $this->status_code) { // $this->status_response OK
                                             $response_data = $response->getBody()->getContents();
                                             $transaction_reference = json_decode($response_data, true);
@@ -194,27 +215,28 @@ class ApiMessagesController extends Controller
                                         //Picking the church id from the number that has been hosted under the church, (the number to which the message is sent to) 
                                         $this->incrementCategoryNumbersCount($category_id);
                                         $senders_contact = new SendersNumber();
+                                        
                                         if(SendersNumber::where('contact',$this->senders_contact)->doesntExist()){
                                             $senders_contact->contact = $this->senders_contact;
-                                            $senders_contact->category_id           = $category_id;
-                                            $senders_contact = $this->getContactsChurch();
+                                            $senders_contact->category_id = $category_id;
+                                            $senders_contact->church_id = $this->getContactsChurch();
                                             $senders_contact->save();
                                         }
                                         $senders_contact_id = SendersNumber::where('contact',$this->senders_contact)->value('id');
                                         $message = new message();
                                         $message->transaction_reference = $transacting_code;
-                                        $message->contact_id            = $this->contact_id;
+                                        $message->contact_id            = $this->getRecieverContact();
                                         $message->message_from          = $senders_contact_id;
-                                        $message->church_id             = $this->church_id;
+                                        $message->church_id             = $this->getContactsChurch();
                                         $message->category_id           = $category_id;
                                         $message->message               = $this->sent_message;
                                         $message->time_from_app         = $this->time_from_app;
                                         $message->status                = 'Recieved';
+                                        $message->referenceId           = $this->reference_id;
                                         $message->transaction_status    = $transaction_status;
                                         $message->save();
                                         return response()->json(["Status" => $this->status_response]);
                                     }
-                                    
                                     else{
                                         $this->incrementCategoryNumbersCount($category_id);
                                         $senders_contact = new SendersNumber();
@@ -233,6 +255,7 @@ class ApiMessagesController extends Controller
                                         $message->message               = $this->sent_message;
                                         $message->time_from_app         = $this->time_from_app;
                                         $message->status                = 'Recieved';
+                                        $message->referenceId           = $this->reference_id;
                                         $message->save();
                                         return response()->json(["Status" => $this->status_response]);
                                     }
