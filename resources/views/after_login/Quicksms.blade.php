@@ -36,14 +36,26 @@
                 <div class="row">
                     <div id="content">
                         <ul id="tabs" class="nav nav-tabs col-md-offset-1 col-sm-10" data-tabs="tabs">
-                            <li class="active"><a href="#groupmessage" data-toggle="tab">Send to Group</a></li>
-                            <li><a href="#categorymessage" data-toggle="tab">Send To Category</a></li>
-                            <li><a href="#nocategorymessage" data-toggle="tab">Send To Un Categorized</a></li>
+                            @if(in_array('Can send messages to a group',auth()->user()->getUserPermisions()))
+                                <li class="active"><a href="#groupmessage" data-toggle="tab">Send to Group</a></li>
+                            @endif
+                            @if(in_array('Can send messages to a category',auth()->user()->getUserPermisions()))
+                                <li><a href="#categorymessage" data-toggle="tab">Send To Category</a></li>
+                            @endif
+                            @if(in_array('Can send uncategorized message',auth()->user()->getUserPermisions()))
+                                <li><a href="#nocategorymessage" data-toggle="tab">Send To Un Categorized</a></li>
+                            @endif
                         </ul>
                         <div id="my-tab-content" class="tab-content">
-                            @include('layouts.groupsMessage')
-                            @include('layouts.categorizedMessage')
-                            @include('layouts.unCategorizedMessage')
+                            @if(in_array('Can send messages to a group',auth()->user()->getUserPermisions()))
+                                @include('layouts.groupsMessage')
+                            @endif
+                            @if(in_array('Can send messages to a category',auth()->user()->getUserPermisions()))
+                                @include('layouts.categorizedMessage')
+                            @endif
+                            @if(in_array('Can send uncategorized message',auth()->user()->getUserPermisions()))
+                                @include('layouts.unCategorizedMessage')
+                            @endif
                         </div>
                         <div class="row">
                         </div>

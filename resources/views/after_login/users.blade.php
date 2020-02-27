@@ -54,12 +54,13 @@
                                                     </div>
                                             </div>
                                             <div class="col-md-1"></div>
-                                        <div class="col-md-2">
-                                            <div class="input-group">
-                                            <a href="/addusers"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> User</i></button></a>
-
+                                            @if(in_array('Can add users to church',auth()->user()->getUserPermisions()))
+                                            <div class="col-md-2">
+                                                <div class="input-group">
+                                                <a href="/addusers"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> User</i></button></a>
+                                                </div>
                                             </div>
-                                        </div>
+                                            @endif
                                 </div>
                             </form>
                         </div>
@@ -78,6 +79,7 @@
                                                     <th class="th-sm">Phone number / Username
                                                     </th>
                                                     <th class="th-sm">Date created</th>
+                                                    {{-- <th class="th-sm">User Role</th> --}}
                                                 </tr>
                                             </thead>
                                         <tbody>
@@ -99,6 +101,7 @@
                                                 <td>{{ $first_name[1] }}</td>
                                                 <td>{{ $users_particular_church->email }}</td>
                                                 <td>{{ $users_particular_church->created_at }}</td>
+                                                {{-- <td>{{ $users_particular_church->role_name }}</td> --}}
                                             </tr>
                                             @endforeach
                                         </tbody>

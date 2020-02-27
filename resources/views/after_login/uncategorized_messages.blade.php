@@ -45,7 +45,9 @@
                                             <th class="th-sm">Message</th>
                                             <th class="th-sm">Senders Contact</th>
                                             <th class="th-sm">Message Sent on</th>
-                                            <th class="th-sm">Options</th>
+                                            @if(in_array('Can delete uncategorized messages',auth()->user()->getUserPermisions()))
+                                                <th class="th-sm">Options</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -61,10 +63,12 @@
                                             <td>{{$message->message}}</td>
                                             <td>{{$message->contact}}</td>
                                             <td>{{$message->created_at}}</td>
+                                            @if(in_array('Can delete uncategorized messages',auth()->user()->getUserPermisions()))
                                             <form action="/delete-uncategorized-message/{{$message->id}}" method="get">
                                                 @csrf
                                                 <td><button class="btn btn-danger"><i class="fa fa-trash"></i> Delete</button></td>
                                             </form>
+                                            @endif
                                         </tr>
                                         @endforeach
                                     </tbody>

@@ -39,13 +39,14 @@
                                                             </div>
                                                     </div>
                                             </div>
-
+                                            @if(in_array('Can add contacts groups',auth()->user()->getUserPermisions()))
                                         <div class="col-md-2">
                                             <div class="input-group">
                                             <a href="/create-group-form"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> Contact Group</i></button></a>
 
                                             </div>
                                         </div>
+                                        @endif
                                 </div>
                 </form>
                 <!--table -->
@@ -59,8 +60,11 @@
                                         <th class="th-sm">Group name</th>
                                         <th class="th-sm">Created by</th>
                                         <th class="th-sm">Date created</th>
+                                        
                                         <th class="th-sm">Number of contacts</th>
+                                        @if(in_array('Can view contacts in a group',auth()->user()->getUserPermisions()))
                                         <th class="th-sm">Option</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -76,7 +80,9 @@
                                             <td>{{ $contact->email }}</td>
                                             <td>{{ $contact->created_at }}</td>
                                             <td>{{ $contact->number_of_contacts }}</td>
+                                            @if(in_array('Can view contacts in a group',auth()->user()->getUserPermisions()))
                                             <td><a href="/view-contacts/{{ $contact->id }}">view contacts</a></td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>

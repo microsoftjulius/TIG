@@ -58,13 +58,15 @@
                                                     </form>
                                             </div>
                                             <div class="col-md-3 pull-right">
+                                                @if(in_array('Can add message categories',auth()->user()->getUserPermisions()))
                                                 <div class="input-group-btn">
                                                     <form action="/add-message-category" method="GET">
                                                         @csrf
-                                                    <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Message category
-                                                    </button>
-                                                </form>
+                                                        <button class="btn btn-primary" type="submit"><i class="fa fa-plus"></i> Message category
+                                                        </button>
+                                                    </form>
                                                 </div>
+                                                @endif
 
                                             </div>
                                 </div>
@@ -81,7 +83,9 @@
                                                         <th class="th-sm">Message category</th>
                                                         <th class="th-sm">Number of Search Terms</th>
                                                         <th class="th-sm">Number of Subscribers</th>
-                                                        <th class="th-sm">Option</th>
+                                                        @if(in_array('Can view search terms of a category',auth()->user()->getUserPermisions()))
+                                                            <th class="th-sm">Option</th>
+                                                        @endif
                                                     </tr>
                                                 </thead>
                                             <tbody>
@@ -97,7 +101,9 @@
                                                         <td>{{ $categories->title }}</td>
                                                         <td>{{  $categories->countSearchTerms -1}}</td>
                                                         <td>{{ $categories->number_of_subscribers}}</td>
-                                                        <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
+                                                        @if(in_array('Can view search terms of a category',auth()->user()->getUserPermisions()))
+                                                            <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
+                                                        @endif
                                                     </tr>
                                                 @endforeach
                                             </tbody>

@@ -36,19 +36,23 @@ class PackagesController extends Controller
     }
 
     public function getChurchPackages(){
-        if(Auth::user()->church_id == 1){
-            $all_packages = PackagesModel::join('church_databases','church_databases.id','packages.church_id')
-            ->select('packages.*')
-            ->paginate('10');
-            $message_categories = category::paginate('10');
-        }else{
-            $all_packages = PackagesModel::where('church_id',Auth::user()->church_id)
-            ->select('packages.*')
-            ->paginate('10');
+        if(in_array('Can view payment packages',auth()->user()->getUserPermisions())){
+            if(Auth::user()->church_id == 1){
+                $all_packages = PackagesModel::join('church_databases','church_databases.id','packages.church_id')
+                ->select('packages.*')
+                ->paginate('10');
+                $message_categories = category::paginate('10');
+            }else{
+                $all_packages = PackagesModel::where('church_id',Auth::user()->church_id)
+                ->select('packages.*')
+                ->paginate('10');
 
-            $message_categories = category::where('church_id',Auth::user()->church_id)->paginate('10');
+                $message_categories = category::where('church_id',Auth::user()->church_id)->paginate('10');
+            }
+            return view('after_login.packages',compact('all_packages','message_categories'));
+        }else{
+            return redirect()->back();
         }
-        return view('after_login.packages',compact('all_packages','message_categories'));
     }
 
     public function selectSubscribedForMessagesTitle(){
@@ -71,11 +75,16 @@ class PackagesController extends Controller
     }
 
     public function getPaymentLogs(){
-        if(Auth::user()->church_id == 1){
-            return $this->getPaymentLogsForAdmin();
-        }
+        if(in_array('Can view payment packages',auth()->user()->getUserPermisions())){
+            if(Auth::user()->church_id == 1){
+                return $this->getPaymentLogsForAdmin();
+            }
+                else{
+                    return $this->getPaymentLogsForChurch();
+                }
+            }
         else{
-            return $this->getPaymentLogsForChurch();
+            return redirect()->back();
         }
     }
 
@@ -126,5 +135,14 @@ class PackagesController extends Controller
             ));
         }
         return redirect()->back()->with('message','A package has been attached to a message category successfully');
+    }
+
+    public function showPackagesAndCategory(){
+        
+        $collection = package_category::join('packages','packages.id','package_category.package_id')
+        ->join('category','category.id','package_category.category_id')
+        ->where('package_category.church_id',Auth::user()->church_id)
+        ->paginate(10);
+        return view('after_login.packages_category',compact('collection'));
     }
 }

@@ -24,15 +24,19 @@ class ChurchesController extends Controller
     }
     public function getAllChurches()
     {
-        $churches = churchdatabase::join('ChurchHostedNumber','ChurchHostedNumber.church_id','church_databases.id')
-        ->where('church_databases.id','>',1)
-        ->select('church_databases.*','ChurchHostedNumber.contact_number')
-        ->orderBy('church_databases.created_at','Desc')
-        ->paginate('10');
-        if(auth()->user()->church_id == 1){
-            return view('after_login.churches',compact('churches'));
+        if(in_array('Can view groups',auth()->user()->getUserPermisions())){
+            $churches = churchdatabase::join('ChurchHostedNumber','ChurchHostedNumber.church_id','church_databases.id')
+            ->where('church_databases.id','>',1)
+            ->select('church_databases.*','ChurchHostedNumber.contact_number')
+            ->orderBy('church_databases.created_at','Desc')
+            ->paginate('10');
+            if(auth()->user()->church_id == 1){
+                return view('after_login.churches',compact('churches'));
+            }else{
+                return Redirect()->back();
+            }
         }else{
-            return Redirect()->back();
+            return redirect()->back();
         }
     }
     public function getChurchUsers($id)

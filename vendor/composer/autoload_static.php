@@ -127,6 +127,7 @@ class ComposerStaticInit347ba4baf32ab8056bbf7366a83a0d7b
             'Symfony\\Component\\Debug\\' => 24,
             'Symfony\\Component\\CssSelector\\' => 30,
             'Symfony\\Component\\Console\\' => 26,
+            'Spatie\\ArrayToXml\\' => 18,
         ),
         'R' => 
         array (
@@ -320,6 +321,10 @@ class ComposerStaticInit347ba4baf32ab8056bbf7366a83a0d7b
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
+        ),
+        'Spatie\\ArrayToXml\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/array-to-xml/src',
         ),
         'Ramsey\\Uuid\\' => 
         array (
@@ -550,6 +555,8 @@ class ComposerStaticInit347ba4baf32ab8056bbf7366a83a0d7b
         'App\\messageCategories' => __DIR__ . '/../..' . '/app/messageCategories.php',
         'App\\messages' => __DIR__ . '/../..' . '/app/messages.php',
         'App\\package_category' => __DIR__ . '/../..' . '/app/package_category.php',
+        'App\\permission' => __DIR__ . '/../..' . '/app/permission.php',
+        'App\\roles' => __DIR__ . '/../..' . '/app/roles.php',
         'App\\searchTerms' => __DIR__ . '/../..' . '/app/searchTerms.php',
         'BeyondCode\\DumpServer\\DumpServerCommand' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/src/DumpServerCommand.php',
         'BeyondCode\\DumpServer\\DumpServerServiceProvider' => __DIR__ . '/..' . '/beyondcode/laravel-dump-server/src/DumpServerServiceProvider.php',
@@ -3800,6 +3807,7 @@ class ComposerStaticInit347ba4baf32ab8056bbf7366a83a0d7b
         'SebastianBergmann\\Timer\\RuntimeException' => __DIR__ . '/..' . '/phpunit/php-timer/src/RuntimeException.php',
         'SebastianBergmann\\Timer\\Timer' => __DIR__ . '/..' . '/phpunit/php-timer/src/Timer.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Spatie\\ArrayToXml\\ArrayToXml' => __DIR__ . '/..' . '/spatie/array-to-xml/src/ArrayToXml.php',
         'Symfony\\Component\\Console\\Application' => __DIR__ . '/..' . '/symfony/console/Application.php',
         'Symfony\\Component\\Console\\CommandLoader\\CommandLoaderInterface' => __DIR__ . '/..' . '/symfony/console/CommandLoader/CommandLoaderInterface.php',
         'Symfony\\Component\\Console\\CommandLoader\\ContainerCommandLoader' => __DIR__ . '/..' . '/symfony/console/CommandLoader/ContainerCommandLoader.php',

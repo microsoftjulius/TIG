@@ -397,7 +397,7 @@ class User extends Authenticatable
         $permisions_array = DB::table('permisions_roles')
         ->join('permisions','permisions.id','permisions_roles.permision_id')
         ->where('role_id',Auth::user()->role_id)
-        ->select('permisions.permision')->get();
+        ->select('permisions.permission_description')->get();
         foreach(json_decode($permisions_array,true) as $permisions){
                 array_push($empty_permisions_array,$permisions["permission_description"]);
         }

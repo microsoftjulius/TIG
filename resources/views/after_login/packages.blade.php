@@ -43,11 +43,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                @if(in_array('Can add a new package',auth()->user()->getUserPermisions()))
                                 <div class="col-md-2">
                                     <div class="input-group">
                                         <a href="/addnewsubscription"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> New Package</i></button></a>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                         </form>
                     </div>
@@ -108,6 +110,9 @@
                                 <!--link for pagination-->
                             </div>
                         </div>
+                        @if(in_array('Can view package and respective categories',auth()->user()->getUserPermisions()))
+                            <a href="/view-categories">View</a>
+                        @endif
                         <input type="submit" value="save" class="btn btn-primary pull-right">
                     </form>
                     <div class="row">

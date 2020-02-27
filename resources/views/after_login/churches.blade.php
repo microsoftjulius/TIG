@@ -51,11 +51,13 @@
                                     </div>
                                 </div>
                             </div>
+                            @if(in_array('Can add groups',auth()->user()->getUserPermisions()))
                             <div class="col-md-2">
                                 <div class="input-group">
                                     <a href="/create-TIG-groups"><button type="button" class="btn btn-primary"><i class="fa fa-plus"> Group</i></button></a>
                                 </div>
                             </div>
+                            @endif
                         </div>
                     </form>
                     <!--table -->

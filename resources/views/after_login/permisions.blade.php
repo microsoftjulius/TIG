@@ -35,7 +35,7 @@
                 <div class="right_col" role="main">
                     <!-- Search form -->
                     <!--Table-->
-                    <form action="/map-package-to-category" method="get">
+                    <form @foreach ($roles as $role) action="/assign-role/{{$role->id}}" @endforeach method="get">
                         <div class="row">
                             <div class="col-lg-6">
                                 <section class="box col-lg-12 col-sm-12 col-md-12 mt-3">
@@ -44,7 +44,7 @@
                                             <tr>
                                                 <th class="th-sm"></th>
                                                 <th class="th-sm">Members Role Title</th>
-                                                <th class="th-sm">Number Of People With the Role</th>
+                                                {{-- <th class="th-sm">Number Of Permissions</th> --}}
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -52,12 +52,14 @@
                                             <tr>
                                                 <td><input type="radio" name="role_id" value="{{$role->id}}"></td>
                                                 <td>{{$role->role_name}}</td>
-                                                <td>2</td>
+                                                {{-- <td>{{$role->countRoles}}</td> --}}
                                             </tr>
                                             @endforeach
                                         </tbody>
                                     </table>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addrole"><i class="fa fa-plus"></i> Add Role</button>
+                                    @if(in_array('Can add a role',auth()->user()->getUserPermisions()))
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addrole"><i class="fa fa-plus"></i> Add Role</button>
+                                    @endif
                                 </section>
                                 <!--link for pagination-->
                             </div>
@@ -68,7 +70,6 @@
                                             <tr>
                                                 <th class="th-sm"></th>
                                                 <th class="th-sm">Permission</th>
-                                                <th class="th-sm">Number of people</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -77,11 +78,12 @@
                                             <tr>
                                                 <th class="th-sm"><input type="checkbox" name="user_permisions[]" value="{{$permission->id}}"></th>
                                                 <th class="th-sm">{{$permission->permission_description}}</th>
-                                                <th class="th-sm">1</th>
                                             </tr>
                                             @endforeach
                                         </tbody>
+                                        
                                     </table>
+                                    {{ $permissions->links()}}
                                 </section>
                                 <!--link for pagination-->
                             </div>
@@ -108,7 +110,7 @@
                         </div>
                         <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                     </div>

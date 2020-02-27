@@ -27,7 +27,9 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/sent-messages','messages@send');
     Route::get('/view-church-user/{id}','ChurchesController@view_church_user');
     Route::get('/create-user',function() { return view('after_login.create-users');});
-    Route::get('/addusers',function() { return view('after_login.add-users');});
+    Route::get('/addusers',function() { 
+        $roles = DB::table('roles')->where('church_id',Auth::user()->church_id)->get();
+        return view('after_login.add-users',compact('roles'));});
     Route::get('/contacts',function() { return view('after_login.contacts');});
     Route::get('/manager',function() { return view('after_login.manager');});
     Route::get('/create-TIG-groups',function(){return view('after_login.create-church');});
@@ -88,4 +90,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/save-contact-to-category/{id}','CategoriesController@saveContact');
     Route::get('/send-uncategorized-message','UnCategorizedMessages@sendMessage');
     Route::get('/add-new-role','PermisionsController@createRole');
+    Route::get('/view-categories','PackagesController@showPackagesAndCategory');
+    Route::get('/assign-role/{id}','PermisionsController@assignRoles');
 });

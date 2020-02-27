@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use App\church_user;
 use Illuminate\Support\Facades\Auth;
+use DB;
+
 class ChurchUserController extends Controller {
     public function __construct(Request $request){
         $this->error_message = new ErrorMessagesController();
@@ -63,15 +65,21 @@ class ChurchUserController extends Controller {
         }
     }
     public function show() {
-        $display_all_church_users = User::where('church_id', Auth::user()->church_id)->paginate('10');
+        $display_all_church_users = User::where('users.church_id', Auth::user()->church_id)
+        // ->join('permisions_roles','permisions_roles.id','users.id')
+        // ->join('roles','permisions_roles.role_id','roles.id')
+        // ->select('users.*','roles.role_name')
+        ->paginate('10');
         return view('after_login.users', compact('display_all_church_users'));
     }
 
     protected function addUserToChurch(){
+        $role_id = DB::table('roles')->where('church_id',Auth::user()->church_id)->where('role_name',request()->role)->value('id');
         User::create(array('name' => $this->first_name . " " . $this->last_name,
         'email' => $this->contact_number, 
         'password' => Hash::make($this->password), 
-        'church_id' => Auth::user()->church_id));
+        'church_id' => Auth::user()->church_id,
+        'role_id'   => $role_id));
         return redirect('/user');
     }
 }

@@ -10,11 +10,16 @@ use Illuminate\Support\Facades\Auth;
 class ScheduledMessagesController extends Controller
 {
     public function displayScheduledMessages(){
-        if(Auth::user()->church_id == 1){
-            return $this->getAllScheduledMessagesToAdmin();
+        if(in_array('Can view scheduled messages',auth()->user()->getUserPermisions())){
+            if(Auth::user()->church_id == 1){
+                return $this->getAllScheduledMessagesToAdmin();
+            }
+            else{
+                return $this->getAllScheduledMessagesToUsers();
+            }
         }
         else{
-            return $this->getAllScheduledMessagesToUsers();
+            return redirect()->back();
         }
         
     }

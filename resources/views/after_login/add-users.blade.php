@@ -64,6 +64,18 @@
                                 </div>
                             </div>
                             <div class="form-group row">
+                                <label for="colFormLabelLg" class="col-sm-2 col-form-label col-form-label-lg">Role</label>
+                                <div class="col-sm-10">
+                                <input type="text" name="role" list="role" class="form-control" autocomplete="off">
+                                <datalist id="role" >
+                                    @foreach ($roles as $role)
+                                        <option>{{$role->role_name}}</option>
+                                    @endforeach
+                                </datalist>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group row">
                                 <div class="text-center py-4 mt-3 ">
                                 <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Save</button>
                                 <a href="/user"><button type="button" class="btn btn-warning"><i class="fa fa-arrow-left" aria-hidden="true"></i> Back</i></button></a>
