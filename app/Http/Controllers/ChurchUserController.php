@@ -74,7 +74,11 @@ class ChurchUserController extends Controller {
     }
 
     protected function addUserToChurch(){
+        
         $role_id = DB::table('roles')->where('church_id',Auth::user()->church_id)->where('role_name',request()->role)->value('id');
+        if(empty($role_id)){
+            return redirect()->back()->withErrors("Create a role to continue");
+        }
         User::create(array('name' => $this->first_name . " " . $this->last_name,
         'email' => $this->contact_number, 
         'password' => Hash::make($this->password), 

@@ -21,7 +21,9 @@
     <div class="menu_section">
         <h3>General</h3>
         <ul class="nav side-menu">
-            <li><a href='/home'><i class="fa fa-home"></i> Home </a></li>
+            @if(in_array('Can view Dashboards',auth()->user()->getUserPermisions()))
+                <li><a href='/home'><i class="fa fa-home"></i> Home </a></li>
+            @endif
             @if(in_array('Can view groups',auth()->user()->getUserPermisions()))
                 <li><a href='/groups'><i class="fa fa-book"></i> Groups </a></li>
             @endif
@@ -51,7 +53,7 @@
                 @if(in_array('Can view scheduled messages',auth()->user()->getUserPermisions()))
                     <li><a href="/display-scheduled-messages">Scheduled Messages</a></li>
                 @endif
-                @if(in_array('Can view message categoriess',auth()->user()->getUserPermisions()))
+                @if(in_array('Can view message categories',auth()->user()->getUserPermisions()))
                     <li><a href="/message-categories"><i class=""></i> Message categories </a></li>
                 @endif
                 @if(in_array('Can view incoming messages',auth()->user()->getUserPermisions()))

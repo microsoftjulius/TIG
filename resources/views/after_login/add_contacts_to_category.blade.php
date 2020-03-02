@@ -54,7 +54,7 @@
 
                         <div class="col-md-2 pull-right">
                             <div class="input-group">
-                            <a href='/add-search-term/{{ \Request::segment(2) }}'><button type="button" class="btn btn-warning">
+                            <a href='/view-categories'><button type="button" class="btn btn-warning">
                                 <i class="fa fa-arrow-circle-left" aria-hidden="true"></i> Back</i></button></a>
                             </div>
                         </div>

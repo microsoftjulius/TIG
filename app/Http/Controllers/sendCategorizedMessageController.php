@@ -32,9 +32,13 @@ class sendCategorizedMessageController extends Controller
         $mytime = Carbon::now();
         $mytime->setTimezone('Africa/Kampala');
         //return $this->category_id;
-        $packaged_categories = SendersNumber::join('package_category','package_category.category_id','senders_numbers.category_id')
-        ->where('senders_numbers.category_id',$this->category_id)->get(); //->where('messages.transaction_status','like', 'F%')
+        $packaged_categories = SendersNumber::join('messages','messages.category_id','senders_numbers.category_id')
+        ->where('messages.transaction_status','like','S%')
+        ->where('messages.church_id',Auth::user()->church_id)->get(); //->where('messages.transaction_status','like', 'F%')
+
+        $manual_subs = category::join('senders_numbers','senders_numbers.category_id','category.id')->where('category.church_id',Auth::user()->church_id)->get();
         //return $packaged_categories;
+        
         foreach($packaged_categories as $packaged_category){
             //return $packaged_category;
             $final_day_of_subscription = Carbon::parse($packaged_category->time_from_app)->addDays($packaged_category->time_frame);
@@ -48,6 +52,14 @@ class sendCategorizedMessageController extends Controller
                 }
             }
         }
+        foreach($manual_subs as $subs){
+            if($subs->contact == null){
+                continue;
+            }else{
+            array_push($this->contacts_array, $subs->contact);
+            }
+        }
+        //return $this->contacts_array;
         if(count($this->contacts_array) == 0){
             return $this->error_message->emptyCategoryError();
         } 
@@ -116,6 +128,7 @@ class sendCategorizedMessageController extends Controller
             }
         }
         $counted_valid = count($unique_array);
+        //return $this->contacts_array;
         if(count($this->contacts_array)<1){
             return $this->error_message->emptyCategoryError();
         }

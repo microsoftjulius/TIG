@@ -63,6 +63,7 @@
                                                     </th>
                                                     <th class="th-sm">Category
                                                     </th>
+                                                    <th class="th-sm">Options</th>
                                                 </tr>
                                             </thead>
                                         <tbody>
@@ -76,6 +77,7 @@
                                                     <td>{{ $i++}}</td>
                                                     <td>{{$item->package_name}}</td>
                                                     <td>{{$item->title}}</td>
+                                                    <td><a href="/add-category-contacts/{{$item->id}}"><button type="button" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Add Contacts </button></a></td>
                                                 </tr>
                                             @endforeach
                                         </tbody>
