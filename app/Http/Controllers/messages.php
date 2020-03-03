@@ -252,7 +252,7 @@ class messages extends Controller
         }else{
             category::create(array(
                 'church_id' => Auth::user()->church_id, 
-                'title'     => $request->category,
+                'title'     => strtolower($request->category),
                 'user_id'   =>  Auth::user()->id,
             ));
             $id = category::where('title',$request->category)->value('id');
