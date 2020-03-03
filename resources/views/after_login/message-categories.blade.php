@@ -82,7 +82,6 @@
                                                         <th>Added by</th>
                                                         <th class="th-sm">Message category</th>
                                                         <th class="th-sm">Number of Search Terms</th>
-                                                        <th class="th-sm">Number of Subscribers</th>
                                                         @if(in_array('Can view search terms of a category',auth()->user()->getUserPermisions()))
                                                             <th class="th-sm">Option</th>
                                                         @endif
@@ -100,7 +99,6 @@
                                                         <td>{{ $categories->name }}</td>
                                                         <td>{{ $categories->title }}</td>
                                                         <td>{{  $categories->countSearchTerms -1}}</td>
-                                                        <td>{{ $categories->number_of_subscribers}}</td>
                                                         @if(in_array('Can view search terms of a category',auth()->user()->getUserPermisions()))
                                                             <td><a href="/add-search-term/{{ $categories->id }}">View/edit</a></td>
                                                         @endif

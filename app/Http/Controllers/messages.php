@@ -5,6 +5,7 @@ use App\category;
 use App\Contacts;
 use App\messages as message;
 use App\Groups;
+use App\SendersNumber;
 use DB;
 use App\searchTerms;
 use Illuminate\Http\Request;
@@ -343,7 +344,9 @@ class messages extends Controller
         ->where('category_id',$id)
         ->select('users.name','category.title','search_terms.*')
         ->paginate(10);
-        return view('after_login.search-term-table',compact('all_search_terms'));
+        
+        $count_subscribers = SendersNumber::where('category_id',$id)->count();
+        return view('after_login.search-term-table',compact('all_search_terms','count_subscribers'));
     }
 
     /**
