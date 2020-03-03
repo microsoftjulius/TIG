@@ -23,6 +23,7 @@
                         <div class="col-lg-12">
                     @include('layouts.message')
                             <section class="box col-lg-12 col-sm-12 col-md-12 mt-3">
+                                <span>Number of subscribers: {{$count_subscribers}}</span>
                                 <a href="/message-categories"><button class="btn btn-warning pull-right"><i class="fa fa-arrow-left"></i> Back</button></a>
                                 <button type="button" class="btn btn-primary pull-right" data-toggle="modal" data-target="#addSearchTerm"><i class="fa fa-plus"></i> Add search term</button>
                                 {{-- <a href="/add-category-contacts/{{request()->route('id')}}"><button type="button" class="btn btn-primary pull-right"><i class="fa fa-plus"></i> Add Contacts </button></a> --}}
