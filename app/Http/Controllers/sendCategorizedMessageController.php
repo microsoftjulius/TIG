@@ -33,9 +33,9 @@ class sendCategorizedMessageController extends Controller
         $mytime->setTimezone('Africa/Kampala');
         //return $this->category_id;
         $packaged_categories = SendersNumber::join('messages','messages.category_id','senders_numbers.category_id')
-        ->where('messages.transaction_status','like','S%')
+        ->where('messages.transaction_status','SUCCEEDED')
         ->where('messages.church_id',Auth::user()->church_id)->get(); //->where('messages.transaction_status','like', 'F%')
-
+    //return $packaged_categories;
         $manual_subs = category::join('senders_numbers','senders_numbers.category_id','category.id')->where('category.church_id',Auth::user()->church_id)->get();
         //return $packaged_categories;
         
@@ -106,20 +106,23 @@ class sendCategorizedMessageController extends Controller
 
 
     protected function apiCall(){
+        
         //Just put this
+        $subscribers_array = [];
         if(empty(request()->scheduled_date)){
             $contacts = SendersNumber::where('messages.category_id',$this->category_id)
             ->join('messages','messages.message_from','senders_numbers.id')
-            ->where('status','!=','Scheduled')->get();
+            ->where('status','!=','Scheduled')->where('messages.transaction_status','SUCCEEDED')->get();
+            
             foreach($contacts as $contact){
-                array_push($this->contacts_array, $contact->contact);
+                array_push($subscribers_array, $contact->contact);
             }
         }
         else{
             return $this->api_response->saveCategoriesSentMessage($this->category_id);
         }
         $unique_array = [];
-        foreach($this->contacts_array as $unique){
+        foreach($subscribers_array as $unique){
             if(in_array($unique, $unique_array)){
                 continue;
             }
@@ -128,16 +131,16 @@ class sendCategorizedMessageController extends Controller
             }
         }
         $counted_valid = count($unique_array);
-        //return $this->contacts_array;
-        if(count($this->contacts_array)<1){
-            return $this->error_message->emptyCategoryError();
+        if(empty($subscribers_array)){
+            return redirect('/sent-quick-messages')->withErrors("The Entered Category has no subscribers");
+            //return $this->error_message->emptyCategoryError();
         }
         $unique_numbers = [];
-        for($i=0; $i<count($this->contacts_array); $i++){
-            if(in_array($this->contacts_array[$i], $unique_numbers)){
+        for($i=0; $i<count($subscribers_array); $i++){
+            if(in_array($subscribers_array[$i], $unique_numbers)){
                 continue;
             }else{
-                array_push($unique_numbers, $this->contacts_array[$i]);
+                array_push($unique_numbers, $subscribers_array[$i]);
             }
         }
         $this->api_response->saveCategoriesSentMessage($counted_valid);
