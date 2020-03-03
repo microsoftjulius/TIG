@@ -29,8 +29,8 @@ class CategoriesController extends Controller
         $contact->church_id   = Auth::user()->church_id;
         $contact->save();
 
-        // $number = category::where('id',$id)->value('number_of_subscribers');
-        // category::where('id',$id)->update(array('number_of_subscribers' => $number+1));
+        $number = category::where('id',$id)->value('number_of_subscribers');
+        category::where('id',$id)->update(array('number_of_subscribers' => $number+1));
         return redirect()->back()->with('message','Contact Added Successfully');
     }
     
